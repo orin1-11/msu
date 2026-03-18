@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Number Puzzle</title>
+<style>
+  body {
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-family: Arial;
+  }
+
+  h2 {
+    margin-top: 20px;
+  }
+
+  #board {
+    width: 400px;
+    height: 400px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin-top: 20px;
+  }
+
+  .tile {
+    background: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .tile:hover {
+    background: #333;
+  }
+
+  .empty {
+    background: black;
+    cursor: default;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<h2>🔢 Number Puzzle</h2>
+<button onclick="shuffle()">Shuffle</button>
+
+<div id="board"></div>
+
+<script>
+const board = document.getElementById("board");
+
+let state = [
+  1, 2, 3, 4,
+  5, 6, 7, 8,
+  9,10,11,12,
+ 14,15,13,0
+];
+
+function render() {
+  board.innerHTML = "";
+
+  state.forEach((num, i) => {
+    const tile = document.createElement("div");
+
+    if (num === 0) {
+      tile.className = "tile empty";
+    } else {
+      tile.className = "tile";
+      tile.textContent = num;
+    }
+
+    tile.addEventListener("click", () => move(i));
+    board.appendChild(tile);
+  });
+}
+
+function move(index) {
+  const emptyIndex = state.indexOf(0);
+
+  const canMove =
+    (index === emptyIndex - 1 && index % 4 !== 3) ||
+    (index === emptyIndex + 1 && index % 4 !== 0) ||
+    (index === emptyIndex - 4) ||
+    (index === emptyIndex + 4);
+
+  if (canMove) {
+    [state[index], state[emptyIndex]] = [state[emptyIndex], state[index]];
+    render();
+  }
+}
+
+function shuffle() {
+  for (let i = 0; i < 200; i++) {
+    const rand = Math.floor(Math.random() * 16);
+    move(rand);
+  }
+}
+
+render();
+</script>
+
+</body>
+</html>
