@@ -1,0 +1,536 @@
+{
+    "cubeType": "CubeType_BONUS_POTENTIAL",
+    "gradeType": "GradeType_LEGENDARY",
+    "partsType": "PartsType_OVERALL",
+    "equipLevelMin": 120,
+    "equipLevelMax": 120,
+    "probabilityInfos": [
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +18",
+                    "probability": "5.882353",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +18",
+                    "probability": "5.882353",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +18",
+                    "probability": "5.882353",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +18",
+                    "probability": "5.882353",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +300",
+                    "probability": "5.882353",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +300",
+                    "probability": "5.882353",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "ATT: +14",
+                    "probability": "3.921569",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "Magic ATT: +14",
+                    "probability": "3.921569",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "STR : +7%",
+                    "probability": "3.921569",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "DEX : +7%",
+                    "probability": "3.921569",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "INT : +7%",
+                    "probability": "3.921569",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "LUK : +7%",
+                    "probability": "3.921569",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "Max HP: +10%",
+                    "probability": "5.882353",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "Max MP: +10%",
+                    "probability": "5.882353",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "Critical Damage: +1%",
+                    "probability": "3.921569",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "All Stats: +5%",
+                    "probability": "3.921569",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "STR per 10 Character Levels: +2",
+                    "probability": "3.921569",
+                    "displayOrder": 17
+                },
+                {
+                    "optionDescription": "DEX per 10 Character Levels: +2",
+                    "probability": "3.921569",
+                    "displayOrder": 18
+                },
+                {
+                    "optionDescription": "INT per 10 Character Levels: +2",
+                    "probability": "3.921569",
+                    "displayOrder": 19
+                },
+                {
+                    "optionDescription": "LUK per 10 Character Levels: +2",
+                    "probability": "3.921569",
+                    "displayOrder": 20
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +30%",
+                    "probability": "5.882353",
+                    "displayOrder": 21
+                }
+            ]
+        },
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +16",
+                    "probability": "6.091989",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +16",
+                    "probability": "6.091989",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +16",
+                    "probability": "6.091989",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +16",
+                    "probability": "6.091989",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +240",
+                    "probability": "6.091989",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +240",
+                    "probability": "6.091989",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "ATT: +12",
+                    "probability": "4.061326",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "Magic ATT: +12",
+                    "probability": "4.061326",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "STR : +5%",
+                    "probability": "4.061326",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "DEX : +5%",
+                    "probability": "4.061326",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "INT : +5%",
+                    "probability": "4.061326",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "LUK : +5%",
+                    "probability": "4.061326",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "Max HP: +7%",
+                    "probability": "6.091989",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "Max MP: +7%",
+                    "probability": "6.091989",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "All Stats: +4%",
+                    "probability": "4.061326",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "STR per 10 Character Levels: +1",
+                    "probability": "4.061326",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "DEX per 10 Character Levels: +1",
+                    "probability": "4.061326",
+                    "displayOrder": 17
+                },
+                {
+                    "optionDescription": "INT per 10 Character Levels: +1",
+                    "probability": "4.061326",
+                    "displayOrder": 18
+                },
+                {
+                    "optionDescription": "LUK per 10 Character Levels: +1",
+                    "probability": "4.061326",
+                    "displayOrder": 19
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +20%",
+                    "probability": "6.091989",
+                    "displayOrder": 20
+                },
+                {
+                    "optionDescription": "STR : +18",
+                    "probability": "0.029265",
+                    "displayOrder": 21
+                },
+                {
+                    "optionDescription": "DEX : +18",
+                    "probability": "0.029265",
+                    "displayOrder": 22
+                },
+                {
+                    "optionDescription": "INT : +18",
+                    "probability": "0.029265",
+                    "displayOrder": 23
+                },
+                {
+                    "optionDescription": "LUK : +18",
+                    "probability": "0.029265",
+                    "displayOrder": 24
+                },
+                {
+                    "optionDescription": "Max HP: +300",
+                    "probability": "0.029265",
+                    "displayOrder": 25
+                },
+                {
+                    "optionDescription": "Max MP: +300",
+                    "probability": "0.029265",
+                    "displayOrder": 26
+                },
+                {
+                    "optionDescription": "ATT: +14",
+                    "probability": "0.019510",
+                    "displayOrder": 27
+                },
+                {
+                    "optionDescription": "Magic ATT: +14",
+                    "probability": "0.019510",
+                    "displayOrder": 28
+                },
+                {
+                    "optionDescription": "STR : +7%",
+                    "probability": "0.019510",
+                    "displayOrder": 29
+                },
+                {
+                    "optionDescription": "DEX : +7%",
+                    "probability": "0.019510",
+                    "displayOrder": 30
+                },
+                {
+                    "optionDescription": "INT : +7%",
+                    "probability": "0.019510",
+                    "displayOrder": 31
+                },
+                {
+                    "optionDescription": "LUK : +7%",
+                    "probability": "0.019510",
+                    "displayOrder": 32
+                },
+                {
+                    "optionDescription": "Max HP: +10%",
+                    "probability": "0.029265",
+                    "displayOrder": 33
+                },
+                {
+                    "optionDescription": "Max MP: +10%",
+                    "probability": "0.029265",
+                    "displayOrder": 34
+                },
+                {
+                    "optionDescription": "Critical Damage: +1%",
+                    "probability": "0.019510",
+                    "displayOrder": 35
+                },
+                {
+                    "optionDescription": "All Stats: +5%",
+                    "probability": "0.019510",
+                    "displayOrder": 36
+                },
+                {
+                    "optionDescription": "STR per 10 Character Levels: +2",
+                    "probability": "0.019510",
+                    "displayOrder": 37
+                },
+                {
+                    "optionDescription": "DEX per 10 Character Levels: +2",
+                    "probability": "0.019510",
+                    "displayOrder": 38
+                },
+                {
+                    "optionDescription": "INT per 10 Character Levels: +2",
+                    "probability": "0.019510",
+                    "displayOrder": 39
+                },
+                {
+                    "optionDescription": "LUK per 10 Character Levels: +2",
+                    "probability": "0.019510",
+                    "displayOrder": 40
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +30%",
+                    "probability": "0.029265",
+                    "displayOrder": 41
+                }
+            ]
+        },
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +16",
+                    "probability": "6.091989",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +16",
+                    "probability": "6.091989",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +16",
+                    "probability": "6.091989",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +16",
+                    "probability": "6.091989",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +240",
+                    "probability": "6.091989",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +240",
+                    "probability": "6.091989",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "ATT: +12",
+                    "probability": "4.061326",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "Magic ATT: +12",
+                    "probability": "4.061326",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "STR : +5%",
+                    "probability": "4.061326",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "DEX : +5%",
+                    "probability": "4.061326",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "INT : +5%",
+                    "probability": "4.061326",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "LUK : +5%",
+                    "probability": "4.061326",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "Max HP: +7%",
+                    "probability": "6.091989",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "Max MP: +7%",
+                    "probability": "6.091989",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "All Stats: +4%",
+                    "probability": "4.061326",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "STR per 10 Character Levels: +1",
+                    "probability": "4.061326",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "DEX per 10 Character Levels: +1",
+                    "probability": "4.061326",
+                    "displayOrder": 17
+                },
+                {
+                    "optionDescription": "INT per 10 Character Levels: +1",
+                    "probability": "4.061326",
+                    "displayOrder": 18
+                },
+                {
+                    "optionDescription": "LUK per 10 Character Levels: +1",
+                    "probability": "4.061326",
+                    "displayOrder": 19
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +20%",
+                    "probability": "6.091989",
+                    "displayOrder": 20
+                },
+                {
+                    "optionDescription": "STR : +18",
+                    "probability": "0.029265",
+                    "displayOrder": 21
+                },
+                {
+                    "optionDescription": "DEX : +18",
+                    "probability": "0.029265",
+                    "displayOrder": 22
+                },
+                {
+                    "optionDescription": "INT : +18",
+                    "probability": "0.029265",
+                    "displayOrder": 23
+                },
+                {
+                    "optionDescription": "LUK : +18",
+                    "probability": "0.029265",
+                    "displayOrder": 24
+                },
+                {
+                    "optionDescription": "Max HP: +300",
+                    "probability": "0.029265",
+                    "displayOrder": 25
+                },
+                {
+                    "optionDescription": "Max MP: +300",
+                    "probability": "0.029265",
+                    "displayOrder": 26
+                },
+                {
+                    "optionDescription": "ATT: +14",
+                    "probability": "0.019510",
+                    "displayOrder": 27
+                },
+                {
+                    "optionDescription": "Magic ATT: +14",
+                    "probability": "0.019510",
+                    "displayOrder": 28
+                },
+                {
+                    "optionDescription": "STR : +7%",
+                    "probability": "0.019510",
+                    "displayOrder": 29
+                },
+                {
+                    "optionDescription": "DEX : +7%",
+                    "probability": "0.019510",
+                    "displayOrder": 30
+                },
+                {
+                    "optionDescription": "INT : +7%",
+                    "probability": "0.019510",
+                    "displayOrder": 31
+                },
+                {
+                    "optionDescription": "LUK : +7%",
+                    "probability": "0.019510",
+                    "displayOrder": 32
+                },
+                {
+                    "optionDescription": "Max HP: +10%",
+                    "probability": "0.029265",
+                    "displayOrder": 33
+                },
+                {
+                    "optionDescription": "Max MP: +10%",
+                    "probability": "0.029265",
+                    "displayOrder": 34
+                },
+                {
+                    "optionDescription": "Critical Damage: +1%",
+                    "probability": "0.019510",
+                    "displayOrder": 35
+                },
+                {
+                    "optionDescription": "All Stats: +5%",
+                    "probability": "0.019510",
+                    "displayOrder": 36
+                },
+                {
+                    "optionDescription": "STR per 10 Character Levels: +2",
+                    "probability": "0.019510",
+                    "displayOrder": 37
+                },
+                {
+                    "optionDescription": "DEX per 10 Character Levels: +2",
+                    "probability": "0.019510",
+                    "displayOrder": 38
+                },
+                {
+                    "optionDescription": "INT per 10 Character Levels: +2",
+                    "probability": "0.019510",
+                    "displayOrder": 39
+                },
+                {
+                    "optionDescription": "LUK per 10 Character Levels: +2",
+                    "probability": "0.019510",
+                    "displayOrder": 40
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +30%",
+                    "probability": "0.029265",
+                    "displayOrder": 41
+                }
+            ]
+        }
+    ]
+}
