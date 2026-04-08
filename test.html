@@ -366,78 +366,58 @@ function isPrime(line) {
   return /\+12%|\+10%|\+18%|\+40%|\+30%|Levels: \+2/.test(line || '');
 }
 
-
-// ── PARSE STAT FROM OPTION TEXT ──
-// Extracts { family, value } dynamically from option description strings.
-// % and flat values are SEPARATE families so they are never cross-compared:
-//   "ATT: +12%"  -> { family:"ATT_PCT",  value:12 }
-//   "ATT: +14"   -> { family:"ATT_FLAT", value:14 }
-// Returns null for non-numeric/narrative options (exact-match fallback).
-function parseStatEntry(text) {
-  if (!text) return null;
-  const patterns = [
-    // per-10-levels stat
-    { re: /^(STR|DEX|INT|LUK)\s+per\s+10\s+Character\s+Levels:\s+\+(\d+)/i,
-      family: m => m[1].toUpperCase() + "_LV", value: m => +m[2] },
-    { re: /^(M(?:agic|\.)\s*ATT|ATT)\s+per\s+10\s+Character\s+Levels:\s+\+(\d+)/i,
-      family: m => (m[1].match(/^ATT/i) ? "ATT" : "MATT") + "_LV", value: m => +m[2] },
-    // % options (must come before flat — regex anchored with %)
-    { re: /^Boss\s+Damage:\s+\+(\d+)%/i,       family: () => "BOSS_DMG_PCT",   value: m => +m[1] },
-    { re: /^DEF\s+Ignored:\s+\+(\d+)%/i,        family: () => "IED_PCT",        value: m => +m[1] },
-    { re: /^All\s+Stats:\s+\+(\d+)%/i,          family: () => "ALL_STAT_PCT",   value: m => +m[1] },
-    { re: /^Critical\s+Rate:\s+\+(\d+)%/i,      family: () => "CRIT_RATE_PCT",  value: m => +m[1] },
-    { re: /^Critical\s+Damage:\s+\+(\d+)%/i,    family: () => "CRIT_DMG_PCT",   value: m => +m[1] },
-    { re: /^Damage:\s+\+(\d+)%/i,               family: () => "DMG_PCT",        value: m => +m[1] },
-    { re: /^M(?:agic|\.)\s*ATT:\s+\+(\d+)%/i,  family: () => "MATT_PCT",       value: m => +m[1] },
-    { re: /^ATT:\s+\+(\d+)%/i,                  family: () => "ATT_PCT",        value: m => +m[1] },
-    { re: /^Max\s+HP:\s+\+(\d+)%/i,             family: () => "MAX_HP_PCT",     value: m => +m[1] },
-    { re: /^Max\s+MP:\s+\+(\d+)%/i,             family: () => "MAX_MP_PCT",     value: m => +m[1] },
-    { re: /^(STR|DEX|INT|LUK)\s*:\s+\+(\d+)%/i, family: m => m[1].toUpperCase() + "_PCT", value: m => +m[2] },
-    // flat options (no % — anchored with $)
-    { re: /^M(?:agic|\.)\s*ATT:\s+\+(\d+)$/i,  family: () => "MATT_FLAT",      value: m => +m[1] },
-    { re: /^ATT:\s+\+(\d+)$/i,                  family: () => "ATT_FLAT",       value: m => +m[1] },
-    { re: /^Max\s+HP:\s+\+(\d+)$/i,             family: () => "MAX_HP_FLAT",    value: m => +m[1] },
-    { re: /^Max\s+MP:\s+\+(\d+)$/i,             family: () => "MAX_MP_FLAT",    value: m => +m[1] },
-    { re: /^(STR|DEX|INT|LUK)\s*:\s+\+(\d+)$/i, family: m => m[1].toUpperCase() + "_FLAT", value: m => +m[2] },
-  ];
-  for (let p of patterns) {
-    const m = text.match(p.re);
-    if (m) return { family: p.family(m), value: p.value(m) };
-  }
-  return null;
-}
-
+// ── TIER SYSTEM ──
+// ── STAT VALUE MAP ──
+// Maps option text -> { family, value }. Hit = rolled total per family >= wanted total.
+const STAT_VALUE_MAP = {
+  "ATT: +9%":  {family:"ATT_PCT", value:9},  "ATT: +12%": {family:"ATT_PCT", value:12},
+  "ATT: +9%":  {family:"ATT_FLAT", value:9},  "ATT: +12%": {family:"ATT_FLAT", value:12},
+  "Magic ATT: +9%":  {family:"MATT_PCT", value:9},  "Magic ATT: +12%": {family:"MATT_PCT", value:12},
+  "Magic ATT: +9%":  {family:"MATT_FLAT", value:9},  "Magic ATT: +12%": {family:"MATT_FLAT", value:12},
+  "STR : +6%":  {family:"STR", value:6},  "STR : +9%":  {family:"STR", value:9},  "STR : +12%": {family:"STR", value:12},
+  "DEX : +6%":  {family:"DEX", value:6},  "DEX : +9%":  {family:"DEX", value:9},  "DEX : +12%": {family:"DEX", value:12},
+  "INT : +6%":  {family:"INT", value:6},  "INT : +9%":  {family:"INT", value:9},  "INT : +12%": {family:"INT", value:12},
+  "LUK : +6%":  {family:"LUK", value:6},  "LUK : +9%":  {family:"LUK", value:9},  "LUK : +12%": {family:"LUK", value:12},
+  "All Stats: +6%": {family:"ALLSTAT", value:6},  "All Stats: +9%": {family:"ALLSTAT", value:9},
+  "Damage: +9%":  {family:"DMG", value:9},  "Damage: +12%": {family:"DMG", value:12},
+  "Boss Damage: +12%": {family:"BOSS", value:12},  "Boss Damage: +18%": {family:"BOSS", value:18},
+  "DEF Ignored: +4%": {family:"IED", value:4},  "DEF Ignored: +5%": {family:"IED", value:5},
+  "Critical Rate: +9%": {family:"CRITRATE", value:9},  "Critical Rate: +12%": {family:"CRITRATE", value:12},
+  "Critical Damage: +1%": {family:"CRITDMG", value:1}, "Critical Damage: +3%": {family:"CRITDMG", value:3}, "Critical Damage: +9%": {family:"CRITDMG", value:9},
+  "Max HP: +7%":  {family:"HP", value:7},   "Max HP: +10%": {family:"HP", value:10},
+  "Max MP: +7%":  {family:"MP", value:7},   "Max MP: +10%": {family:"MP", value:10},
+  "STR per 10 Character Levels: +1": {family:"STR_LV", value:1}, "STR per 10 Character Levels: +2": {family:"STR_LV", value:2},
+  "DEX per 10 Character Levels: +1": {family:"DEX_LV", value:1}, "DEX per 10 Character Levels: +2": {family:"DEX_LV", value:2},
+  "INT per 10 Character Levels: +1": {family:"INT_LV", value:1}, "INT per 10 Character Levels: +2": {family:"INT_LV", value:2},
+  "LUK per 10 Character Levels: +1": {family:"LUK_LV", value:1}, "LUK per 10 Character Levels: +2": {family:"LUK_LV", value:2},
+  "ATT per 10 Character Levels: +1":    {family:"ATT_LV",  value:1},
+  "M. ATT per 10 Character Levels: +1": {family:"MATT_LV", value:1},
+};
 
 function sumByFamily(lines) {
   const t = {};
-  for (let l of lines) {
-    const e = parseStatEntry(l);
-    if (e) t[e.family] = (t[e.family] || 0) + e.value;
-  }
+  for (let l of lines) { const e = STAT_VALUE_MAP[l]; if (e) t[e.family] = (t[e.family]||0) + e.value; }
   return t;
 }
 
 // ── WANTED CHECK ──
-// For each stat family in wanted lines, total rolled value must be >= total wanted value.
-// Non-numeric options (e.g. HP recovery text) fall back to exact match anywhere in 3 lines.
+// Sum rolled values per stat family. Each wanted family total must be met or exceeded.
+// Unknown options (e.g. HP recovery) fall back to exact match anywhere in the 3 lines.
 function getWanted() { return [0,1,2].map(i => document.getElementById(`want-${i}`)?.value || ''); }
 function anyWantedSet() { return getWanted().some(x => x !== ''); }
 function checkWanted(lines) {
   const wanted = getWanted().filter(x => x !== '');
   if (!wanted.length) return false;
-
   const mappedWants = {}, exactWants = [];
   for (let w of wanted) {
-    const e = parseStatEntry(w);
-    if (e) mappedWants[e.family] = (mappedWants[e.family] || 0) + e.value;
+    const e = STAT_VALUE_MAP[w];
+    if (e) mappedWants[e.family] = (mappedWants[e.family]||0) + e.value;
     else exactWants.push(w);
   }
-
   const rolled = sumByFamily(lines);
   for (let [fam, needed] of Object.entries(mappedWants)) {
-    if ((rolled[fam] || 0) < needed) return false;
+    if ((rolled[fam]||0) < needed) return false;
   }
-
   const pool = [...lines];
   for (let req of exactWants) {
     const idx = pool.indexOf(req);
