@@ -118,15 +118,15 @@
   <div class="pot-tabs">
     <button class="pot-tab" id="tab-mpot-red" onclick="switchPot('mpot-red')">
       <img class="tab-icon" src="images/RED.webp" alt="Main Pot Red">
-      <span class="tab-label">Main Pot · Red</span>
+      <span class="tab-label">Red Cube</span>
     </button>
     <button class="pot-tab" id="tab-mpot-black" onclick="switchPot('mpot-black')">
       <img class="tab-icon" src="images/BLACK.webp" alt="Main Pot Black">
-      <span class="tab-label">Main Pot · Black</span>
+      <span class="tab-label">Black Cube</span>
     </button>
     <button class="pot-tab" id="tab-bpot" onclick="switchPot('bpot')">
       <img class="tab-icon" src="images/ADDITIONAL.webp" alt="Bonus Pot">
-      <span class="tab-label">Bonus Pot</span>
+      <span class="tab-label">Bonus Cube</span>
     </button>   
   </div>
 
@@ -304,7 +304,7 @@ function applyTheme() {
   const badge   = document.getElementById('cube-badge');
   const rollBtn = document.getElementById('btn-roll');
   if (currentPot === 'bpot') {
-    badge.textContent = 'BONUS';      badge.className = 'cube-badge badge-bpot';
+    badge.textContent = 'BONUS Cube';      badge.className = 'cube-badge badge-bpot';
     rollBtn.className = 'btn-roll btn-roll-bpot'; rollBtn.textContent = 'Roll Bonus Cube';
   } else if (currentPot === 'mpot-red') {
     badge.textContent = 'RED CUBE';   badge.className = 'cube-badge badge-red';
