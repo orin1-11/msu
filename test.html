@@ -3,95 +3,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MapleStory Bonus Cube Simulator</title>
+<title>MapleStory Cube Simulator</title>
 <style>
-  /* === Your original CSS (unchanged) === */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; padding: 24px 16px; }
   .container { max-width: 720px; margin: 0 auto; }
-  h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
-  .sub { font-size: 13px; color: #666; margin-bottom: 20px; }
+
+  /* ── POT TYPE TABS ── */
+  .pot-tabs { display: flex; gap: 0; margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
+  .pot-tab {
+    flex: 1; padding: 13px 10px; text-align: center; cursor: pointer;
+    font-size: 14px; font-weight: 600; border: none; background: #fff;
+    color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    font-family: inherit;
+  }
+  .pot-tab:last-child { border-right: none; }
+  .pot-tab .tab-icon { font-size: 20px; line-height: 1; }
+  .pot-tab .tab-label { font-size: 11px; letter-spacing: 0.03em; }
+  .pot-tab.active-bpot  { background: #1a1a1a; color: #fff; }
+  .pot-tab.active-mpot-red   { background: #c0392b; color: #fff; }
+  .pot-tab.active-mpot-black { background: #2c2c2c; color: #fff; }
+
+  /* ── HEADER ── */
+  .sim-header { margin-bottom: 20px; }
+  .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 10px; }
+  .sim-header .sub { font-size: 13px; color: #888; }
+  .cube-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px; }
+  .badge-bpot  { background: #1a1a1a; color: #fff; }
+  .badge-red   { background: #c0392b; color: #fff; }
+  .badge-black { background: #2c2c2c; color: #fff; }
+
+  /* ── STATS ── */
   .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
   .stat { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 12px; text-align: center; }
   .stat-label { font-size: 11px; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
   .stat-val { font-size: 22px; font-weight: 600; color: #1a1a1a; }
-  .stat-val.small { font-size: 13px; padding-top: 4px; line-height: 1.4; }
+
+  /* ── CARDS ── */
   .card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; }
   .card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+
+  /* ── FORM ELEMENTS ── */
   .wanted-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
   .wanted-label { font-size: 12px; color: #999; min-width: 44px; }
-  .wanted-select { flex: 1; font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; cursor: pointer; outline: none; }
+  .wanted-select { flex: 1; font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; cursor: pointer; outline: none; font-family: inherit; }
   .wanted-select:focus { border-color: #534AB7; }
-  .line-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+
+  /* ── RESULT LINES ── */
+  .line-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f5f4f0; }
+  .line-row:last-of-type { border-bottom: none; }
   .line-num { font-size: 12px; color: #bbb; min-width: 16px; }
   .line-name { flex: 1; font-size: 14px; color: #1a1a1a; }
   .badge { font-size: 11px; padding: 2px 9px; border-radius: 6px; font-weight: 500; }
-  .badge-prime { background: #EEEDFE; color: #3C3489; }
+  .badge-prime  { background: #EEEDFE; color: #3C3489; }
   .badge-normal { background: #f0efe8; color: #888; }
   .hit-notice { margin-top: 8px; font-size: 12px; color: #534AB7; font-weight: 600; }
+
+  /* ── BUTTONS ── */
   .btn-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
   button { padding: 9px 20px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #1a1a1a; font-size: 14px; cursor: pointer; transition: background 0.1s, transform 0.05s; font-family: inherit; }
   button:hover { background: #f0efe8; }
   button:active { transform: scale(0.97); }
-  .btn-roll { border-color: #534AB7; color: #534AB7; font-weight: 600; background: #EEEDFE; }
-  .btn-roll:hover { background: #e0ddf8; }
+  .btn-roll { font-weight: 600; }
+  .btn-roll-bpot  { border-color: #534AB7; color: #534AB7; background: #EEEDFE; }
+  .btn-roll-bpot:hover  { background: #e0ddf8; }
+  .btn-roll-red   { border-color: #c0392b; color: #c0392b; background: #fdf0ef; }
+  .btn-roll-red:hover   { background: #faddda; }
+  .btn-roll-black { border-color: #2c2c2c; color: #2c2c2c; background: #f0f0f0; }
+  .btn-roll-black:hover { background: #e4e4e4; }
   .btn-auto { border-color: #0F6E56; color: #0F6E56; font-weight: 600; background: #E1F5EE; }
   .btn-auto:hover { background: #c5eddf; }
   .btn-auto:disabled { opacity: 0.4; cursor: not-allowed; }
   .btn-reset { color: #999; }
+
+  /* ── AUTO ROLL ── */
   .auto-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
   .auto-row label { font-size: 13px; color: #666; }
-  .auto-input { width: 90px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px; background: #fafafa; color: #1a1a1a; outline: none; font-family: inherit; }
+  .auto-input { width: 100px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px; background: #fafafa; color: #1a1a1a; outline: none; font-family: inherit; }
   .auto-input:focus { border-color: #534AB7; }
   .auto-progress { font-size: 12px; color: #888; }
+
+  /* ── HISTORY ── */
   .history-list { max-height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
   .history-item { background: #fafafa; border-radius: 8px; padding: 6px 10px; font-size: 12px; color: #555; display: flex; gap: 8px; align-items: center; border: 1px solid transparent; }
   .history-item.is-hit { background: #EEEDFE; border-color: #c8c4f0; }
-  .history-num { color: #bbb; min-width: 28px; font-size: 11px; }
+  .history-num  { color: #bbb; min-width: 28px; font-size: 11px; }
   .history-lines { flex: 1; line-height: 1.5; }
   .history-hit-badge { font-size: 10px; background: #534AB7; color: #fff; padding: 1px 7px; border-radius: 5px; font-weight: 600; }
-  .summary-box { background: #E1F5EE; border: 1px solid #9FE1CB; border-radius: 10px; padding: 12px 16px; margin-bottom: 12px; }
-  .summary-box .sum-title { font-size: 12px; font-weight: 600; color: #085041; margin-bottom: 6px; }
-  .summary-box .sum-body { font-size: 13px; color: #0F6E56; line-height: 1.6; }
-  .empty-note { font-size: 13px; color: #bbb; padding: 4px 0; }
   .history-list::-webkit-scrollbar { width: 4px; }
   .history-list::-webkit-scrollbar-track { background: transparent; }
   .history-list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+  /* ── SUMMARY ── */
+  .summary-box { border-radius: 10px; padding: 12px 16px; margin-bottom: 4px; }
+  .summary-green    { background: #E1F5EE; border: 1px solid #9FE1CB; }
+  .summary-red-err  { background: #FAECE7; border: 1px solid #F5C4B3; }
+  .summary-box .sum-title { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  .summary-green   .sum-title { color: #085041; }
+  .summary-red-err .sum-title { color: #712B13; }
+  .summary-box .sum-body { font-size: 13px; line-height: 1.6; }
+  .summary-green   .sum-body { color: #0F6E56; }
+  .summary-red-err .sum-body { color: #993C1D; }
+  .hit-list-row { font-size: 12px; color: #0F6E56; padding: 3px 0; border-bottom: 1px solid #9FE1CB44; }
+  .hit-list-num { color: #bbb; min-width: 32px; display: inline-block; }
+
+  .empty-note { font-size: 13px; color: #bbb; padding: 4px 0; }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>Bonus Potential Simulator</h1>
-  <p class="sub">Legendary &middot; Secondary Weapon &middot; Lv.100 &middot; Bonus Cube</p>
 
-  <!-- Stats -->
+  <!-- TABS -->
+  <div class="pot-tabs">
+    <button class="pot-tab" id="tab-bpot" onclick="switchPot('bpot')">
+      <span class="tab-icon">⬛</span>
+      <span class="tab-label">Bonus Pot</span>
+    </button>
+    <button class="pot-tab" id="tab-mpot-red" onclick="switchPot('mpot-red')">
+      <span class="tab-icon">🟥</span>
+      <span class="tab-label">Main Pot · Red</span>
+    </button>
+    <button class="pot-tab" id="tab-mpot-black" onclick="switchPot('mpot-black')">
+      <span class="tab-icon">🖤</span>
+      <span class="tab-label">Main Pot · Black</span>
+    </button>
+  </div>
+
+  <!-- HEADER -->
+  <div class="sim-header">
+    <h1>Cube Simulator <span class="cube-badge badge-bpot" id="cube-badge">BONUS</span></h1>
+    <p class="sub" id="sim-sub">Weapon · Legendary · Lv.120</p>
+  </div>
+
+  <!-- STATS -->
   <div class="stats">
     <div class="stat"><div class="stat-label">Total Rolls</div><div class="stat-val" id="s-total">0</div></div>
     <div class="stat"><div class="stat-label">Wanted Hits</div><div class="stat-val" id="s-hits">0</div></div>
     <div class="stat"><div class="stat-label">Hit Rate</div><div class="stat-val" id="s-rate">—</div></div>
-  </div>  
+  </div>
 
+  <!-- ITEM TYPE -->
   <div class="card">
     <div class="card-title">Item Type</div>
     <div class="wanted-row">
       <span class="wanted-label">Item</span>
       <select id="item-type" class="wanted-select" onchange="onItemChange()">
-        <option value="PartsType_WEAPON">Weapon</option>        
-        <option value="PartsType_WEAPON_SECONDARY">Secondary Weapon</option>
-        <option value="PartsType_EMBLEM">Emblem</option>
-        <option value="PartsType_HAT">Hat</option>
-        <option value="PartsType_OVERALL">Overall</option>
-        <option value="PartsType_GLOVES">Gloves</option>
-        <option value="PartsType_ACCESSORY_FACE">Accessory</option>
+        <option value="weapon">Weapon</option>
+        <option value="secondary">Secondary Weapon</option>
+        <option value="emblem">Emblem</option>
+        <option value="hat">Hat</option>
+        <option value="overall">Overall</option>
+        <option value="gloves">Gloves</option>
+        <option value="accessory">Accessory</option>
       </select>
     </div>
   </div>
 
+  <!-- WANTED LINES -->
   <div class="card">
     <div class="card-title">Wanted Lines</div>
-    <div id="wanted-lines"></div>
+    <div id="wanted-lines"><div class="empty-note">Loading...</div></div>
   </div>
 
+  <!-- AUTO ROLL -->
   <div class="card">
     <div class="card-title">Auto Roll Until Wanted</div>
     <div class="auto-row">
@@ -105,114 +180,180 @@
     <div id="auto-summary" style="margin-top:12px;"></div>
   </div>
 
+  <!-- CURRENT RESULT -->
   <div class="card">
-    <div class="card-title">Current Roll &nbsp;<span id="roll-label" style="font-size:11px; color:#bbb; font-weight:400;">No roll yet</span></div>
+    <div class="card-title">Current Roll &nbsp;<span id="roll-label" style="font-size:11px;color:#bbb;font-weight:400;">No roll yet</span></div>
     <div id="result-lines"><div class="empty-note">Press Roll to start cubing...</div></div>
   </div>
 
+  <!-- ROLL BUTTONS -->
   <div class="btn-row">
-    <button class="btn-roll" onclick="doRoll()">Roll Cube</button>
+    <button class="btn-roll btn-roll-bpot" id="btn-roll" onclick="doRoll()">Roll Bonus Cube</button>
     <button class="btn-reset" onclick="doReset()">Reset All</button>
   </div>
 
+  <!-- HISTORY -->
   <div class="card">
     <div class="card-title">Roll History</div>
     <div class="history-list" id="history-list">
       <div class="empty-note">No rolls yet.</div>
     </div>
   </div>
+
 </div>
-
 <script>
-// ====================== STATE ======================
-let totalRolls = 0;
-let wantedHits = 0;
-let history = [];
-let bestRoll = null;
+// =============================================
+//  FOLDER STRUCTURE:
+//
+//  data/
+//    bpot/
+//      weapon.json
+//      secondary.json
+//      emblem.json
+//      hat.json
+//      overall.json
+//      gloves.json
+//      accessory.json
+//    mpot/
+//      red/
+//        weapon.json
+//        secondary.json
+//        emblem.json
+//        hat.json
+//        overall.json
+//        gloves.json
+//        accessory.json
+//      black/
+//        weapon.json
+//        secondary.json
+//        emblem.json
+//        hat.json
+//        overall.json
+//        gloves.json
+//        accessory.json
+// =============================================
 
-const itemDatabase = {
-  "PartsType_WEAPON":           { name: "Main Weapon",      file: "data/bpot/weapon.json" },
-  "PartsType_WEAPON_SECONDARY": { name: "Secondary Weapon", file: "data/bpot/secondary.json" },
-  "PartsType_EMBLEM":           { name: "Emblem",           file: "data/bpot/emblem.json" },
-  "PartsType_HAT":              { name: "Hat",              file: "data/bpot/hat.json" },
-  "PartsType_OVERALL":          { name: "Overall",          file: "data/bpot/overall.json" },
-  "PartsType_GLOVES":           { name: "Gloves",           file: "data/bpot/gloves.json" },
-  "PartsType_ACCESSORY_FACE":   { name: "Accessory",        file: "data/bpot/accessory.json" },
+const ITEM_LABELS = {
+  weapon:'Weapon', secondary:'Secondary Weapon', emblem:'Emblem',
+  hat:'Hat', overall:'Overall', gloves:'Gloves', accessory:'Accessory'
 };
 
-  
-let currentPartsType = "PartsType_WEAPON";
+let currentPot  = 'bpot';   // 'bpot' | 'mpot-red' | 'mpot-black'
+let currentItem = 'weapon';
 let currentData = null;
 
-// ====================== CORE FUNCTIONS ======================
-function getProbabilityInfos() {
-  return currentData ? currentData.probabilityInfos || [] : [];
+let totalRolls = 0, wantedHits = 0, history = [], bestRoll = null;
+
+// ── DATA PATH ──
+function dataPath(pot, item) {
+  if (pot === 'bpot')        return `data/bpot/${item}.json`;
+  if (pot === 'mpot-red')    return `data/mpot/red/${item}.json`;
+  if (pot === 'mpot-black')  return `data/mpot/black/${item}.json`;
 }
 
-async function loadItemData(partsType) {
-  const item = itemDatabase[partsType];
-  if (!item || !item.file) {
-    alert("No data file configured for this item.");
-    return null;
-  }
-
+// ── LOAD ──
+async function loadData(pot, item) {
+  const path = dataPath(pot, item);
   try {
-    const response = await fetch(item.file);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    currentData = await response.json();
-    return currentData;
-  } catch (err) {
-    console.error("Load error:", err);
-    alert(`Cannot load ${item.name} data.\nMake sure the file "${item.file}" exists in the "data" folder.`);
-    return null;
+    const r = await fetch(path);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    currentData = await r.json();
+    return true;
+  } catch(e) {
+    console.error('Load failed:', path, e);
+    alert(`Cannot load:\n${path}\n\nCheck that the file exists in the correct folder.`);
+    currentData = null;
+    return false;
   }
 }
 
-function buildWanted() {
-  const infos = getProbabilityInfos();
-  const container = document.getElementById('wanted-lines');
-  container.innerHTML = '';
+// ── SWITCH POT ──
+function switchPot(pot) {
+  currentPot = pot;
+  refreshAll();
+}
 
-  if (infos.length === 0) {
-    container.innerHTML = '<div class="empty-note">No data loaded yet.</div>';
+// ── ITEM CHANGE ──
+function onItemChange() {
+  currentItem = document.getElementById('item-type').value;
+  refreshAll();
+}
+
+// ── REFRESH ──
+async function refreshAll() {
+  applyTheme();
+  document.getElementById('wanted-lines').innerHTML = '<div class="empty-note">Loading...</div>';
+  const ok = await loadData(currentPot, currentItem);
+  if (!ok) {
+    document.getElementById('wanted-lines').innerHTML =
+      '<div class="empty-note" style="color:#c0392b;">Failed to load data file. Check the path.</div>';
     return;
   }
+  buildWanted();
+  doReset();
+}
 
+// ── APPLY THEME ──
+function applyTheme() {
+  // tabs
+  document.getElementById('tab-bpot').className        = 'pot-tab' + (currentPot === 'bpot'        ? ' active-bpot'        : '');
+  document.getElementById('tab-mpot-red').className    = 'pot-tab' + (currentPot === 'mpot-red'    ? ' active-mpot-red'    : '');
+  document.getElementById('tab-mpot-black').className  = 'pot-tab' + (currentPot === 'mpot-black'  ? ' active-mpot-black'  : '');
+
+  // badge + roll button
+  const badge   = document.getElementById('cube-badge');
+  const rollBtn = document.getElementById('btn-roll');
+  if (currentPot === 'bpot') {
+    badge.textContent = 'BONUS';      badge.className = 'cube-badge badge-bpot';
+    rollBtn.className = 'btn-roll btn-roll-bpot'; rollBtn.textContent = 'Roll Bonus Cube';
+  } else if (currentPot === 'mpot-red') {
+    badge.textContent = 'RED CUBE';   badge.className = 'cube-badge badge-red';
+    rollBtn.className = 'btn-roll btn-roll-red';   rollBtn.textContent = 'Roll Red Cube';
+  } else {
+    badge.textContent = 'BLACK CUBE'; badge.className = 'cube-badge badge-black';
+    rollBtn.className = 'btn-roll btn-roll-black'; rollBtn.textContent = 'Roll Black Cube';
+  }
+
+  // sub label
+  document.getElementById('sim-sub').textContent =
+    `${ITEM_LABELS[currentItem] || currentItem} · Legendary · Lv.120`;
+}
+
+// ── BUILD WANTED ──
+function buildWanted() {
+  const infos = currentData?.probabilityInfos || [];
+  const c = document.getElementById('wanted-lines');
+  c.innerHTML = '';
+  if (!infos.length) { c.innerHTML = '<div class="empty-note">No data.</div>'; return; }
   const lineCount = Math.min(3, infos.length);
-
   for (let i = 0; i < lineCount; i++) {
-    const options = infos[i].probabilityInfo ? infos[i].probabilityInfo.map(x => x.optionDescription) : [];
+    const opts = (infos[i]?.probabilityInfo || []).map(x => x.optionDescription);
     const row = document.createElement('div');
     row.className = 'wanted-row';
-    row.innerHTML = `
-      <span class="wanted-label">Line ${i+1}</span>
+    row.innerHTML = `<span class="wanted-label">Line ${i+1}</span>
       <select class="wanted-select" id="want-${i}">
         <option value="">— Any —</option>
-        ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+        ${opts.map(o => `<option value="${o}">${o}</option>`).join('')}
       </select>`;
-    container.appendChild(row);
+    c.appendChild(row);
   }
 }
 
-function pick(probabilityInfo) {
-  if (!probabilityInfo || probabilityInfo.length === 0) return "No Option";
-  const list = probabilityInfo.map(item => ({
-    name: item.optionDescription,
-    p: parseFloat(item.probability)
-  }));
-
+// ── PICK ──
+function pick(list) {
+  if (!list?.length) return 'No Option';
   let rand = Math.random() * 100, sum = 0;
-  for (let item of list) {
-    sum += item.p;
-    if (rand <= sum) return item.name;
+  for (let x of list) {
+    sum += parseFloat(x.probability);
+    if (rand <= sum) return x.optionDescription;
   }
-  return list[list.length - 1].name;
+  return list[list.length-1].optionDescription;
 }
 
+// ── ROLL ONCE ──
 function rollOnce() {
-  const infos = getProbabilityInfos();
-  if (infos.length === 0) return ["No Data", "No Data", "No Data"];
-
+  const infos = currentData?.probabilityInfos || [];
+  if (!infos.length) return ['No Data','No Data','No Data'];
   return [
     pick(infos[0]?.probabilityInfo),
     pick((infos[1] || infos[0])?.probabilityInfo),
@@ -220,164 +361,133 @@ function rollOnce() {
   ];
 }
 
+// ── IS PRIME (visual badge only) ──
 function isPrime(line) {
-  if (!line) return false;
-  return line.includes("+12%") || line.includes("+10%") || line.includes("+18%") ||
-         line.includes("+9%") || line.includes("per 10 Character Levels: +2");
+  return /\+12%|\+10%|\+18%|\+40%|\+30%|Levels: \+2/.test(line || '');
 }
 
-function normalize(str) {
-  return str.replace(/\s+/g, ' ').trim();
-}
-
+// ── WANTED CHECK (any-order) ──
+function getWanted() { return [0,1,2].map(i => document.getElementById(`want-${i}`)?.value || ''); }
+function anyWantedSet() { return getWanted().some(x => x !== ''); }
 function checkWanted(lines) {
-  const wantedRaw = [0,1,2].map(i => {
-    const el = document.getElementById(`want-${i}`);
-    return el ? el.value : '';
-  }).filter(x => x !== '');
-
-  if (wantedRaw.length === 0) return false;
-
-  let pool = lines.map(normalize);
-
-  for (let req of wantedRaw) {
-    const normReq = normalize(req);
-    const idx = pool.findIndex(line => line === normReq);
-
+  const wanted = getWanted().filter(x => x !== '');
+  if (!wanted.length) return false;
+  const pool = [...lines];
+  for (let req of wanted) {
+    const idx = pool.indexOf(req);
     if (idx === -1) return false;
     pool.splice(idx, 1);
   }
-
   return true;
 }
 
-// ====================== UI UPDATES ======================
-function updateResult(lines, hit) {
-  document.getElementById('roll-label').textContent = `Roll #${totalRolls.toLocaleString()}`;
-  const c = document.getElementById('result-lines');
-  c.innerHTML = lines.map((l, i) => `
-    <div class="line-row">
-      <span class="line-num">${i+1}</span>
-      <span class="line-name">${l}</span>
-      <span class="badge ${isPrime(l) ? 'badge-prime' : 'badge-normal'}">${isPrime(l) ? 'Prime' : 'Normal'}</span>
-    </div>
-  `).join('') + (hit ? '<div class="hit-notice">✓ Wanted lines matched!</div>' : '');
-}
-
-function updateStats() {
-  document.getElementById('s-total').textContent = totalRolls.toLocaleString();
-  document.getElementById('s-hits').textContent = wantedHits.toLocaleString();
-  document.getElementById('s-rate').textContent = totalRolls > 0 ? ((wantedHits / totalRolls) * 100).toFixed(2) + '%' : '—';
-  // Removed s-best since we no longer have that column
-}
-
-function updateHistory() {
-  const c = document.getElementById('history-list');
-  const show = history.slice(0, 200);
-  if (show.length === 0) {
-    c.innerHTML = '<div class="empty-note">No rolls yet.</div>';
-    return;
-  }
-  c.innerHTML = show.map(h => `
-    <div class="history-item ${h.hit ? 'is-hit' : ''}">
-      <span class="history-num">#${h.num}</span>
-      <span class="history-lines">${h.lines.join(' · ')}</span>
-      ${h.hit ? '<span class="history-hit-badge">HIT</span>' : ''}
-    </div>
-  `).join('');
-}
-
-// ====================== ROLL FUNCTIONS ======================
+// ── SINGLE ROLL ──
 function doRoll() {
+  if (!currentData) { alert('No data loaded.'); return; }
   const lines = rollOnce();
   totalRolls++;
   const hit = checkWanted(lines);
-  if (hit) {
-    wantedHits++;
-    if (!bestRoll) bestRoll = lines;
-  }
+  if (hit) { wantedHits++; if (!bestRoll) bestRoll = lines; }
   history.unshift({num: totalRolls, lines, hit});
   updateResult(lines, hit);
   updateStats();
   updateHistory();
 }
 
+// ── AUTO ROLL ──
 function doAutoRoll() {
+  if (!currentData) { alert('No data loaded.'); return; }
   if (!anyWantedSet()) {
-    document.getElementById('auto-summary').innerHTML = 
+    document.getElementById('auto-summary').innerHTML =
       '<div style="font-size:13px;color:#c0392b;margin-top:4px;">Please set at least one Wanted Line first.</div>';
     return;
   }
-
-  const maxRolls = parseInt(document.getElementById('auto-max').value) || 1000;
+  const maxRolls = Math.min(parseInt(document.getElementById('auto-max').value) || 1000, 100000);
   const btn = document.getElementById('btn-auto');
   btn.disabled = true;
   document.getElementById('auto-summary').innerHTML = '';
-
   let rolled = 0;
-  const results = [];
+  const hits = [];
 
   function chunk() {
     const end = Math.min(rolled + 2000, maxRolls);
     while (rolled < end) {
       const lines = rollOnce();
-      rolled++;
-      totalRolls++;
+      rolled++; totalRolls++;
       const hit = checkWanted(lines);
       if (hit) {
         wantedHits++;
         if (!bestRoll) bestRoll = lines;
-        results.push({num: totalRolls, lines, hit: true});
+        hits.push({num: totalRolls, lines});
         history.unshift({num: totalRolls, lines, hit: true});
       } else {
         history.unshift({num: totalRolls, lines, hit: false});
       }
     }
-
-    document.getElementById('auto-progress').textContent = `${rolled.toLocaleString()} / ${maxRolls.toLocaleString()} rolled...`;
+    document.getElementById('auto-progress').textContent =
+      `${rolled.toLocaleString()} / ${maxRolls.toLocaleString()} rolled...`;
     updateStats();
-
-    if (rolled < maxRolls) {
-      setTimeout(chunk, 0);
-    } else {
-      btn.disabled = false;
-      document.getElementById('auto-progress').textContent = '';
-      if (history.length > 200) history = history.slice(0, 200);
-      updateHistory();
-      showAutoSummary(rolled, results);
-    }
+    if (rolled < maxRolls) { setTimeout(chunk, 0); return; }
+    btn.disabled = false;
+    document.getElementById('auto-progress').textContent = '';
+    if (history.length > 200) history = history.slice(0, 200);
+    updateHistory();
+    showAutoSummary(rolled, hits);
   }
   chunk();
 }
 
-function anyWantedSet() {
-  return [0,1,2].some(i => {
-    const el = document.getElementById(`want-${i}`);
-    return el && el.value !== '';
-  });
+// ── UI UPDATES ──
+function updateResult(lines, hit) {
+  document.getElementById('roll-label').textContent = `Roll #${totalRolls.toLocaleString()}`;
+  const c = document.getElementById('result-lines');
+  c.innerHTML = lines.map((l, i) =>
+    `<div class="line-row">
+      <span class="line-num">${i+1}</span>
+      <span class="line-name">${l}</span>
+      <span class="badge ${(i===0||isPrime(l))?'badge-prime':'badge-normal'}">${(i===0||isPrime(l))?'Prime':'Normal'}</span>
+    </div>`
+  ).join('') + (hit ? '<div class="hit-notice">&#10003; Wanted lines matched!</div>' : '');
 }
 
-function showAutoSummary(rolled, hitResults) {
-  const c = document.getElementById('auto-summary');
-  if (hitResults.length === 0) {
-    c.innerHTML = `<div class="summary-box" style="background:#FAECE7;border-color:#F5C4B3;">
-      <div class="sum-title" style="color:#712B13;">No hits in ${rolled.toLocaleString()} rolls</div>
-      <div class="sum-body" style="color:#993C1D;">The wanted combination did not appear.</div>
-    </div>`;
-    return;
-  }
-  const avg = (rolled / hitResults.length).toFixed(1);
-  const listHTML = hitResults.slice(0, 20).map(r => `
-    <div style="font-size:12px;color:#0F6E56;padding:2px 0;border-bottom:1px solid #9FE1CB66;">
-      <span style="color:#bbb;min-width:28px;display:inline-block;">#${r.num}</span>
-      ${r.lines.join(' · ')}
-    </div>`).join('');
-  const more = hitResults.length > 20 ? `<div style="font-size:11px;color:#888;margin-top:4px;">... and ${hitResults.length - 20} more hits</div>` : '';
+function updateStats() {
+  document.getElementById('s-total').textContent = totalRolls.toLocaleString();
+  document.getElementById('s-hits').textContent  = wantedHits.toLocaleString();
+  document.getElementById('s-rate').textContent  =
+    totalRolls > 0 ? ((wantedHits/totalRolls)*100).toFixed(2)+'%' : '—';
+}
 
-  c.innerHTML = `<div class="summary-box">
-    <div class="sum-title">Auto Roll Complete — ${hitResults.length} hit${hitResults.length > 1 ? 's' : ''} in ${rolled.toLocaleString()} rolls</div>
-    <div class="sum-body">Average rolls per hit: <strong>${avg}</strong></div>
-    <div style="margin-top:10px;">${listHTML}${more}</div>
+function updateHistory() {
+  const c = document.getElementById('history-list');
+  if (!history.length) { c.innerHTML = '<div class="empty-note">No rolls yet.</div>'; return; }
+  c.innerHTML = history.slice(0,200).map(h =>
+    `<div class="history-item ${h.hit?'is-hit':''}">
+      <span class="history-num">#${h.num}</span>
+      <span class="history-lines">${h.lines.join(' · ')}</span>
+      ${h.hit?'<span class="history-hit-badge">HIT</span>':''}
+    </div>`
+  ).join('');
+}
+
+function showAutoSummary(rolled, hits) {
+  const c = document.getElementById('auto-summary');
+  if (!hits.length) {
+    c.innerHTML = `<div class="summary-box summary-red-err">
+      <div class="sum-title">No hits in ${rolled.toLocaleString()} rolls</div>
+      <div class="sum-body">The wanted combination did not appear. Try more rolls or loosen your wanted lines.</div>
+    </div>`; return;
+  }
+  const avg = (rolled / hits.length).toFixed(1);
+  const rows = hits.slice(0,20).map(r =>
+    `<div class="hit-list-row">
+      <span class="hit-list-num">#${r.num}</span>${r.lines.join(' · ')}
+    </div>`).join('');
+  const more = hits.length > 20
+    ? `<div style="font-size:11px;color:#888;margin-top:6px;">...and ${hits.length-20} more hits</div>` : '';
+  c.innerHTML = `<div class="summary-box summary-green">
+    <div class="sum-title">${hits.length} hit${hits.length>1?'s':''} in ${rolled.toLocaleString()} rolls — avg 1 hit every ${avg} rolls</div>
+    <div class="sum-body" style="margin-bottom:8px;">All matching rolls:</div>
+    ${rows}${more}
   </div>`;
 }
 
@@ -387,29 +497,17 @@ function doReset() {
   document.getElementById('roll-label').textContent = 'No roll yet';
   document.getElementById('auto-summary').innerHTML = '';
   document.getElementById('auto-progress').textContent = '';
-  updateStats();
-  updateHistory();
+  updateStats(); updateHistory();
 }
 
-// ====================== ITEM CHANGE & INIT ======================
-async function onItemChange() {
-  currentPartsType = document.getElementById('item-type').value;
-  const data = await loadItemData(currentPartsType);
-  if (!data) return;
-
-  document.querySelector('.sub').textContent = 
-    `${itemDatabase[currentPartsType].name} · Lv.100 · Bonus Cube`;
-
-  buildWanted();
-  doReset();
-}
-
+// ── INIT ──
 async function init() {
-  document.getElementById('item-type').value = "PartsType_WEAPON";
-  await loadItemData("PartsType_WEAPON");
-  buildWanted();
+  applyTheme();
+  const ok = await loadData('bpot', 'weapon');
+  if (ok) buildWanted();
   updateStats();
 }
-
 init();
 </script>
+</body>
+</html>
