@@ -1,0 +1,311 @@
+{
+    "cubeType": "CubeType_RED",
+    "gradeType": "GradeType_LEGENDARY",
+    "partsType": "PartsType_HAT",
+    "equipLevelMin": 120,
+    "equipLevelMax": 120,
+    "probabilityInfos": [
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +12%",
+                    "probability": "9.756097",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +12%",
+                    "probability": "9.756097",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +12%",
+                    "probability": "9.756097",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +12%",
+                    "probability": "9.756097",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +12%",
+                    "probability": "9.756097",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +12%",
+                    "probability": "9.756097",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "All Stats: +9%",
+                    "probability": "7.317073",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "10% chance to ignore 20% damage when attacked.",
+                    "probability": "7.317073",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "10% chance to ignore 40% damage when attacked.",
+                    "probability": "7.317073",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "Skill Cooldown: -1 sec (-5% for under 10 sec, minimum cooldown of 5 sec)",
+                    "probability": "7.317073",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "Skill Cooldown: -2 sec. (-10% for under 10 sec., minimum cooldown of 5 sec.)",
+                    "probability": "4.878048",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "Enables the <Decent Advanced Blessing> skill",
+                    "probability": "7.317073",
+                    "displayOrder": 12
+                }
+            ]
+        },
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +9%",
+                    "probability": "8.653847",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +9%",
+                    "probability": "8.653847",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +9%",
+                    "probability": "8.653847",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +9%",
+                    "probability": "8.653847",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +9%",
+                    "probability": "10.384616",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +9%",
+                    "probability": "10.384616",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "All Stats: +6%",
+                    "probability": "6.923077",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "5% chance to ignore 20% damage when attacked.",
+                    "probability": "6.923077",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "5% chance to ignore 40% damage when attacked.",
+                    "probability": "6.923077",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +30%",
+                    "probability": "6.923077",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "Enables the <Decent Mystic Door> skill",
+                    "probability": "6.923077",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "STR : +12%",
+                    "probability": "0.975610",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "DEX : +12%",
+                    "probability": "0.975610",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "INT : +12%",
+                    "probability": "0.975610",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "LUK : +12%",
+                    "probability": "0.975610",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "Max HP: +12%",
+                    "probability": "0.975610",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "Max MP: +12%",
+                    "probability": "0.975610",
+                    "displayOrder": 17
+                },
+                {
+                    "optionDescription": "All Stats: +9%",
+                    "probability": "0.731707",
+                    "displayOrder": 18
+                },
+                {
+                    "optionDescription": "10% chance to ignore 20% damage when attacked.",
+                    "probability": "0.731707",
+                    "displayOrder": 19
+                },
+                {
+                    "optionDescription": "10% chance to ignore 40% damage when attacked.",
+                    "probability": "0.731707",
+                    "displayOrder": 20
+                },
+                {
+                    "optionDescription": "Skill Cooldown: -1 sec (-5% for under 10 sec, minimum cooldown of 5 sec)",
+                    "probability": "0.731707",
+                    "displayOrder": 21
+                },
+                {
+                    "optionDescription": "Skill Cooldown: -2 sec. (-10% for under 10 sec., minimum cooldown of 5 sec.)",
+                    "probability": "0.487805",
+                    "displayOrder": 22
+                },
+                {
+                    "optionDescription": "Enables the <Decent Advanced Blessing> skill",
+                    "probability": "0.731707",
+                    "displayOrder": 23
+                }
+            ]
+        },
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +9%",
+                    "probability": "9.519232",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +9%",
+                    "probability": "9.519232",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +9%",
+                    "probability": "9.519232",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +9%",
+                    "probability": "9.519232",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +9%",
+                    "probability": "11.423078",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +9%",
+                    "probability": "11.423078",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "All Stats: +6%",
+                    "probability": "7.615385",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "5% chance to ignore 20% damage when attacked.",
+                    "probability": "7.615385",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "5% chance to ignore 40% damage when attacked.",
+                    "probability": "7.615385",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +30%",
+                    "probability": "7.615385",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "Enables the <Decent Mystic Door> skill",
+                    "probability": "7.615385",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "STR : +12%",
+                    "probability": "0.097561",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "DEX : +12%",
+                    "probability": "0.097561",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "INT : +12%",
+                    "probability": "0.097561",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "LUK : +12%",
+                    "probability": "0.097561",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "Max HP: +12%",
+                    "probability": "0.097561",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "Max MP: +12%",
+                    "probability": "0.097561",
+                    "displayOrder": 17
+                },
+                {
+                    "optionDescription": "All Stats: +9%",
+                    "probability": "0.073171",
+                    "displayOrder": 18
+                },
+                {
+                    "optionDescription": "10% chance to ignore 20% damage when attacked.",
+                    "probability": "0.073171",
+                    "displayOrder": 19
+                },
+                {
+                    "optionDescription": "10% chance to ignore 40% damage when attacked.",
+                    "probability": "0.073171",
+                    "displayOrder": 20
+                },
+                {
+                    "optionDescription": "Skill Cooldown: -1 sec (-5% for under 10 sec, minimum cooldown of 5 sec)",
+                    "probability": "0.073171",
+                    "displayOrder": 21
+                },
+                {
+                    "optionDescription": "Skill Cooldown: -2 sec. (-10% for under 10 sec., minimum cooldown of 5 sec.)",
+                    "probability": "0.048780",
+                    "displayOrder": 22
+                },
+                {
+                    "optionDescription": "Enables the <Decent Advanced Blessing> skill",
+                    "probability": "0.073171",
+                    "displayOrder": 23
+                }
+            ]
+        }
+    ]
+}
