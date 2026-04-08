@@ -76,9 +76,9 @@
     <div class="wanted-row">
       <span class="wanted-label">Item</span>
       <select id="item-type" class="wanted-select" onchange="onItemChange()">
+        <option value="PartsType_WEAPON">Weapon</option>        
         <option value="PartsType_WEAPON_SECONDARY">Secondary Weapon</option>
         <option value="PartsType_EMBLEM">Emblem</option>
-        <option value="PartsType_WEAPON">Weapon (Main)</option>
       </select>
     </div>
   </div>
@@ -127,12 +127,12 @@ let history = [];
 let bestRoll = null;
 
 const itemDatabase = {
+  "PartsType_WEAPON":           { name: "Main Weapon",      file: "data/weapon.json" },
   "PartsType_WEAPON_SECONDARY": { name: "Secondary Weapon", file: "data/secondary.json" },
   "PartsType_EMBLEM":           { name: "Emblem",           file: "data/emblem.json" },
-  "PartsType_WEAPON":           { name: "Main Weapon",      file: "data/weapon.json" },
 };
 
-let currentPartsType = "PartsType_WEAPON_SECONDARY";
+let currentPartsType = "PartsType_WEAPON";
 let currentData = null;
 
 // ====================== CORE FUNCTIONS ======================
@@ -388,8 +388,8 @@ async function onItemChange() {
 }
 
 async function init() {
-  document.getElementById('item-type').value = "PartsType_WEAPON_SECONDARY";
-  await loadItemData("PartsType_WEAPON_SECONDARY");
+  document.getElementById('item-type').value = "PartsType_WEAPON";
+  await loadItemData("PartsType_WEAPON");
   buildWanted();
   updateStats();
 }
