@@ -1,0 +1,326 @@
+{
+    "cubeType": "CubeType_RED",
+    "gradeType": "GradeType_LEGENDARY",
+    "partsType": "PartsType_OVERALL",
+    "equipLevelMin": 120,
+    "equipLevelMax": 120,
+    "probabilityInfos": [
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +12%",
+                    "probability": "10.256411",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +12%",
+                    "probability": "10.256411",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +12%",
+                    "probability": "10.256411",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +12%",
+                    "probability": "10.256411",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +12%",
+                    "probability": "10.256411",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +12%",
+                    "probability": "10.256411",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "All Stats: +9%",
+                    "probability": "7.692308",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "10% chance to ignore 20% damage when attacked.",
+                    "probability": "7.692308",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "10% chance to ignore 40% damage when attacked.",
+                    "probability": "7.692308",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "Invincible for +3 more sec. when hit",
+                    "probability": "7.692308",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "4% chance to become invincible for 7 seconds when attacked.",
+                    "probability": "7.692308",
+                    "displayOrder": 11
+                }
+            ]
+        },
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +9%",
+                    "probability": "7.258064",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +9%",
+                    "probability": "7.258064",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +9%",
+                    "probability": "7.258064",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +9%",
+                    "probability": "7.258064",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +9%",
+                    "probability": "8.709677",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +9%",
+                    "probability": "8.709677",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "All Stats: +6%",
+                    "probability": "5.806451",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "5% chance to ignore 20% damage when attacked.",
+                    "probability": "5.806451",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "5% chance to ignore 40% damage when attacked.",
+                    "probability": "5.806451",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "Invincible for +2 more sec. when hit",
+                    "probability": "5.806451",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "2% chance to become invincible for 7 seconds when attacked.",
+                    "probability": "5.806451",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "30% chance to reflect 50% damage.",
+                    "probability": "5.806451",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "30% chance to reflect 70% damage.",
+                    "probability": "2.903226",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +30%",
+                    "probability": "5.806451",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "STR : +12%",
+                    "probability": "1.025641",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "DEX : +12%",
+                    "probability": "1.025641",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "INT : +12%",
+                    "probability": "1.025641",
+                    "displayOrder": 17
+                },
+                {
+                    "optionDescription": "LUK : +12%",
+                    "probability": "1.025641",
+                    "displayOrder": 18
+                },
+                {
+                    "optionDescription": "Max HP: +12%",
+                    "probability": "1.025641",
+                    "displayOrder": 19
+                },
+                {
+                    "optionDescription": "Max MP: +12%",
+                    "probability": "1.025641",
+                    "displayOrder": 20
+                },
+                {
+                    "optionDescription": "All Stats: +9%",
+                    "probability": "0.769231",
+                    "displayOrder": 21
+                },
+                {
+                    "optionDescription": "10% chance to ignore 20% damage when attacked.",
+                    "probability": "0.769231",
+                    "displayOrder": 22
+                },
+                {
+                    "optionDescription": "10% chance to ignore 40% damage when attacked.",
+                    "probability": "0.769231",
+                    "displayOrder": 23
+                },
+                {
+                    "optionDescription": "Invincible for +3 more sec. when hit",
+                    "probability": "0.769231",
+                    "displayOrder": 24
+                },
+                {
+                    "optionDescription": "4% chance to become invincible for 7 seconds when attacked.",
+                    "probability": "0.769231",
+                    "displayOrder": 25
+                }
+            ]
+        },
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +9%",
+                    "probability": "7.983871",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +9%",
+                    "probability": "7.983871",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +9%",
+                    "probability": "7.983871",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +9%",
+                    "probability": "7.983871",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +9%",
+                    "probability": "9.580645",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +9%",
+                    "probability": "9.580645",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "All Stats: +6%",
+                    "probability": "6.387096",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "5% chance to ignore 20% damage when attacked.",
+                    "probability": "6.387096",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "5% chance to ignore 40% damage when attacked.",
+                    "probability": "6.387096",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "Invincible for +2 more sec. when hit",
+                    "probability": "6.387096",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "2% chance to become invincible for 7 seconds when attacked.",
+                    "probability": "6.387096",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "30% chance to reflect 50% damage.",
+                    "probability": "6.387096",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "30% chance to reflect 70% damage.",
+                    "probability": "3.193548",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +30%",
+                    "probability": "6.387096",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "STR : +12%",
+                    "probability": "0.102564",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "DEX : +12%",
+                    "probability": "0.102564",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "INT : +12%",
+                    "probability": "0.102564",
+                    "displayOrder": 17
+                },
+                {
+                    "optionDescription": "LUK : +12%",
+                    "probability": "0.102564",
+                    "displayOrder": 18
+                },
+                {
+                    "optionDescription": "Max HP: +12%",
+                    "probability": "0.102564",
+                    "displayOrder": 19
+                },
+                {
+                    "optionDescription": "Max MP: +12%",
+                    "probability": "0.102564",
+                    "displayOrder": 20
+                },
+                {
+                    "optionDescription": "All Stats: +9%",
+                    "probability": "0.076923",
+                    "displayOrder": 21
+                },
+                {
+                    "optionDescription": "10% chance to ignore 20% damage when attacked.",
+                    "probability": "0.076923",
+                    "displayOrder": 22
+                },
+                {
+                    "optionDescription": "10% chance to ignore 40% damage when attacked.",
+                    "probability": "0.076923",
+                    "displayOrder": 23
+                },
+                {
+                    "optionDescription": "Invincible for +3 more sec. when hit",
+                    "probability": "0.076923",
+                    "displayOrder": 24
+                },
+                {
+                    "optionDescription": "4% chance to become invincible for 7 seconds when attacked.",
+                    "probability": "0.076923",
+                    "displayOrder": 25
+                }
+            ]
+        }
+    ]
+}
