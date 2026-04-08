@@ -1,0 +1,491 @@
+{
+    "cubeType": "CubeType_BLACK",
+    "gradeType": "GradeType_RARE",
+    "partsType": "PartsType_EMBLEM",
+    "equipLevelMin": 100,
+    "equipLevelMax": 100,
+    "probabilityInfos": [
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +12",
+                    "probability": "6.122449",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +12",
+                    "probability": "6.122449",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +12",
+                    "probability": "6.122449",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +12",
+                    "probability": "6.122449",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +100",
+                    "probability": "6.122449",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +100",
+                    "probability": "6.122449",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "ATT: +12",
+                    "probability": "4.081633",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "Magic ATT: +12",
+                    "probability": "4.081633",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "STR : +3%",
+                    "probability": "6.122449",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "DEX : +3%",
+                    "probability": "6.122449",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "INT : +3%",
+                    "probability": "6.122449",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "LUK : +3%",
+                    "probability": "6.122449",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "ATT: +3%",
+                    "probability": "2.040816",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "Magic ATT: +3%",
+                    "probability": "2.040816",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "Critical Rate: +4%",
+                    "probability": "2.040816",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "Damage: +3%",
+                    "probability": "2.040816",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "All Stats: +5",
+                    "probability": "4.081633",
+                    "displayOrder": 17
+                },
+                {
+                    "optionDescription": "20% chance to recover 200 HP when attacking.",
+                    "probability": "2.040816",
+                    "displayOrder": 18
+                },
+                {
+                    "optionDescription": "20% chance to recover 110 MP when attacking.",
+                    "probability": "2.040816",
+                    "displayOrder": 19
+                },
+                {
+                    "optionDescription": "20% chance to apply Lv. 5 Poison when attacking.",
+                    "probability": "2.040816",
+                    "displayOrder": 20
+                },
+                {
+                    "optionDescription": "10% chance to apply Lv. 2 Stun on hit.",
+                    "probability": "2.040816",
+                    "displayOrder": 21
+                },
+                {
+                    "optionDescription": "20% chance to apply Lv. 2 Slow when attacking.",
+                    "probability": "2.040816",
+                    "displayOrder": 22
+                },
+                {
+                    "optionDescription": "20% chance to apply Lv. 2 Blind when attacking.",
+                    "probability": "2.040816",
+                    "displayOrder": 23
+                },
+                {
+                    "optionDescription": "10% chance to apply Lv. 2 Freeze when attacking.",
+                    "probability": "2.040816",
+                    "displayOrder": 24
+                },
+                {
+                    "optionDescription": "10% chance to apply Lv. 2 Seal when attacking.",
+                    "probability": "2.040816",
+                    "displayOrder": 25
+                },
+                {
+                    "optionDescription": "DEF Ignored: +15%",
+                    "probability": "2.040816",
+                    "displayOrder": 26
+                }
+            ]
+        },
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +6",
+                    "probability": "10.909092",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +6",
+                    "probability": "10.909092",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +6",
+                    "probability": "10.909092",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +6",
+                    "probability": "10.909092",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +50",
+                    "probability": "10.909092",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +50",
+                    "probability": "10.909092",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "ATT: +6",
+                    "probability": "7.272728",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "Magic ATT: +6",
+                    "probability": "7.272728",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "STR : +12",
+                    "probability": "1.224490",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "DEX : +12",
+                    "probability": "1.224490",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "INT : +12",
+                    "probability": "1.224490",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "LUK : +12",
+                    "probability": "1.224490",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "Max HP: +100",
+                    "probability": "1.224490",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "Max MP: +100",
+                    "probability": "1.224490",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "ATT: +12",
+                    "probability": "0.816326",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "Magic ATT: +12",
+                    "probability": "0.816326",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "STR : +3%",
+                    "probability": "1.224490",
+                    "displayOrder": 17
+                },
+                {
+                    "optionDescription": "DEX : +3%",
+                    "probability": "1.224490",
+                    "displayOrder": 18
+                },
+                {
+                    "optionDescription": "INT : +3%",
+                    "probability": "1.224490",
+                    "displayOrder": 19
+                },
+                {
+                    "optionDescription": "LUK : +3%",
+                    "probability": "1.224490",
+                    "displayOrder": 20
+                },
+                {
+                    "optionDescription": "ATT: +3%",
+                    "probability": "0.408163",
+                    "displayOrder": 21
+                },
+                {
+                    "optionDescription": "Magic ATT: +3%",
+                    "probability": "0.408163",
+                    "displayOrder": 22
+                },
+                {
+                    "optionDescription": "Critical Rate: +4%",
+                    "probability": "0.408163",
+                    "displayOrder": 23
+                },
+                {
+                    "optionDescription": "Damage: +3%",
+                    "probability": "0.408163",
+                    "displayOrder": 24
+                },
+                {
+                    "optionDescription": "All Stats: +5",
+                    "probability": "0.816326",
+                    "displayOrder": 25
+                },
+                {
+                    "optionDescription": "20% chance to recover 200 HP when attacking.",
+                    "probability": "0.408163",
+                    "displayOrder": 26
+                },
+                {
+                    "optionDescription": "20% chance to recover 110 MP when attacking.",
+                    "probability": "0.408163",
+                    "displayOrder": 27
+                },
+                {
+                    "optionDescription": "20% chance to apply Lv. 5 Poison when attacking.",
+                    "probability": "0.408163",
+                    "displayOrder": 28
+                },
+                {
+                    "optionDescription": "10% chance to apply Lv. 2 Stun on hit.",
+                    "probability": "0.408163",
+                    "displayOrder": 29
+                },
+                {
+                    "optionDescription": "20% chance to apply Lv. 2 Slow when attacking.",
+                    "probability": "0.408163",
+                    "displayOrder": 30
+                },
+                {
+                    "optionDescription": "20% chance to apply Lv. 2 Blind when attacking.",
+                    "probability": "0.408163",
+                    "displayOrder": 31
+                },
+                {
+                    "optionDescription": "10% chance to apply Lv. 2 Freeze when attacking.",
+                    "probability": "0.408163",
+                    "displayOrder": 32
+                },
+                {
+                    "optionDescription": "10% chance to apply Lv. 2 Seal when attacking.",
+                    "probability": "0.408163",
+                    "displayOrder": 33
+                },
+                {
+                    "optionDescription": "DEF Ignored: +15%",
+                    "probability": "0.408163",
+                    "displayOrder": 34
+                }
+            ]
+        },
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +6",
+                    "probability": "12.954545",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +6",
+                    "probability": "12.954545",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +6",
+                    "probability": "12.954545",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +6",
+                    "probability": "12.954545",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +50",
+                    "probability": "12.954545",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +50",
+                    "probability": "12.954545",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "ATT: +6",
+                    "probability": "8.636364",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "Magic ATT: +6",
+                    "probability": "8.636364",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "STR : +12",
+                    "probability": "0.306122",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "DEX : +12",
+                    "probability": "0.306122",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "INT : +12",
+                    "probability": "0.306122",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "LUK : +12",
+                    "probability": "0.306122",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "Max HP: +100",
+                    "probability": "0.306122",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "Max MP: +100",
+                    "probability": "0.306122",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "ATT: +12",
+                    "probability": "0.204082",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "Magic ATT: +12",
+                    "probability": "0.204082",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "STR : +3%",
+                    "probability": "0.306122",
+                    "displayOrder": 17
+                },
+                {
+                    "optionDescription": "DEX : +3%",
+                    "probability": "0.306122",
+                    "displayOrder": 18
+                },
+                {
+                    "optionDescription": "INT : +3%",
+                    "probability": "0.306122",
+                    "displayOrder": 19
+                },
+                {
+                    "optionDescription": "LUK : +3%",
+                    "probability": "0.306122",
+                    "displayOrder": 20
+                },
+                {
+                    "optionDescription": "ATT: +3%",
+                    "probability": "0.102041",
+                    "displayOrder": 21
+                },
+                {
+                    "optionDescription": "Magic ATT: +3%",
+                    "probability": "0.102041",
+                    "displayOrder": 22
+                },
+                {
+                    "optionDescription": "Critical Rate: +4%",
+                    "probability": "0.102041",
+                    "displayOrder": 23
+                },
+                {
+                    "optionDescription": "Damage: +3%",
+                    "probability": "0.102041",
+                    "displayOrder": 24
+                },
+                {
+                    "optionDescription": "All Stats: +5",
+                    "probability": "0.204082",
+                    "displayOrder": 25
+                },
+                {
+                    "optionDescription": "20% chance to recover 200 HP when attacking.",
+                    "probability": "0.102041",
+                    "displayOrder": 26
+                },
+                {
+                    "optionDescription": "20% chance to recover 110 MP when attacking.",
+                    "probability": "0.102041",
+                    "displayOrder": 27
+                },
+                {
+                    "optionDescription": "20% chance to apply Lv. 5 Poison when attacking.",
+                    "probability": "0.102041",
+                    "displayOrder": 28
+                },
+                {
+                    "optionDescription": "10% chance to apply Lv. 2 Stun on hit.",
+                    "probability": "0.102041",
+                    "displayOrder": 29
+                },
+                {
+                    "optionDescription": "20% chance to apply Lv. 2 Slow when attacking.",
+                    "probability": "0.102041",
+                    "displayOrder": 30
+                },
+                {
+                    "optionDescription": "20% chance to apply Lv. 2 Blind when attacking.",
+                    "probability": "0.102041",
+                    "displayOrder": 31
+                },
+                {
+                    "optionDescription": "10% chance to apply Lv. 2 Freeze when attacking.",
+                    "probability": "0.102041",
+                    "displayOrder": 32
+                },
+                {
+                    "optionDescription": "10% chance to apply Lv. 2 Seal when attacking.",
+                    "probability": "0.102041",
+                    "displayOrder": 33
+                },
+                {
+                    "optionDescription": "DEF Ignored: +15%",
+                    "probability": "0.102041",
+                    "displayOrder": 34
+                }
+            ]
+        }
+    ]
+}
