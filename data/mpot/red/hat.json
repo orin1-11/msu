@@ -53,12 +53,12 @@
                     "displayOrder": 9
                 },
                 {
-                    "optionDescription": "Skill Cooldown: -1 sec (-5% for under 10 sec, minimum cooldown of 5 sec)",
+                    "optionDescription": "\"Skill Cooldown: -1 sec (-5% for under 10 sec, minimum cooldown of 5 sec)\"",
                     "probability": "7.317073",
                     "displayOrder": 10
                 },
                 {
-                    "optionDescription": "Skill Cooldown: -2 sec. (-10% for under 10 sec., minimum cooldown of 5 sec.)",
+                    "optionDescription": "\"Skill Cooldown: -2 sec. (-10% for under 10 sec., minimum cooldown of 5 sec.)\"",
                     "probability": "4.878048",
                     "displayOrder": 11
                 },
@@ -172,12 +172,12 @@
                     "displayOrder": 20
                 },
                 {
-                    "optionDescription": "Skill Cooldown: -1 sec (-5% for under 10 sec, minimum cooldown of 5 sec)",
+                    "optionDescription": "\"Skill Cooldown: -1 sec (-5% for under 10 sec, minimum cooldown of 5 sec)\"",
                     "probability": "0.731707",
                     "displayOrder": 21
                 },
                 {
-                    "optionDescription": "Skill Cooldown: -2 sec. (-10% for under 10 sec., minimum cooldown of 5 sec.)",
+                    "optionDescription": "\"Skill Cooldown: -2 sec. (-10% for under 10 sec., minimum cooldown of 5 sec.)\"",
                     "probability": "0.487805",
                     "displayOrder": 22
                 },
@@ -291,12 +291,12 @@
                     "displayOrder": 20
                 },
                 {
-                    "optionDescription": "Skill Cooldown: -1 sec (-5% for under 10 sec, minimum cooldown of 5 sec)",
+                    "optionDescription": "\"Skill Cooldown: -1 sec (-5% for under 10 sec, minimum cooldown of 5 sec)\"",
                     "probability": "0.073171",
                     "displayOrder": 21
                 },
                 {
-                    "optionDescription": "Skill Cooldown: -2 sec. (-10% for under 10 sec., minimum cooldown of 5 sec.)",
+                    "optionDescription": "\"Skill Cooldown: -2 sec. (-10% for under 10 sec., minimum cooldown of 5 sec.)\"",
                     "probability": "0.048780",
                     "displayOrder": 22
                 },
