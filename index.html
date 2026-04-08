@@ -11,7 +11,7 @@
   .container { max-width: 720px; margin: 0 auto; }
   h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
   .sub { font-size: 13px; color: #666; margin-bottom: 20px; }
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
   .stat { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 12px; text-align: center; }
   .stat-label { font-size: 11px; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
   .stat-val { font-size: 22px; font-weight: 600; color: #1a1a1a; }
@@ -64,7 +64,8 @@
   <h1>Bonus Potential Simulator</h1>
   <p class="sub">Legendary &middot; Secondary Weapon &middot; Lv.100 &middot; Bonus Cube</p>
 
-  <div class="stats" style="grid-template-columns: repeat(3, 1fr);">
+  <!-- Stats -->
+  <div class="stats">
     <div class="stat"><div class="stat-label">Total Rolls</div><div class="stat-val" id="s-total">0</div></div>
     <div class="stat"><div class="stat-label">Wanted Hits</div><div class="stat-val" id="s-hits">0</div></div>
     <div class="stat"><div class="stat-label">Hit Rate</div><div class="stat-val" id="s-rate">—</div></div>
