@@ -153,28 +153,26 @@ async function loadItemData(partsType) {
     currentData = await response.json();
     return currentData;
   } catch (err) {
-    console.error("Load error:", err);
-    alert(`Cannot load ${item.name} data.\nMake sure the folder "data" exists and "secondary.json" is inside it.`);
+    console.error("Load error:", err);   // Keep this one for safety
+    alert(`Cannot load ${item.name} data.\nMake sure the file "${item.file}" exists in the "data" folder.`);
     return null;
   }
 }
 
 function buildWanted() {
   const infos = getProbabilityInfos();
-  if (infos.length === 0) {
-    document.getElementById('wanted-lines').innerHTML = '<div class="empty-note">No data loaded yet.</div>';
-    return;
-  }
-
   const container = document.getElementById('wanted-lines');
   container.innerHTML = '';
 
-  // Support both 2-group and 3-group data from API
+  if (infos.length === 0) {
+    container.innerHTML = '<div class="empty-note">No data loaded yet.</div>';
+    return;
+  }
+
   const lineCount = Math.min(3, infos.length);
 
   for (let i = 0; i < lineCount; i++) {
-    const options = infos[i].probabilityInfo.map(x => x.optionDescription);
-    
+    const options = infos[i].probabilityInfo ? infos[i].probabilityInfo.map(x => x.optionDescription) : [];
     const row = document.createElement('div');
     row.className = 'wanted-row';
     row.innerHTML = `
@@ -188,6 +186,7 @@ function buildWanted() {
 }
 
 function pick(probabilityInfo) {
+  if (!probabilityInfo || probabilityInfo.length === 0) return "No Option";
   const list = probabilityInfo.map(item => ({
     name: item.optionDescription,
     p: parseFloat(item.probability)
@@ -206,13 +205,14 @@ function rollOnce() {
   if (infos.length === 0) return ["No Data", "No Data", "No Data"];
 
   return [
-    pick(infos[0].probabilityInfo),
-    pick((infos[1] || infos[0]).probabilityInfo),
-    pick((infos[2] || infos[1] || infos[0]).probabilityInfo)
+    pick(infos[0]?.probabilityInfo),
+    pick((infos[1] || infos[0])?.probabilityInfo),
+    pick((infos[2] || infos[1] || infos[0])?.probabilityInfo)
   ];
 }
 
 function isPrime(line) {
+  if (!line) return false;
   return line.includes("+12%") || line.includes("+10%") || line.includes("+18%") ||
          line.includes("+9%") || line.includes("per 10 Character Levels: +2");
 }
@@ -251,7 +251,7 @@ function updateStats() {
   document.getElementById('s-total').textContent = totalRolls.toLocaleString();
   document.getElementById('s-hits').textContent = wantedHits.toLocaleString();
   document.getElementById('s-rate').textContent = totalRolls > 0 ? ((wantedHits / totalRolls) * 100).toFixed(2) + '%' : '—';
-  document.getElementById('s-best').textContent = bestRoll ? bestRoll.map(l => l.split(':')[0]).join(' / ') : '—';
+  document.getElementById('s-best').textContent = bestRoll ? bestRoll.map(l => l.split(':')[0] || l).join(' / ') : '—';
 }
 
 function updateHistory() {
