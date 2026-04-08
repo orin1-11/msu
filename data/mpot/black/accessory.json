@@ -1,0 +1,236 @@
+{
+    "cubeType": "CubeType_BLACK",
+    "gradeType": "GradeType_LEGENDARY",
+    "partsType": "PartsType_ACCESSORY_FACE",
+    "equipLevelMin": 100,
+    "equipLevelMax": 100,
+    "probabilityInfos": [
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +12%",
+                    "probability": "12.121212",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +12%",
+                    "probability": "12.121212",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +12%",
+                    "probability": "12.121212",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +12%",
+                    "probability": "12.121212",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +12%",
+                    "probability": "12.121212",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +12%",
+                    "probability": "12.121212",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "All Stats: +9%",
+                    "probability": "9.090909",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "Skill MP Cost: -10%",
+                    "probability": "9.090909",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "Skill MP Cost: -20%",
+                    "probability": "9.090909",
+                    "displayOrder": 9
+                }
+            ]
+        },
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +9%",
+                    "probability": "10.000000",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +9%",
+                    "probability": "10.000000",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +9%",
+                    "probability": "10.000000",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +9%",
+                    "probability": "10.000000",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +9%",
+                    "probability": "12.000000",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +9%",
+                    "probability": "12.000000",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "All Stats: +6%",
+                    "probability": "8.000001",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +30%",
+                    "probability": "8.000001",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "STR : +12%",
+                    "probability": "2.424242",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "DEX : +12%",
+                    "probability": "2.424242",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "INT : +12%",
+                    "probability": "2.424242",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "LUK : +12%",
+                    "probability": "2.424242",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "Max HP: +12%",
+                    "probability": "2.424242",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "Max MP: +12%",
+                    "probability": "2.424242",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "All Stats: +9%",
+                    "probability": "1.818182",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "Skill MP Cost: -10%",
+                    "probability": "1.818182",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "Skill MP Cost: -20%",
+                    "probability": "1.818182",
+                    "displayOrder": 17
+                }
+            ]
+        },
+        {
+            "probabilityInfo": [
+                {
+                    "optionDescription": "STR : +9%",
+                    "probability": "11.875000",
+                    "displayOrder": 1
+                },
+                {
+                    "optionDescription": "DEX : +9%",
+                    "probability": "11.875000",
+                    "displayOrder": 2
+                },
+                {
+                    "optionDescription": "INT : +9%",
+                    "probability": "11.875000",
+                    "displayOrder": 3
+                },
+                {
+                    "optionDescription": "LUK : +9%",
+                    "probability": "11.875000",
+                    "displayOrder": 4
+                },
+                {
+                    "optionDescription": "Max HP: +9%",
+                    "probability": "14.250000",
+                    "displayOrder": 5
+                },
+                {
+                    "optionDescription": "Max MP: +9%",
+                    "probability": "14.250000",
+                    "displayOrder": 6
+                },
+                {
+                    "optionDescription": "All Stats: +6%",
+                    "probability": "9.500000",
+                    "displayOrder": 7
+                },
+                {
+                    "optionDescription": "HP Recovery Items and Skills: +30%",
+                    "probability": "9.500000",
+                    "displayOrder": 8
+                },
+                {
+                    "optionDescription": "STR : +12%",
+                    "probability": "0.606061",
+                    "displayOrder": 9
+                },
+                {
+                    "optionDescription": "DEX : +12%",
+                    "probability": "0.606061",
+                    "displayOrder": 10
+                },
+                {
+                    "optionDescription": "INT : +12%",
+                    "probability": "0.606061",
+                    "displayOrder": 11
+                },
+                {
+                    "optionDescription": "LUK : +12%",
+                    "probability": "0.606061",
+                    "displayOrder": 12
+                },
+                {
+                    "optionDescription": "Max HP: +12%",
+                    "probability": "0.606061",
+                    "displayOrder": 13
+                },
+                {
+                    "optionDescription": "Max MP: +12%",
+                    "probability": "0.606061",
+                    "displayOrder": 14
+                },
+                {
+                    "optionDescription": "All Stats: +9%",
+                    "probability": "0.454545",
+                    "displayOrder": 15
+                },
+                {
+                    "optionDescription": "Skill MP Cost: -10%",
+                    "probability": "0.454545",
+                    "displayOrder": 16
+                },
+                {
+                    "optionDescription": "Skill MP Cost: -20%",
+                    "probability": "0.454545",
+                    "displayOrder": 17
+                }
+            ]
+        }
+    ]
+}
