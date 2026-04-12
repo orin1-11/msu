@@ -24,10 +24,10 @@
   .pot-tab.active-mpot-black { background: #2c2c2c; color: #fff; }
 
   .grade-pill { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; vertical-align: middle; margin-left: 4px; }
-  .gpill-rare      { background: #2e8b57; color: #fff; }
+  .gpill-rare      { background: #3b82f6; color: #fff; }
   .gpill-epic      { background: #7b2d8b; color: #fff; }
-  .gpill-unique    { background: #c9940a; color: #fff; }
-  .gpill-legendary { background: #d4712a; color: #fff; }
+  .gpill-unique    { background: #e08b00; color: #fff; }
+  .gpill-legendary { background: #22c55e; color: #fff; }
 
   .sim-header { margin-bottom: 20px; }
   .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -45,10 +45,10 @@
   .cg-track { display: flex; gap: 6px; align-items: center; flex: 1; }
   .cg-step { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: #ccc; }
   .cg-step.done  { color: #2e8b57; }
-  .cg-step.doing { color: #d4712a; font-weight: 700; }
+  .cg-step.doing { color: #22c55e; font-weight: 700; }
   .cg-step .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
   .cg-arrow { color: #ccc; font-size: 10px; }
-  .cg-arrow.done { color: #2e8b57; }
+  .cg-arrow.done { color: #22c55e; }
   .rank-up-chance { font-size: 11px; color: #888; margin-left: auto; white-space: nowrap; }
   .rank-up-chance b { color: #d4712a; }
 
@@ -74,10 +74,10 @@
     font-family: inherit; background: #fff; color: #999;
   }
   .grade-btn .grade-icon { font-size: 16px; }
-  .grade-btn.active-rare      { background: #e8f4e8; border-color: #2e8b57; color: #1a5c34; }
+  .grade-btn.active-rare      { background: #dbeafe; border-color: #3b82f6; color: #1e40af; }
   .grade-btn.active-epic      { background: #f0e8f8; border-color: #7b2d8b; color: #52007a; }
   .grade-btn.active-unique    { background: #fff8e0; border-color: #c9940a; color: #7a5500; }
-  .grade-btn.active-legendary { background: #fff0e0; border-color: #d4712a; color: #8a3a00; }
+  .grade-btn.active-legendary { background: #dcfce7; border-color: #22c55e; color: #14532d; }
 
   .target-grade-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding-top: 12px; border-top: 1px solid #f0efe8; }
   .target-grade-row label { font-size: 13px; color: #555; min-width: 90px; font-weight: 600; }
@@ -94,7 +94,7 @@
   .rankup-notice { margin-top: 8px; font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 6px; }
   .rankup-to-epic      { background: #f0e8f8; color: #7b2d8b; }
   .rankup-to-unique    { background: #fff8e0; color: #7a5500; }
-  .rankup-to-legendary { background: #fff0e0; color: #8a3a00; }
+  .rankup-to-legendary { background: #dcfce7; color: #14532d; }
 
   .btn-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
   button { padding: 9px 20px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #1a1a1a; font-size: 14px; cursor: pointer; transition: background 0.1s, transform 0.05s; font-family: inherit; }
@@ -239,10 +239,10 @@
     <div style="margin-bottom:0;">
       <div style="font-size:12px;color:#999;margin-bottom:6px;">Start Grade</div>
       <div class="grade-bar">
-        <button class="grade-btn" id="gbtn-rare"      onclick="setStartGrade('rare')">      <span class="grade-icon">🟢</span>Rare</button>
+        <button class="grade-btn" id="gbtn-rare"      onclick="setStartGrade('rare')">      <span class="grade-icon">🔵</span>Rare</button>
         <button class="grade-btn" id="gbtn-epic"      onclick="setStartGrade('epic')">      <span class="grade-icon">🟣</span>Epic</button>
         <button class="grade-btn" id="gbtn-unique"    onclick="setStartGrade('unique')">    <span class="grade-icon">🟡</span>Unique</button>
-        <button class="grade-btn active-legendary" id="gbtn-legendary" onclick="setStartGrade('legendary')"><span class="grade-icon">🟠</span>Legendary</button>
+        <button class="grade-btn active-legendary" id="gbtn-legendary" onclick="setStartGrade('legendary')"><span class="grade-icon">🟢</span>Legendary</button>
       </div>
     </div>
   </div>
@@ -334,7 +334,7 @@
 
 const GRADE_ORDER = ['rare','epic','unique','legendary'];
 const GRADE_LABEL = { rare:'Rare', epic:'Epic', unique:'Unique', legendary:'Legendary' };
-const GRADE_ICON  = { rare:'🟢', epic:'🟣', unique:'🟡', legendary:'🟠' };
+const GRADE_ICON  = { rare:'🔵', epic:'🟣', unique:'🟡', legendary:'🟢' };
 const ITEM_LABELS = {
   weapon:'Weapon', secondary:'Secondary Weapon', emblem:'Emblem',
   hat:'Hat', overall:'Overall', gloves:'Gloves', accessory:'Accessory'
@@ -654,7 +654,7 @@ function updateStats(){
   document.getElementById('s-rate').textContent=totalRolls>0?((wantedHits/totalRolls)*100).toFixed(2)+'%':'—';
 }
 function gpHtml(grade){
-  const c={rare:'#2e8b57',epic:'#7b2d8b',unique:'#c9940a',legendary:'#d4712a'};
+  const c={rare:'#3b82f6',epic:'#7b2d8b',unique:'#c9940a',legendary:'#22c55e'};
   return `<span class="history-grade-pill" style="background:${c[grade]||'#aaa'};color:#fff;">${GRADE_LABEL[grade]||grade}</span>`;
 }
 function updateHistory(){
