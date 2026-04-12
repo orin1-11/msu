@@ -2,221 +2,178 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arcane Symbol Calculator</title>
 <style>
-  /* System font stack, modern and readable */
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f5f4f0; /* soft light background */
-    color: #1a1a1a;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 24px 16px;
-    margin: 0;
-  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; padding: 24px 16px; }
+  .container { max-width: 480px; margin: 0 auto; }
 
-  .calculator-card {
-    background-color: #ffffff; /* white card */
-    color: #1a1a1a;
-    padding: 35px 30px;
-    border-radius: 12px;
-    width: 400px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    border: 1px solid #e5e7eb;
+  /* ── NAV ── */
+  .site-nav { display: flex; gap: 0; margin-bottom: 24px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
+  .nav-tab {
+    flex: 1; padding: 11px 10px; text-align: center; cursor: pointer;
+    font-size: 13px; font-weight: 600; border: none; background: #fff;
+    color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-family: inherit; text-decoration: none;
   }
+  .nav-tab:last-child { border-right: none; }
+  .nav-tab .nav-icon { font-size: 18px; line-height: 1; }
+  .nav-tab .nav-label { font-size: 11px; letter-spacing: 0.03em; }
+  .nav-tab.active { background: #1a1a1a; color: #fff; }
+  .nav-tab:not(.active):hover { background: #f5f4f0; color: #555; }
 
-  h1 {
-    font-family: inherit; /* system font */
-    font-weight: bold;
-    text-align: center;
-    font-size: 1.8em;
-    margin-bottom: 20px;
-    color: #22d3ee; /* Arcane cyan */
-  }
+  /* ── HEADER ── */
+  .sim-header { margin-bottom: 20px; }
+  .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+  .sim-header .sub { font-size: 13px; color: #888; }
 
-  .level-row {
-    display: flex;
-    gap: 10px;
-  }
-  .level-row div {
-    flex: 1;
-  }
-  .level-row label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-  }
+  /* ── CARDS ── */
+  .card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; }
+  .card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
 
-  select {
-    width: 100%;
-    padding: 6px;
-    border-radius: 5px;
-    border: 1px solid #d1d5db;
-    background: #ffffff;
-    color: #1a1a1a;
-  }
-  select:hover {
-    background: #f3f4f6;
-  }
+  /* ── FORM ── */
+  .row { display: flex; gap: 12px; margin-bottom: 14px; }
+  .field { flex: 1; }
+  .field label { font-size: 12px; color: #999; display: block; margin-bottom: 6px; }
+  .wanted-select { width: 100%; font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; cursor: pointer; outline: none; font-family: inherit; }
+  .wanted-select:focus { border-color: #534AB7; }
 
-  label.slider-label {
-    font-weight: bold;
-    margin-top: 20px;
-    display: block;
-  }
+  .slider-row { margin-bottom: 0; }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .slider-header span { font-size: 12px; color: #999; }
+  .slider-header strong { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+  input[type=range] { width: 100%; accent-color: #0F6E56; margin-bottom: 4px; }
+  .slider-hint { font-size: 11px; color: #bbb; }
 
-  input[type=range] {
-    width: 100%;
-    margin-top: 5px;
-    -webkit-appearance: none;
-    height: 6px;
-    background: #e5e7eb;
-    border-radius: 5px;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    height: 18px;
-    width: 18px;
-    border-radius: 50%;
-    background: #22d3ee; /* Arcane cyan */
-    cursor: pointer;
-  }
-
-  .slider-value {
-    text-align: center;
-    font-weight: bold;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    color: #22d3ee; /* Arcane cyan */
-  }
-
-  .result-card {
-    background: #f3f4f6;
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    margin-top: 25px;
-    border: 2px solid #22d3ee; /* Arcane cyan */
-    box-shadow: 0 2px 10px rgba(34,211,238,0.5); /* subtle cyan glow */
-  }
-  .result-card div {
-    margin: 10px 0;
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #1a1a1a;
-  }
+  /* ── METRICS ── */
+  .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .metric { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 14px 16px; }
+  .metric-label { font-size: 10px; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .metric-val { font-size: 24px; font-weight: 600; color: #1a1a1a; }
+  .metric-val.green { color: #0F6E56; }
 </style>
 </head>
 <body>
+<div class="container">
 
-<div class="calculator-card">
-  <h1>Arcane Symbol Calculator</h1>
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a class="nav-tab" href="index.html">
+      <span class="nav-icon">🎲</span>
+      <span class="nav-label">Cube Simulator</span>
+    </a>
+    <a class="nav-tab active" href="symbols.html">
+      <span class="nav-icon">✦</span>
+      <span class="nav-label">Arcane Symbols</span>
+    </a>
+  </nav>
 
-  <!-- Current & Target Level -->
-  <div class="level-row">
-    <div>
-      <label for="currentLevel">Current Level</label>
-      <select id="currentLevel"></select>
+  <!-- HEADER -->
+  <div class="sim-header">
+    <h1>Arcane Symbol Calculator</h1>
+    <p class="sub">MapleStory N · Arcane Force symbols</p>
+  </div>
+
+  <!-- SETUP -->
+  <div class="card">
+    <div class="card-title">Setup</div>
+    <div class="row">
+      <div class="field">
+        <label>Current level</label>
+        <select id="curLv" class="wanted-select"></select>
+      </div>
+      <div class="field">
+        <label>Target level</label>
+        <select id="tgtLv" class="wanted-select"></select>
+      </div>
     </div>
-    <div>
-      <label for="targetLevel">Target Level</label>
-      <select id="targetLevel"></select>
+    <div class="slider-row">
+      <div class="slider-header">
+        <span>Symbols at current level</span>
+        <strong id="symVal">0</strong>
+      </div>
+      <input type="range" id="symSlider" min="0" max="12" value="0" step="1">
+      <div class="slider-hint" id="symHint">need 12 to level up</div>
     </div>
   </div>
 
-  <!-- Current Symbols Slider -->
-  <label class="slider-label" for="currentSymbols">Current Symbols at this Level</label>
-  <div class="slider-value" id="currentSymbolsValue">0</div>
-  <input type="range" id="currentSymbols" min="0" value="0">
-
-  <!-- Result Box -->
-  <div class="result-card">
-    <div>Symbols Needed: <span id="neededSymbols">0</span></div>
-    <div>Neso Needed: <span id="neededNeso">0</span></div>
+  <!-- RESULTS -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Symbols needed</div>
+      <div class="metric-val green" id="mSymbols">0</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Neso needed</div>
+      <div class="metric-val" id="mNeso">0</div>
+    </div>
   </div>
+
 </div>
-
 <script>
-const arcaneCosts = [12,15,20,27,36,47,60,75,92,111,132,155,180,207,236,267,300,335,372];
-const NesoCosts = [
-  227000, 308000, 392000, 479000, 573000, 674000, 784000, 904000,
-  1037000, 1184000, 1345000, 1525000, 1721000, 1936000, 2174000,
-  2417000, 2684000, 2969000, 3273000
-];
+const COSTS = [12,15,20,27,36,47,60,75,92,111,132,155,180,207,236,267,300,335,372];
+const NESO  = [227000,308000,392000,479000,573000,674000,784000,904000,
+               1037000,1184000,1345000,1525000,1721000,1936000,2174000,
+               2417000,2684000,2969000,3273000];
 
-const currentLevelSelect = document.getElementById('currentLevel');
-const targetLevelSelect = document.getElementById('targetLevel');
-const currentSymbolsSlider = document.getElementById('currentSymbols');
-const currentSymbolsValue = document.getElementById('currentSymbolsValue');
-const neededSymbolsSpan = document.getElementById('neededSymbols');
-const neededNesoSpan = document.getElementById('neededNeso');
+const curLvEl  = document.getElementById('curLv');
+const tgtLvEl  = document.getElementById('tgtLv');
+const slider   = document.getElementById('symSlider');
+const symValEl = document.getElementById('symVal');
+const symHint  = document.getElementById('symHint');
 
-// Populate level dropdowns
 for (let i = 1; i <= 20; i++) {
-  currentLevelSelect.innerHTML += `<option value="${i}">${i}</option>`;
-  targetLevelSelect.innerHTML += `<option value="${i}">${i}</option>`;
+  curLvEl.innerHTML += `<option value="${i}">${i}</option>`;
+  tgtLvEl.innerHTML += `<option value="${i}">${i}</option>`;
 }
+tgtLvEl.value = 20;
 
-// Auto-update target level options
-function updateTargetOptions() {
-  const currentLevel = parseInt(currentLevelSelect.value);
-  for (let i = 0; i < targetLevelSelect.options.length; i++) {
-    const opt = targetLevelSelect.options[i];
-    opt.disabled = parseInt(opt.value) <= currentLevel;
-  }
-  if (parseInt(targetLevelSelect.value) <= currentLevel) {
-    targetLevelSelect.value = currentLevel + 1 <= 20 ? currentLevel + 1 : 20;
-  }
-}
+function fmt(n) { return n.toLocaleString(); }
 
-// Calculate needed symbols & Neso
-function calculateNeeded() {
-  const currentLevel = parseInt(currentLevelSelect.value);
-  const targetLevel = parseInt(targetLevelSelect.value);
-  const currentSymbols = parseInt(currentSymbolsSlider.value);
+function calc() {
+  const cur  = parseInt(curLvEl.value);
+  const tgt  = parseInt(tgtLvEl.value);
+  const have = parseInt(slider.value);
 
-  if (targetLevel <= currentLevel) {
-    neededSymbolsSpan.textContent = "0";
-    neededNesoSpan.textContent = "0";
+  const maxAtCur = COSTS[cur - 1];
+  slider.max = maxAtCur - 1;
+  if (parseInt(slider.value) >= maxAtCur) slider.value = 0;
+  symValEl.textContent = slider.value;
+  symHint.textContent  = `need ${maxAtCur} to level up`;
+
+  if (tgt <= cur) {
+    document.getElementById('mSymbols').textContent = '0';
+    document.getElementById('mNeso').textContent    = '0';
     return;
   }
 
-  let totalSymbols = 0;
-  let totalNeso = 0;
-  for (let i = currentLevel - 1; i < targetLevel - 1; i++) {
-    totalSymbols += arcaneCosts[i];
-    totalNeso += NesoCosts[i];
+  let totalSymbols = 0, totalNeso = 0;
+  for (let i = cur - 1; i < tgt - 1; i++) {
+    totalSymbols += COSTS[i];
+    totalNeso    += NESO[i];
   }
 
-  const remainingSymbols = totalSymbols - currentSymbols;
-  neededSymbolsSpan.textContent = remainingSymbols > 0 ? remainingSymbols : 0;
-  neededNesoSpan.textContent = totalNeso.toLocaleString();
+  const remaining = Math.max(0, totalSymbols - have);
+  document.getElementById('mSymbols').textContent = fmt(remaining);
+  document.getElementById('mNeso').textContent    = fmt(totalNeso);
 }
 
-// Event listeners
-currentSymbolsSlider.addEventListener('input', () => {
-  currentSymbolsValue.textContent = currentSymbolsSlider.value;
-  calculateNeeded();
-});
-currentLevelSelect.addEventListener('change', () => {
-  const levelIndex = parseInt(currentLevelSelect.value) - 1;
-  currentSymbolsSlider.max = arcaneCosts[levelIndex];
-  if (parseInt(currentSymbolsSlider.value) > arcaneCosts[levelIndex]) {
-    currentSymbolsSlider.value = arcaneCosts[levelIndex];
-    currentSymbolsValue.textContent = arcaneCosts[levelIndex];
+function syncTarget() {
+  const cur = parseInt(curLvEl.value);
+  for (let i = 0; i < tgtLvEl.options.length; i++) {
+    tgtLvEl.options[i].disabled = parseInt(tgtLvEl.options[i].value) <= cur;
   }
-  updateTargetOptions();
-  calculateNeeded();
-});
-targetLevelSelect.addEventListener('change', calculateNeeded);
+  if (parseInt(tgtLvEl.value) <= cur) tgtLvEl.value = Math.min(cur + 1, 20);
+  slider.value = 0;
+  calc();
+}
 
-// Initial setup
-currentSymbolsSlider.max = arcaneCosts[0];
-updateTargetOptions();
-calculateNeeded();
+curLvEl.addEventListener('change', syncTarget);
+tgtLvEl.addEventListener('change', calc);
+slider.addEventListener('input', calc);
+syncTarget();
 </script>
-
 </body>
 </html>
