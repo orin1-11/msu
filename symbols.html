@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Arcane Symbol Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <style>
   body {
-    font-family: 'Orbitron', sans-serif;
+    font-family: Verdana, Arial, sans-serif; /* system font, no external API */
     background-color: #f9fafb; /* soft light background */
     display: flex;
     justify-content: center;
@@ -70,7 +69,7 @@
     height: 18px;
     width: 18px;
     border-radius: 50%;
-    background: #22d3ee; /* Arcane cyan for thumb */
+    background: #22d3ee; /* Arcane cyan thumb */
     cursor: pointer;
   }
   .slider-value {
@@ -78,7 +77,7 @@
     font-weight: bold;
     margin-top: 5px;
     margin-bottom: 15px;
-    color: #22d3ee; /* Arcane cyan for value */
+    color: #22d3ee; /* Arcane cyan */
   }
   .result-card {
     background: #f3f4f6;
@@ -87,7 +86,7 @@
     text-align: center;
     margin-top: 25px;
     border: 2px solid #22d3ee; /* Arcane cyan border */
-    box-shadow: 0 2px 10px rgba(34,211,238,0.5); /* subtle cyan glow */
+    box-shadow: 0 2px 10px rgba(34,211,238,0.5);
   }
   .result-card div {
     margin: 10px 0;
@@ -127,7 +126,7 @@
 </div>
 
 <script>
-// Arcane Symbol data
+// Arcane Symbol costs
 const arcaneCosts = [12,15,20,27,36,47,60,75,92,111,132,155,180,207,236,267,300,335,372];
 const NesoCosts = [
   227000, 308000, 392000, 479000, 573000, 674000, 784000, 904000,
@@ -142,7 +141,7 @@ const currentSymbolsValue = document.getElementById('currentSymbolsValue');
 const neededSymbolsSpan = document.getElementById('neededSymbols');
 const neededNesoSpan = document.getElementById('neededNeso');
 
-// Populate dropdowns
+// Populate levels
 for (let i = 1; i <= 20; i++) {
   currentLevelSelect.innerHTML += `<option value="${i}">${i}</option>`;
   targetLevelSelect.innerHTML += `<option value="${i}">${i}</option>`;
