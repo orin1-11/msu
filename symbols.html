@@ -103,15 +103,15 @@
   <!-- Result Box -->
   <div class="result-card">
     <div>Symbols Needed: <span id="neededSymbols">0</span></div>
-    <div>Meso Needed: <span id="neededMeso">0</span></div>
+    <div>Neso Needed: <span id="neededNeso">0</span></div>
   </div>
 </div>
 
 <script>
 // Arcane Symbol data
 const arcaneCosts = [12,15,20,27,36,47,60,75,92,111,132,155,180,207,236,267,300,335,372];
-// Example meso costs
-const mesoCosts = [
+// Example Neso costs
+const NesoCosts = [
   227000, 308000, 392000, 479000, 573000, 674000, 784000, 904000,
   1037000, 1184000, 1345000, 1525000, 1721000, 1936000, 2168000,
   2417000, 2684000, 2969000, 3273000
@@ -122,7 +122,7 @@ const targetLevelSelect = document.getElementById('targetLevel');
 const currentSymbolsSlider = document.getElementById('currentSymbols');
 const currentSymbolsValue = document.getElementById('currentSymbolsValue');
 const neededSymbolsSpan = document.getElementById('neededSymbols');
-const neededMesoSpan = document.getElementById('neededMeso');
+const neededNesoSpan = document.getElementById('neededNeso');
 
 // Populate levels
 for (let i = 1; i <= 20; i++) {
@@ -142,7 +142,7 @@ function updateTargetOptions() {
   }
 }
 
-// Calculate symbols & meso needed
+// Calculate symbols & Neso needed
 function calculateNeeded() {
   let currentLevel = parseInt(currentLevelSelect.value);
   let targetLevel = parseInt(targetLevelSelect.value);
@@ -150,20 +150,20 @@ function calculateNeeded() {
 
   if (targetLevel <= currentLevel) {
     neededSymbolsSpan.textContent = "0";
-    neededMesoSpan.textContent = "0";
+    neededNesoSpan.textContent = "0";
     return;
   }
 
   let totalSymbols = 0;
-  let totalMeso = 0;
+  let totalNeso = 0;
   for (let i = currentLevel - 1; i < targetLevel - 1; i++) {
     totalSymbols += arcaneCosts[i];
-    totalMeso += mesoCosts[i];
+    totalNeso += NesoCosts[i];
   }
 
   let remainingSymbols = totalSymbols - currentSymbols;
   neededSymbolsSpan.textContent = remainingSymbols > 0 ? remainingSymbols : 0;
-  neededMesoSpan.textContent = totalMeso.toLocaleString();
+  neededNesoSpan.textContent = totalNeso.toLocaleString();
 }
 
 // Event listeners
