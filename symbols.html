@@ -9,21 +9,6 @@
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; padding: 24px 16px; }
   .container { max-width: 480px; margin: 0 auto; }
 
-  /* ── NAV ── */
-  .site-nav { display: flex; gap: 0; margin-bottom: 24px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
-  .nav-tab {
-    flex: 1; padding: 11px 10px; text-align: center; cursor: pointer;
-    font-size: 13px; font-weight: 600; border: none; background: #fff;
-    color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd;
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-    font-family: inherit; text-decoration: none;
-  }
-  .nav-tab:last-child { border-right: none; }
-  .nav-tab .nav-icon { font-size: 18px; line-height: 1; }
-  .nav-tab .nav-label { font-size: 11px; letter-spacing: 0.03em; }
-  .nav-tab.active { background: #1a1a1a; color: #fff; }
-  .nav-tab:not(.active):hover { background: #f5f4f0; color: #555; }
-
   /* ── HEADER ── */
   .sim-header { margin-bottom: 20px; }
   .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
@@ -53,20 +38,44 @@
   .metric-label { font-size: 10px; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
   .metric-val { font-size: 24px; font-weight: 600; color: #1a1a1a; }
   .metric-val.green { color: #0F6E56; }
+
+  /* ── SITE NAV ── */
+  .site-nav { display: flex; gap: 0; margin-bottom: 24px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
+  .nav-tab {
+    flex: 1; padding: 11px 8px; text-align: center;
+    font-size: 13px; font-weight: 600; border: none; background: #fff;
+    color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-family: inherit; text-decoration: none;
+  }
+  .nav-tab:last-child { border-right: none; }
+  .nav-tab .nav-icon { font-size: 17px; line-height: 1; }
+  .nav-tab .nav-icon-img { width: 20px; height: 20px; object-fit: contain; }
+  .nav-tab .nav-label { font-size: 11px; letter-spacing: 0.03em; }
+  .nav-tab.active { background: #1a1a1a; color: #fff; }
+  .nav-tab:not(.active):hover { background: #f5f4f0; color: #555; }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- NAV -->
+  <!-- SITE NAV -->
   <nav class="site-nav">
-    <a class="nav-tab" href="index.html">
-      <span class="nav-icon">🎲</span>
-      <span class="nav-label">Cube Simulator</span>
+    <a class="nav-tab " href="index.html">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a class="nav-tab " href="cube.html">
+      <img class="nav-icon-img" src="images/RED.webp" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=font-size:17px>🎲</span>')" alt="">
+      <span class="nav-label">Cube Sim</span>
     </a>
     <a class="nav-tab active" href="symbols.html">
       <span class="nav-icon">✦</span>
-      <span class="nav-label">Arcane Symbols</span>
+      <span class="nav-label">Symbols</span>
+    </a>
+    <a class="nav-tab " href="vmatrix.html">
+      <span class="nav-icon">◈</span>
+      <span class="nav-label">V Matrix</span>
     </a>
   </nav>
 
