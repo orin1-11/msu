@@ -3,32 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <title>Arcane Symbol Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <style>
+  /* System font stack, modern and readable */
   body {
-    font-family: 'Orbitron', sans-serif;
-    background-color: #f9fafb; /* soft light background */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f4f0; /* soft light background */
+    color: #1a1a1a;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    padding: 24px 16px;
     margin: 0;
   }
+
   .calculator-card {
     background-color: #ffffff; /* white card */
-    color: #111827; /* dark text */
+    color: #1a1a1a;
     padding: 35px 30px;
     border-radius: 12px;
     width: 400px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     border: 1px solid #e5e7eb;
   }
+
   h1 {
+    font-family: inherit; /* system font */
+    font-weight: bold;
     text-align: center;
     font-size: 1.8em;
     margin-bottom: 20px;
-    color: #22d3ee; /* Arcane cyan for title */
+    color: #22d3ee; /* Arcane cyan */
   }
+
   .level-row {
     display: flex;
     gap: 10px;
@@ -41,22 +48,25 @@
     display: block;
     margin-bottom: 5px;
   }
+
   select {
     width: 100%;
     padding: 6px;
     border-radius: 5px;
     border: 1px solid #d1d5db;
     background: #ffffff;
-    color: #111827;
+    color: #1a1a1a;
   }
   select:hover {
     background: #f3f4f6;
   }
+
   label.slider-label {
     font-weight: bold;
     margin-top: 20px;
     display: block;
   }
+
   input[type=range] {
     width: 100%;
     margin-top: 5px;
@@ -70,30 +80,32 @@
     height: 18px;
     width: 18px;
     border-radius: 50%;
-    background: #22d3ee; /* Arcane cyan for thumb */
+    background: #22d3ee; /* Arcane cyan */
     cursor: pointer;
   }
+
   .slider-value {
     text-align: center;
     font-weight: bold;
     margin-top: 5px;
     margin-bottom: 15px;
-    color: #22d3ee; /* Arcane cyan for value */
+    color: #22d3ee; /* Arcane cyan */
   }
+
   .result-card {
     background: #f3f4f6;
     border-radius: 12px;
     padding: 20px;
     text-align: center;
     margin-top: 25px;
-    border: 2px solid #22d3ee; /* Arcane cyan border */
+    border: 2px solid #22d3ee; /* Arcane cyan */
     box-shadow: 0 2px 10px rgba(34,211,238,0.5); /* subtle cyan glow */
   }
   .result-card div {
     margin: 10px 0;
     font-size: 1.4em;
     font-weight: bold;
-    color: #111827;
+    color: #1a1a1a;
   }
 </style>
 </head>
@@ -127,7 +139,6 @@
 </div>
 
 <script>
-// Arcane Symbol data
 const arcaneCosts = [12,15,20,27,36,47,60,75,92,111,132,155,180,207,236,267,300,335,372];
 const NesoCosts = [
   227000, 308000, 392000, 479000, 573000, 674000, 784000, 904000,
@@ -142,13 +153,13 @@ const currentSymbolsValue = document.getElementById('currentSymbolsValue');
 const neededSymbolsSpan = document.getElementById('neededSymbols');
 const neededNesoSpan = document.getElementById('neededNeso');
 
-// Populate dropdowns
+// Populate level dropdowns
 for (let i = 1; i <= 20; i++) {
   currentLevelSelect.innerHTML += `<option value="${i}">${i}</option>`;
   targetLevelSelect.innerHTML += `<option value="${i}">${i}</option>`;
 }
 
-// Auto adjust target
+// Auto-update target level options
 function updateTargetOptions() {
   const currentLevel = parseInt(currentLevelSelect.value);
   for (let i = 0; i < targetLevelSelect.options.length; i++) {
@@ -160,11 +171,11 @@ function updateTargetOptions() {
   }
 }
 
-// Calculate symbols & Neso needed
+// Calculate needed symbols & Neso
 function calculateNeeded() {
-  let currentLevel = parseInt(currentLevelSelect.value);
-  let targetLevel = parseInt(targetLevelSelect.value);
-  let currentSymbols = parseInt(currentSymbolsSlider.value);
+  const currentLevel = parseInt(currentLevelSelect.value);
+  const targetLevel = parseInt(targetLevelSelect.value);
+  const currentSymbols = parseInt(currentSymbolsSlider.value);
 
   if (targetLevel <= currentLevel) {
     neededSymbolsSpan.textContent = "0";
@@ -179,7 +190,7 @@ function calculateNeeded() {
     totalNeso += NesoCosts[i];
   }
 
-  let remainingSymbols = totalSymbols - currentSymbols;
+  const remainingSymbols = totalSymbols - currentSymbols;
   neededSymbolsSpan.textContent = remainingSymbols > 0 ? remainingSymbols : 0;
   neededNesoSpan.textContent = totalNeso.toLocaleString();
 }
@@ -189,9 +200,8 @@ currentSymbolsSlider.addEventListener('input', () => {
   currentSymbolsValue.textContent = currentSymbolsSlider.value;
   calculateNeeded();
 });
-
 currentLevelSelect.addEventListener('change', () => {
-  let levelIndex = parseInt(currentLevelSelect.value) - 1;
+  const levelIndex = parseInt(currentLevelSelect.value) - 1;
   currentSymbolsSlider.max = arcaneCosts[levelIndex];
   if (parseInt(currentSymbolsSlider.value) > arcaneCosts[levelIndex]) {
     currentSymbolsSlider.value = arcaneCosts[levelIndex];
@@ -200,7 +210,6 @@ currentLevelSelect.addEventListener('change', () => {
   updateTargetOptions();
   calculateNeeded();
 });
-
 targetLevelSelect.addEventListener('change', calculateNeeded);
 
 // Initial setup
