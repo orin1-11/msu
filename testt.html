@@ -433,7 +433,12 @@ function updateTargetGradeOptions() {
 // ── BUILD WANTED ──
 function buildWanted() {
   const info=getGradeData(currentPot,currentItem,currentGrade);
-  const c=document.getElementById('wanted-lines'); c.innerHTML='';
+  const c=document.getElementById('wanted-lines');
+
+  // Save current selections before rebuilding
+  const saved=[0,1,2].map(i=>document.getElementById(`want-${i}`)?.value||'');
+
+  c.innerHTML='';
   if (!info?.length) {
     c.innerHTML=`<div class="error-note">No data for ${GRADE_LABEL[currentGrade]}. Run <b>fetch_data.py</b> to download all grades.</div>`;
     return;
@@ -448,6 +453,11 @@ function buildWanted() {
         ${opts.map(o=>`<option value="${o}">${o}</option>`).join('')}
       </select>`;
     c.appendChild(row);
+    // Restore saved value if it still exists in the new option list
+    if (saved[i]) {
+      const sel=document.getElementById(`want-${i}`);
+      if ([...sel.options].some(o=>o.value===saved[i])) sel.value=saved[i];
+    }
   }
 }
 
@@ -654,6 +664,8 @@ function showAutoSummary(rolled,hits,rankUps){
 }
 function doReset(){
   totalRolls=0;wantedHits=0;rankUpCount=0;history=[];currentGrade=startGrade;
+  // Clear dropdowns first so buildWanted() doesn't restore old selections on reset
+  [0,1,2].forEach(i=>{ const s=document.getElementById(`want-${i}`); if(s) s.value=''; });
   document.getElementById('result-lines').innerHTML='<div class="empty-note">Press Roll to start cubing...</div>';
   document.getElementById('roll-label').textContent='No roll yet';
   document.getElementById('auto-summary').innerHTML='';
