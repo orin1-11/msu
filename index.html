@@ -24,10 +24,10 @@
   .pot-tab.active-mpot-black { background: #2c2c2c; color: #fff; }
 
   .grade-pill { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; vertical-align: middle; margin-left: 4px; }
-  .gpill-rare      { background: #3b82f6; color: #fff; }
+  .gpill-rare      { background: #2e8b57; color: #fff; }
   .gpill-epic      { background: #7b2d8b; color: #fff; }
   .gpill-unique    { background: #c9940a; color: #fff; }
-  .gpill-legendary { background: #22c55e; color: #fff; }
+  .gpill-legendary { background: #d4712a; color: #fff; }
 
   .sim-header { margin-bottom: 20px; }
   .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -44,8 +44,8 @@
   .cg-label { font-size: 12px; color: #888; }
   .cg-track { display: flex; gap: 6px; align-items: center; flex: 1; }
   .cg-step { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: #ccc; }
-  .cg-step.done  { color: #3b82f6; }
-  .cg-step.doing { color: #22c55e; font-weight: 700; }
+  .cg-step.done  { color: #2e8b57; }
+  .cg-step.doing { color: #d4712a; font-weight: 700; }
   .cg-step .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
   .cg-arrow { color: #ccc; font-size: 10px; }
   .cg-arrow.done { color: #2e8b57; }
@@ -154,10 +154,37 @@
   .empty-note   { font-size: 13px; color: #bbb; padding: 4px 0; }
   .loading-note { font-size: 13px; color: #aaa; padding: 4px 0; font-style: italic; }
   .error-note   { font-size: 13px; color: #c0392b; padding: 4px 0; }
+
+  /* ── SITE NAV ── */
+  .site-nav { display: flex; gap: 0; margin-bottom: 16px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
+  .nav-tab {
+    flex: 1; padding: 11px 10px; text-align: center;
+    font-size: 13px; font-weight: 600; border: none; background: #fff;
+    color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-family: inherit; text-decoration: none;
+  }
+  .nav-tab:last-child { border-right: none; }
+  .nav-tab .nav-icon { font-size: 18px; line-height: 1; }
+  .nav-tab .nav-label { font-size: 11px; letter-spacing: 0.03em; }
+  .nav-tab.active { background: #1a1a1a; color: #fff; }
+  .nav-tab:not(.active):hover { background: #f5f4f0; color: #555; }
 </style>
 </head>
 <body>
 <div class="container">
+
+  <!-- SITE NAV -->
+  <nav class="site-nav">
+    <a class="nav-tab active" href="index.html">
+      <span class="nav-icon">🎲</span>
+      <span class="nav-label">Cube Simulator</span>
+    </a>
+    <a class="nav-tab" href="symbols.html">
+      <span class="nav-icon">✦</span>
+      <span class="nav-label">Arcane Symbols</span>
+    </a>
+  </nav>
 
   <!-- TABS -->
   <div class="pot-tabs">
@@ -203,10 +230,10 @@
     <div style="margin-bottom:0;">
       <div style="font-size:12px;color:#999;margin-bottom:6px;">Start Grade</div>
       <div class="grade-bar">
-        <button class="grade-btn" id="gbtn-rare"      onclick="setStartGrade('rare')">      <span class="grade-icon">🔵</span>Rare</button>
+        <button class="grade-btn" id="gbtn-rare"      onclick="setStartGrade('rare')">      <span class="grade-icon">🟢</span>Rare</button>
         <button class="grade-btn" id="gbtn-epic"      onclick="setStartGrade('epic')">      <span class="grade-icon">🟣</span>Epic</button>
         <button class="grade-btn" id="gbtn-unique"    onclick="setStartGrade('unique')">    <span class="grade-icon">🟡</span>Unique</button>
-        <button class="grade-btn active-legendary" id="gbtn-legendary" onclick="setStartGrade('legendary')"><span class="grade-icon">🟢</span>Legendary</button>
+        <button class="grade-btn active-legendary" id="gbtn-legendary" onclick="setStartGrade('legendary')"><span class="grade-icon">🟠</span>Legendary</button>
       </div>
     </div>
   </div>
@@ -298,7 +325,7 @@
 
 const GRADE_ORDER = ['rare','epic','unique','legendary'];
 const GRADE_LABEL = { rare:'Rare', epic:'Epic', unique:'Unique', legendary:'Legendary' };
-const GRADE_ICON  = { rare:'🔵', epic:'🟣', unique:'🟡', legendary:'🟢' };
+const GRADE_ICON  = { rare:'🟢', epic:'🟣', unique:'🟡', legendary:'🟠' };
 const ITEM_LABELS = {
   weapon:'Weapon', secondary:'Secondary Weapon', emblem:'Emblem',
   hat:'Hat', overall:'Overall', gloves:'Gloves', accessory:'Accessory'
@@ -311,7 +338,7 @@ const RANKUP_CHANCE = {
 };
 
 // ── STATE ──
-let currentPot   = 'mpot-red';
+let currentPot   = 'bpot';
 let currentItem  = 'weapon';
 let startGrade   = 'legendary';
 let currentGrade = 'legendary';
@@ -618,7 +645,7 @@ function updateStats(){
   document.getElementById('s-rate').textContent=totalRolls>0?((wantedHits/totalRolls)*100).toFixed(2)+'%':'—';
 }
 function gpHtml(grade){
-  const c={rare:'#3b82f6',epic:'#a855f7',unique:'#facc15',legendary:'#22c55e'};
+  const c={rare:'#2e8b57',epic:'#7b2d8b',unique:'#c9940a',legendary:'#d4712a'};
   return `<span class="history-grade-pill" style="background:${c[grade]||'#aaa'};color:#fff;">${GRADE_LABEL[grade]||grade}</span>`;
 }
 function updateHistory(){
