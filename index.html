@@ -24,10 +24,10 @@
   .pot-tab.active-mpot-black { background: #2c2c2c; color: #fff; }
 
   .grade-pill { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; vertical-align: middle; margin-left: 4px; }
-  .gpill-rare      { background: #2e8b57; color: #fff; }
+  .gpill-rare      { background: #3b82f6; color: #fff; }
   .gpill-epic      { background: #7b2d8b; color: #fff; }
   .gpill-unique    { background: #c9940a; color: #fff; }
-  .gpill-legendary { background: #d4712a; color: #fff; }
+  .gpill-legendary { background: #22c55e; color: #fff; }
 
   .sim-header { margin-bottom: 20px; }
   .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -44,8 +44,8 @@
   .cg-label { font-size: 12px; color: #888; }
   .cg-track { display: flex; gap: 6px; align-items: center; flex: 1; }
   .cg-step { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: #ccc; }
-  .cg-step.done  { color: #2e8b57; }
-  .cg-step.doing { color: #d4712a; font-weight: 700; }
+  .cg-step.done  { color: #3b82f6; }
+  .cg-step.doing { color: #22c55e; font-weight: 700; }
   .cg-step .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
   .cg-arrow { color: #ccc; font-size: 10px; }
   .cg-arrow.done { color: #2e8b57; }
@@ -618,7 +618,7 @@ function updateStats(){
   document.getElementById('s-rate').textContent=totalRolls>0?((wantedHits/totalRolls)*100).toFixed(2)+'%':'—';
 }
 function gpHtml(grade){
-  const c={rare:'#2e8b57',epic:'#7b2d8b',unique:'#c9940a',legendary:'#d4712a'};
+  const c={rare:'#3b82f6',epic:'#a855f7',unique:'#facc15',legendary:'#22c55e'};
   return `<span class="history-grade-pill" style="background:${c[grade]||'#aaa'};color:#fff;">${GRADE_LABEL[grade]||grade}</span>`;
 }
 function updateHistory(){
