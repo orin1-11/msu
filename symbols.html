@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>Arcane Symbol Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <style>
   body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-family: 'Orbitron', sans-serif;
     background-color: #f9fafb; /* soft light background */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
- }
+  }
   .calculator-card {
     background-color: #ffffff; /* white card */
     color: #111827; /* dark text */
@@ -23,12 +24,10 @@
     border: 1px solid #e5e7eb;
   }
   h1 {
-    font-family: inherit; /* uses same system font as body */
-    font-weight: bold; /* keeps it prominent */
     text-align: center;
     font-size: 1.8em;
     margin-bottom: 20px;
-    color: #22d3ee; /* Arcane cyan */
+    color: #22d3ee; /* Arcane cyan for title */
   }
   .level-row {
     display: flex;
@@ -71,7 +70,7 @@
     height: 18px;
     width: 18px;
     border-radius: 50%;
-    background: #22d3ee; /* Arcane cyan thumb */
+    background: #22d3ee; /* Arcane cyan for thumb */
     cursor: pointer;
   }
   .slider-value {
@@ -79,7 +78,7 @@
     font-weight: bold;
     margin-top: 5px;
     margin-bottom: 15px;
-    color: #22d3ee; /* Arcane cyan */
+    color: #22d3ee; /* Arcane cyan for value */
   }
   .result-card {
     background: #f3f4f6;
@@ -88,7 +87,7 @@
     text-align: center;
     margin-top: 25px;
     border: 2px solid #22d3ee; /* Arcane cyan border */
-    box-shadow: 0 2px 10px rgba(34,211,238,0.5);
+    box-shadow: 0 2px 10px rgba(34,211,238,0.5); /* subtle cyan glow */
   }
   .result-card div {
     margin: 10px 0;
@@ -128,7 +127,7 @@
 </div>
 
 <script>
-// Arcane Symbol costs
+// Arcane Symbol data
 const arcaneCosts = [12,15,20,27,36,47,60,75,92,111,132,155,180,207,236,267,300,335,372];
 const NesoCosts = [
   227000, 308000, 392000, 479000, 573000, 674000, 784000, 904000,
@@ -143,7 +142,7 @@ const currentSymbolsValue = document.getElementById('currentSymbolsValue');
 const neededSymbolsSpan = document.getElementById('neededSymbols');
 const neededNesoSpan = document.getElementById('neededNeso');
 
-// Populate levels
+// Populate dropdowns
 for (let i = 1; i <= 20; i++) {
   currentLevelSelect.innerHTML += `<option value="${i}">${i}</option>`;
   targetLevelSelect.innerHTML += `<option value="${i}">${i}</option>`;
