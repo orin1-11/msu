@@ -3,97 +3,249 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MapleStory Bonus Cube Simulator</title>
+<title>MapleStory Cube Simulator</title>
 <style>
-  /* === Your original CSS (unchanged) === */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; padding: 24px 16px; }
-  .container { max-width: 720px; margin: 0 auto; }
-  h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
-  .sub { font-size: 13px; color: #666; margin-bottom: 20px; }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .container { max-width: 760px; margin: 0 auto; }
+
+  .pot-tabs { display: flex; gap: 0; margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
+  .pot-tab {
+    flex: 1; padding: 13px 10px; text-align: center; cursor: pointer;
+    font-size: 14px; font-weight: 600; border: none; background: #fff;
+    color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd;
+    display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: inherit;
+  }
+  .pot-tab:last-child { border-right: none; }
+  .pot-tab .tab-icon { font-size: 20px; line-height: 1; width: 24px; height: 24px; object-fit: contain; }
+  .pot-tab .tab-label { font-size: 11px; letter-spacing: 0.03em; }
+  .pot-tab.active-bpot       { background: #1a1a1a; color: #fff; }
+  .pot-tab.active-mpot-red   { background: #c0392b; color: #fff; }
+  .pot-tab.active-mpot-black { background: #2c2c2c; color: #fff; }
+
+  .grade-pill { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; vertical-align: middle; margin-left: 4px; }
+  .gpill-rare      { background: #2e8b57; color: #fff; }
+  .gpill-epic      { background: #7b2d8b; color: #fff; }
+  .gpill-unique    { background: #c9940a; color: #fff; }
+  .gpill-legendary { background: #d4712a; color: #fff; }
+
+  .sim-header { margin-bottom: 20px; }
+  .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .sim-header .sub { font-size: 13px; color: #888; }
+  .cube-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px; }
+  .badge-bpot  { background: #1a1a1a; color: #fff; }
+  .badge-red   { background: #c0392b; color: #fff; }
+  .badge-black { background: #2c2c2c; color: #fff; }
+
+  .current-grade-bar {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 10px 16px;
+  }
+  .cg-label { font-size: 12px; color: #888; }
+  .cg-track { display: flex; gap: 6px; align-items: center; flex: 1; }
+  .cg-step { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: #ccc; }
+  .cg-step.done  { color: #2e8b57; }
+  .cg-step.doing { color: #d4712a; font-weight: 700; }
+  .cg-step .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .cg-arrow { color: #ccc; font-size: 10px; }
+  .cg-arrow.done { color: #2e8b57; }
+  .rank-up-chance { font-size: 11px; color: #888; margin-left: auto; white-space: nowrap; }
+  .rank-up-chance b { color: #d4712a; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
   .stat { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 12px; text-align: center; }
-  .stat-label { font-size: 11px; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
-  .stat-val { font-size: 22px; font-weight: 600; color: #1a1a1a; }
-  .stat-val.small { font-size: 13px; padding-top: 4px; line-height: 1.4; }
+  .stat-label { font-size: 10px; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .stat-val { font-size: 20px; font-weight: 600; color: #1a1a1a; }
+  .stat-val.highlight { color: #d4712a; }
+
   .card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; }
   .card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+
   .wanted-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
   .wanted-label { font-size: 12px; color: #999; min-width: 44px; }
-  .wanted-select { flex: 1; font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; cursor: pointer; outline: none; }
+  .wanted-select { flex: 1; font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; cursor: pointer; outline: none; font-family: inherit; }
   .wanted-select:focus { border-color: #534AB7; }
-  .line-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+
+  .grade-bar { display: flex; gap: 6px; }
+  .grade-btn {
+    flex: 1; padding: 9px 6px; border-radius: 10px; border: 2px solid #e0ddd5;
+    font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-family: inherit; background: #fff; color: #999;
+  }
+  .grade-btn .grade-icon { font-size: 16px; }
+  .grade-btn.active-rare      { background: #e8f4e8; border-color: #2e8b57; color: #1a5c34; }
+  .grade-btn.active-epic      { background: #f0e8f8; border-color: #7b2d8b; color: #52007a; }
+  .grade-btn.active-unique    { background: #fff8e0; border-color: #c9940a; color: #7a5500; }
+  .grade-btn.active-legendary { background: #fff0e0; border-color: #d4712a; color: #8a3a00; }
+
+  .target-grade-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding-top: 12px; border-top: 1px solid #f0efe8; }
+  .target-grade-row label { font-size: 13px; color: #555; min-width: 90px; font-weight: 600; }
+  .target-grade-row select { font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; cursor: pointer; outline: none; font-family: inherit; flex: 1; }
+
+  .line-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f5f4f0; }
+  .line-row:last-of-type { border-bottom: none; }
   .line-num { font-size: 12px; color: #bbb; min-width: 16px; }
   .line-name { flex: 1; font-size: 14px; color: #1a1a1a; }
   .badge { font-size: 11px; padding: 2px 9px; border-radius: 6px; font-weight: 500; }
-  .badge-prime { background: #EEEDFE; color: #3C3489; }
+  .badge-prime  { background: #EEEDFE; color: #3C3489; }
   .badge-normal { background: #f0efe8; color: #888; }
-  .hit-notice { margin-top: 8px; font-size: 12px; color: #534AB7; font-weight: 600; }
+  .hit-notice    { margin-top: 8px; font-size: 12px; color: #534AB7; font-weight: 600; }
+  .rankup-notice { margin-top: 8px; font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 6px; }
+  .rankup-to-epic      { background: #f0e8f8; color: #7b2d8b; }
+  .rankup-to-unique    { background: #fff8e0; color: #7a5500; }
+  .rankup-to-legendary { background: #fff0e0; color: #8a3a00; }
+
   .btn-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
   button { padding: 9px 20px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #1a1a1a; font-size: 14px; cursor: pointer; transition: background 0.1s, transform 0.05s; font-family: inherit; }
   button:hover { background: #f0efe8; }
   button:active { transform: scale(0.97); }
-  .btn-roll { border-color: #534AB7; color: #534AB7; font-weight: 600; background: #EEEDFE; }
-  .btn-roll:hover { background: #e0ddf8; }
+  .btn-roll { font-weight: 600; }
+  .btn-roll-bpot  { border-color: #534AB7; color: #534AB7; background: #EEEDFE; }
+  .btn-roll-bpot:hover  { background: #e0ddf8; }
+  .btn-roll-red   { border-color: #c0392b; color: #c0392b; background: #fdf0ef; }
+  .btn-roll-red:hover   { background: #faddda; }
+  .btn-roll-black { border-color: #2c2c2c; color: #2c2c2c; background: #f0f0f0; }
+  .btn-roll-black:hover { background: #e4e4e4; }
   .btn-auto { border-color: #0F6E56; color: #0F6E56; font-weight: 600; background: #E1F5EE; }
   .btn-auto:hover { background: #c5eddf; }
   .btn-auto:disabled { opacity: 0.4; cursor: not-allowed; }
   .btn-reset { color: #999; }
+
   .auto-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
   .auto-row label { font-size: 13px; color: #666; }
-  .auto-input { width: 90px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px; background: #fafafa; color: #1a1a1a; outline: none; font-family: inherit; }
+  .auto-input { width: 100px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px; background: #fafafa; color: #1a1a1a; outline: none; font-family: inherit; }
   .auto-input:focus { border-color: #534AB7; }
   .auto-progress { font-size: 12px; color: #888; }
-  .history-list { max-height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
-  .history-item { background: #fafafa; border-radius: 8px; padding: 6px 10px; font-size: 12px; color: #555; display: flex; gap: 8px; align-items: center; border: 1px solid transparent; }
-  .history-item.is-hit { background: #EEEDFE; border-color: #c8c4f0; }
-  .history-num { color: #bbb; min-width: 28px; font-size: 11px; }
-  .history-lines { flex: 1; line-height: 1.5; }
-  .history-hit-badge { font-size: 10px; background: #534AB7; color: #fff; padding: 1px 7px; border-radius: 5px; font-weight: 600; }
-  .summary-box { background: #E1F5EE; border: 1px solid #9FE1CB; border-radius: 10px; padding: 12px 16px; margin-bottom: 12px; }
-  .summary-box .sum-title { font-size: 12px; font-weight: 600; color: #085041; margin-bottom: 6px; }
-  .summary-box .sum-body { font-size: 13px; color: #0F6E56; line-height: 1.6; }
-  .empty-note { font-size: 13px; color: #bbb; padding: 4px 0; }
+
+  .rankup-toggle { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top:0; left:0; right:0; bottom:0; background:#ccc; border-radius:22px; transition:.3s; }
+  .slider:before { position:absolute; content:""; height:16px; width:16px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.3s; }
+  input:checked + .slider { background: #d4712a; }
+  input:checked + .slider:before { transform: translateX(18px); }
+  .toggle-label { font-size: 13px; color: #555; }
+
+  .history-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+  .history-item { background: #fafafa; border-radius: 8px; padding: 6px 10px; font-size: 12px; color: #555; display: flex; gap: 8px; align-items: center; border: 1px solid transparent; flex-wrap: wrap; }
+  .history-item.is-hit    { background: #EEEDFE; border-color: #c8c4f0; }
+  .history-item.is-rankup { background: #fff0e0; border-color: #f0c080; }
+  .history-num  { color: #bbb; min-width: 28px; font-size: 11px; }
+  .history-lines { flex: 1; line-height: 1.5; min-width: 0; }
+  .history-hit-badge    { font-size: 10px; background: #534AB7; color: #fff; padding: 1px 7px; border-radius: 5px; font-weight: 600; flex-shrink: 0; }
+  .history-rankup-badge { font-size: 10px; background: #d4712a; color: #fff; padding: 1px 7px; border-radius: 5px; font-weight: 600; flex-shrink: 0; }
+  .history-grade-pill { font-size: 10px; padding: 1px 6px; border-radius: 5px; font-weight: 700; flex-shrink: 0; }
   .history-list::-webkit-scrollbar { width: 4px; }
-  .history-list::-webkit-scrollbar-track { background: transparent; }
   .history-list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+  .summary-box { border-radius: 10px; padding: 12px 16px; margin-bottom: 4px; }
+  .summary-green   { background: #E1F5EE; border: 1px solid #9FE1CB; }
+  .summary-red-err { background: #FAECE7; border: 1px solid #F5C4B3; }
+  .summary-box .sum-title { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  .summary-green   .sum-title { color: #085041; }
+  .summary-red-err .sum-title { color: #712B13; }
+  .summary-box .sum-body { font-size: 13px; line-height: 1.6; }
+  .summary-green   .sum-body { color: #0F6E56; }
+  .summary-red-err .sum-body { color: #993C1D; }
+  .hit-list-row { font-size: 12px; color: #0F6E56; padding: 3px 0; border-bottom: 1px solid #9FE1CB44; }
+  .hit-list-num { color: #bbb; min-width: 32px; display: inline-block; }
+
+  .empty-note   { font-size: 13px; color: #bbb; padding: 4px 0; }
+  .loading-note { font-size: 13px; color: #aaa; padding: 4px 0; font-style: italic; }
+  .error-note   { font-size: 13px; color: #c0392b; padding: 4px 0; }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>Bonus Potential Simulator</h1>
-  <p class="sub">Legendary &middot; Secondary Weapon &middot; Lv.100 &middot; Bonus Cube</p>
 
-  <!-- Stats -->
-  <div class="stats">
-    <div class="stat"><div class="stat-label">Total Rolls</div><div class="stat-val" id="s-total">0</div></div>
-    <div class="stat"><div class="stat-label">Wanted Hits</div><div class="stat-val" id="s-hits">0</div></div>
-    <div class="stat"><div class="stat-label">Hit Rate</div><div class="stat-val" id="s-rate">—</div></div>
-  </div>  
+  <!-- TABS -->
+  <div class="pot-tabs">
+    <button class="pot-tab" id="tab-mpot-red" onclick="switchPot('mpot-red')">
+      <img class="tab-icon" src="images/RED.webp" onerror="this.outerHTML='<span class=tab-icon>🟥</span>'" alt="">
+      <span class="tab-label">Red Cube</span>
+    </button>
+    <button class="pot-tab" id="tab-mpot-black" onclick="switchPot('mpot-black')">
+      <img class="tab-icon" src="images/BLACK.webp" onerror="this.outerHTML='<span class=tab-icon>⬛</span>'" alt="">
+      <span class="tab-label">Black Cube</span>
+    </button>
+    <button class="pot-tab" id="tab-bpot" onclick="switchPot('bpot')">
+      <img class="tab-icon" src="images/ADDITIONAL.webp" onerror="this.outerHTML='<span class=tab-icon>💠</span>'" alt="">
+      <span class="tab-label">Bonus Cube</span>
+    </button>
+  </div>
 
+  <!-- HEADER -->
+  <div class="sim-header">
+    <h1>
+      Cube Simulator
+      <span class="cube-badge badge-bpot" id="cube-badge">BONUS</span>
+      <span class="grade-pill gpill-legendary" id="header-grade-pill">Legendary</span>
+    </h1>
+    <p class="sub" id="sim-sub">Weapon · Legendary · Lv.120</p>
+  </div>
+
+  <!-- SETUP -->
   <div class="card">
-    <div class="card-title">Item Type</div>
+    <div class="card-title">Setup</div>
     <div class="wanted-row">
       <span class="wanted-label">Item</span>
       <select id="item-type" class="wanted-select" onchange="onItemChange()">
-        <option value="PartsType_WEAPON">Weapon</option>        
-        <option value="PartsType_WEAPON_SECONDARY">Secondary Weapon</option>
-        <option value="PartsType_EMBLEM">Emblem</option>
-        <option value="PartsType_HAT">Hat</option>
-        <option value="PartsType_OVERALL">Overall</option>
-        <option value="PartsType_GLOVES">Gloves</option>
-        <option value="PartsType_ACCESSORY_FACE">Accessory</option>
+        <option value="weapon">Weapon</option>
+        <option value="secondary">Secondary Weapon</option>
+        <option value="emblem">Emblem</option>
+        <option value="hat">Hat</option>
+        <option value="overall">Overall</option>
+        <option value="gloves">Gloves</option>
+        <option value="accessory">Accessory</option>
       </select>
+    </div>
+    <div style="margin-bottom:0;">
+      <div style="font-size:12px;color:#999;margin-bottom:6px;">Start Grade</div>
+      <div class="grade-bar">
+        <button class="grade-btn" id="gbtn-rare"      onclick="setStartGrade('rare')">      <span class="grade-icon">🟢</span>Rare</button>
+        <button class="grade-btn" id="gbtn-epic"      onclick="setStartGrade('epic')">      <span class="grade-icon">🟣</span>Epic</button>
+        <button class="grade-btn" id="gbtn-unique"    onclick="setStartGrade('unique')">    <span class="grade-icon">🟡</span>Unique</button>
+        <button class="grade-btn active-legendary" id="gbtn-legendary" onclick="setStartGrade('legendary')"><span class="grade-icon">🟠</span>Legendary</button>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">Wanted Lines</div>
-    <div id="wanted-lines"></div>
+  <!-- CURRENT GRADE TRACK -->
+  <div class="current-grade-bar">
+    <span class="cg-label">Grade:</span>
+    <div class="cg-track" id="grade-track"></div>
+    <span class="rank-up-chance" id="rankup-chance-label"></span>
   </div>
 
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Total Rolls</div><div class="stat-val" id="s-total">0</div></div>
+    <div class="stat"><div class="stat-label">Rank Ups</div><div class="stat-val highlight" id="s-rankups">0</div></div>
+    <div class="stat"><div class="stat-label">Wanted Hits</div><div class="stat-val" id="s-hits">0</div></div>
+    <div class="stat"><div class="stat-label">Hit Rate</div><div class="stat-val" id="s-rate">—</div></div>
+  </div>
+
+  <!-- WANTED LINES -->
   <div class="card">
-    <div class="card-title">Auto Roll Until Wanted</div>
+    <div class="card-title">Wanted Lines <span style="font-weight:400;color:#aaa;font-size:10px;text-transform:none;">(options shown for current grade)</span></div>
+    <div id="wanted-lines"><div class="loading-note">Loading...</div></div>
+    <div class="target-grade-row">
+      <label>Auto-roll stops at:</label>
+      <select id="target-grade"><option value="legendary" selected>Legendary only</option></select>
+    </div>
+  </div>
+
+  <!-- AUTO ROLL -->
+  <div class="card">
+    <div class="card-title">Auto Roll</div>
+    <div class="rankup-toggle">
+      <label class="toggle-switch">
+        <input type="checkbox" id="rankup-enabled" checked>
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">Enable rank-up (rolls can promote grade)</span>
+    </div>
     <div class="auto-row">
       <label>Max rolls:</label>
       <input class="auto-input" type="number" id="auto-max" value="1000" min="1" max="100000">
@@ -105,303 +257,417 @@
     <div id="auto-summary" style="margin-top:12px;"></div>
   </div>
 
+  <!-- CURRENT RESULT -->
   <div class="card">
-    <div class="card-title">Current Roll &nbsp;<span id="roll-label" style="font-size:11px; color:#bbb; font-weight:400;">No roll yet</span></div>
+    <div class="card-title">Current Roll &nbsp;<span id="roll-label" style="font-size:11px;color:#bbb;font-weight:400;">No roll yet</span></div>
     <div id="result-lines"><div class="empty-note">Press Roll to start cubing...</div></div>
   </div>
 
+  <!-- ROLL BUTTONS -->
   <div class="btn-row">
-    <button class="btn-roll" onclick="doRoll()">Roll Cube</button>
+    <button class="btn-roll btn-roll-bpot" id="btn-roll" onclick="doRoll()">Roll Bonus Cube</button>
     <button class="btn-reset" onclick="doReset()">Reset All</button>
   </div>
 
+  <!-- HISTORY -->
   <div class="card">
     <div class="card-title">Roll History</div>
     <div class="history-list" id="history-list">
       <div class="empty-note">No rolls yet.</div>
     </div>
   </div>
+
 </div>
-
 <script>
-// ====================== STATE ======================
-let totalRolls = 0;
-let wantedHits = 0;
-let history = [];
-let bestRoll = null;
+// =============================================
+// JSON FILE FORMAT (new multi-grade format):
+//
+// data/bpot/weapon.json:
+// {
+//   "rare":      [ ...probabilityInfos array... ],
+//   "epic":      [ ...probabilityInfos array... ],
+//   "unique":    [ ...probabilityInfos array... ],
+//   "legendary": [ ...probabilityInfos array... ]
+// }
+//
+// BACKWARD COMPATIBLE: if your existing files are a plain array [],
+// they will be treated as legendary-only automatically.
+//
+// To generate all files for all grades, run fetch_data.py once.
+// =============================================
 
-const itemDatabase = {
-  "PartsType_WEAPON":           { name: "Main Weapon",      file: "data/bpot/weapon.json" },
-  "PartsType_WEAPON_SECONDARY": { name: "Secondary Weapon", file: "data/bpot/secondary.json" },
-  "PartsType_EMBLEM":           { name: "Emblem",           file: "data/bpot/emblem.json" },
-  "PartsType_HAT":              { name: "Hat",              file: "data/bpot/hat.json" },
-  "PartsType_OVERALL":          { name: "Overall",          file: "data/bpot/overall.json" },
-  "PartsType_GLOVES":           { name: "Gloves",           file: "data/bpot/gloves.json" },
-  "PartsType_ACCESSORY_FACE":   { name: "Accessory",        file: "data/bpot/accessory.json" },
+const GRADE_ORDER = ['rare','epic','unique','legendary'];
+const GRADE_LABEL = { rare:'Rare', epic:'Epic', unique:'Unique', legendary:'Legendary' };
+const GRADE_ICON  = { rare:'🟢', epic:'🟣', unique:'🟡', legendary:'🟠' };
+const ITEM_LABELS = {
+  weapon:'Weapon', secondary:'Secondary Weapon', emblem:'Emblem',
+  hat:'Hat', overall:'Overall', gloves:'Gloves', accessory:'Accessory'
 };
 
-  
-let currentPartsType = "PartsType_WEAPON";
-let currentData = null;
+const RANKUP_CHANCE = {
+  'bpot':       { rare:4.7619, epic:1.9608, unique:0.4975, legendary:0 },
+  'mpot-red':   { rare:2.0,    epic:1.0,    unique:0.2,    legendary:0 },
+  'mpot-black': { rare:2.0,    epic:1.0,    unique:0.2,    legendary:0 },
+};
 
-// ====================== CORE FUNCTIONS ======================
-function getProbabilityInfos() {
-  return currentData ? currentData.probabilityInfos || [] : [];
+// ── STATE ──
+let currentPot   = 'bpot';
+let currentItem  = 'weapon';
+let startGrade   = 'legendary';
+let currentGrade = 'legendary';
+let fileCache    = {};  // key `pot|item` -> { rare:[...], epic:[...], unique:[...], legendary:[...] }
+let totalRolls=0, wantedHits=0, rankUpCount=0, history=[];
+
+// ── DATA PATHS (local JSON) ──
+function dataPath(pot, item) {
+  if (pot === 'bpot')        return `data/bpot/${item}.json`;
+  if (pot === 'mpot-red')    return `data/mpot/red/${item}.json`;
+  if (pot === 'mpot-black')  return `data/mpot/black/${item}.json`;
 }
 
-async function loadItemData(partsType) {
-  const item = itemDatabase[partsType];
-  if (!item || !item.file) {
-    alert("No data file configured for this item.");
-    return null;
-  }
-
+async function loadFile(pot, item) {
+  const key = `${pot}|${item}`;
+  if (fileCache[key]) return fileCache[key];
   try {
-    const response = await fetch(item.file);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    currentData = await response.json();
-    return currentData;
-  } catch (err) {
-    console.error("Load error:", err);
-    alert(`Cannot load ${item.name} data.\nMake sure the file "${item.file}" exists in the "data" folder.`);
+    const r = await fetch(dataPath(pot, item));
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const json = await r.json();
+    // Backward compat: old files are plain arrays (legendary only)
+    if (Array.isArray(json)) {
+      fileCache[key] = { rare:[], epic:[], unique:[], legendary: json };
+    } else {
+      fileCache[key] = { rare:[], epic:[], unique:[], legendary:[], ...json };
+    }
+    return fileCache[key];
+  } catch(e) {
+    console.error('Load failed:', dataPath(pot, item), e);
     return null;
   }
 }
 
-function buildWanted() {
-  const infos = getProbabilityInfos();
-  const container = document.getElementById('wanted-lines');
-  container.innerHTML = '';
+function getGradeData(pot, item, grade) {
+  return fileCache[`${pot}|${item}`]?.[grade] || null;
+}
 
-  if (infos.length === 0) {
-    container.innerHTML = '<div class="empty-note">No data loaded yet.</div>';
+// ── SWITCHING ──
+function switchPot(pot) { currentPot=pot; currentGrade=startGrade; refreshAll(); }
+function onItemChange() { currentItem=document.getElementById('item-type').value; currentGrade=startGrade; refreshAll(); }
+function setStartGrade(g) { startGrade=g; currentGrade=g; updateTargetGradeOptions(); refreshAll(); }
+
+// ── REFRESH ──
+async function refreshAll() {
+  applyTheme(); updateGradeButtons(); updateGradeTrack();
+  document.getElementById('wanted-lines').innerHTML = '<div class="loading-note">Loading...</div>';
+  const ok = await loadFile(currentPot, currentItem);
+  if (!ok) {
+    document.getElementById('wanted-lines').innerHTML =
+      '<div class="error-note">Failed to load data. Run <b>fetch_data.py</b> first, then serve with: <code>python -m http.server 8080</code></div>';
     return;
   }
+  buildWanted(); doReset();
+}
 
-  const lineCount = Math.min(3, infos.length);
+// ── THEME ──
+function applyTheme() {
+  ['bpot','mpot-red','mpot-black'].forEach(p => {
+    document.getElementById(`tab-${p}`).className = `pot-tab${currentPot===p ? ` active-${p}` : ''}`;
+  });
+  const badge=document.getElementById('cube-badge'), btn=document.getElementById('btn-roll');
+  const cfg = {
+    'bpot':       ['BONUS','badge-bpot','btn-roll btn-roll-bpot','Roll Bonus Cube'],
+    'mpot-red':   ['RED','badge-red','btn-roll btn-roll-red','Roll Red Cube'],
+    'mpot-black': ['BLACK','badge-black','btn-roll btn-roll-black','Roll Black Cube'],
+  }[currentPot];
+  badge.textContent=cfg[0]; badge.className=`cube-badge ${cfg[1]}`;
+  btn.className=cfg[2]; btn.textContent=cfg[3];
+  document.getElementById('sim-sub').textContent =
+    `${ITEM_LABELS[currentItem]} · ${GRADE_LABEL[currentGrade]} · Lv.120`;
+}
 
-  for (let i = 0; i < lineCount; i++) {
-    const options = infos[i].probabilityInfo ? infos[i].probabilityInfo.map(x => x.optionDescription) : [];
-    const row = document.createElement('div');
-    row.className = 'wanted-row';
-    row.innerHTML = `
-      <span class="wanted-label">Line ${i+1}</span>
+function updateGradeButtons() {
+  GRADE_ORDER.forEach(g => {
+    document.getElementById(`gbtn-${g}`).className = `grade-btn${g===startGrade ? ` active-${g}` : ''}`;
+  });
+}
+
+function updateHeaderGrade() {
+  const p=document.getElementById('header-grade-pill');
+  p.textContent=GRADE_LABEL[currentGrade]; p.className=`grade-pill gpill-${currentGrade}`;
+  document.getElementById('sim-sub').textContent =
+    `${ITEM_LABELS[currentItem]} · ${GRADE_LABEL[currentGrade]} · Lv.120`;
+}
+
+function updateGradeTrack() {
+  const enabled = document.getElementById('rankup-enabled').checked;
+  const c=document.getElementById('grade-track'); c.innerHTML='';
+  const si=GRADE_ORDER.indexOf(startGrade);
+  for (let i=si; i<GRADE_ORDER.length; i++) {
+    const g=GRADE_ORDER[i], ci=GRADE_ORDER.indexOf(currentGrade);
+    if (i>si) {
+      const a=document.createElement('span');
+      a.className='cg-arrow'+(ci>i?' done':''); a.textContent='›'; c.appendChild(a);
+    }
+    const s=document.createElement('span');
+    s.className='cg-step'+(ci>i?' done':g===currentGrade?' doing':'');
+    s.innerHTML=`<span class="dot"></span>${GRADE_LABEL[g]}`; c.appendChild(s);
+  }
+  const cl=document.getElementById('rankup-chance-label');
+  cl.innerHTML = (!enabled||currentGrade==='legendary') ? '' :
+    `Rank-up: <b>${RANKUP_CHANCE[currentPot][currentGrade]}%</b>`;
+}
+
+function updateTargetGradeOptions() {
+  const sel=document.getElementById('target-grade');
+  const si=GRADE_ORDER.indexOf(startGrade); sel.innerHTML='';
+  for (let i=si; i<GRADE_ORDER.length; i++) {
+    const g=GRADE_ORDER[i], o=document.createElement('option');
+    o.value=g;
+    o.textContent = i===GRADE_ORDER.length-1 ? `${GRADE_LABEL[g]} only` :
+                    i===si                    ? `${GRADE_LABEL[g]} (any)` :
+                    `${GRADE_LABEL[g]} or above`;
+    if (g==='legendary'||i===GRADE_ORDER.length-1) o.selected=true;
+    sel.appendChild(o);
+  }
+}
+
+// ── BUILD WANTED ──
+function buildWanted() {
+  const info=getGradeData(currentPot,currentItem,currentGrade);
+  const c=document.getElementById('wanted-lines'); c.innerHTML='';
+  if (!info?.length) {
+    c.innerHTML=`<div class="error-note">No data for ${GRADE_LABEL[currentGrade]}. Run <b>fetch_data.py</b> to download all grades.</div>`;
+    return;
+  }
+  const lc=Math.min(3,info.length);
+  for (let i=0; i<lc; i++) {
+    const opts=(info[i]?.probabilityInfo||[]).map(x=>x.optionDescription);
+    const row=document.createElement('div'); row.className='wanted-row';
+    row.innerHTML=`<span class="wanted-label">Line ${i+1}</span>
       <select class="wanted-select" id="want-${i}">
         <option value="">— Any —</option>
-        ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+        ${opts.map(o=>`<option value="${o}">${o}</option>`).join('')}
       </select>`;
-    container.appendChild(row);
+    c.appendChild(row);
   }
 }
 
-function pick(probabilityInfo) {
-  if (!probabilityInfo || probabilityInfo.length === 0) return "No Option";
-  const list = probabilityInfo.map(item => ({
-    name: item.optionDescription,
-    p: parseFloat(item.probability)
-  }));
-
-  let rand = Math.random() * 100, sum = 0;
-  for (let item of list) {
-    sum += item.p;
-    if (rand <= sum) return item.name;
-  }
-  return list[list.length - 1].name;
+// ── PICK / ROLL ──
+function pick(list) {
+  if (!list?.length) return 'No Option';
+  let r=Math.random()*100, s=0;
+  for (let x of list) { s+=parseFloat(x.probability); if(r<=s) return x.optionDescription; }
+  return list[list.length-1].optionDescription;
 }
-
-function rollOnce() {
-  const infos = getProbabilityInfos();
-  if (infos.length === 0) return ["No Data", "No Data", "No Data"];
-
+function rollOnce(info) {
+  if (!info?.length) return ['No Data','No Data','No Data'];
   return [
-    pick(infos[0]?.probabilityInfo),
-    pick((infos[1] || infos[0])?.probabilityInfo),
-    pick((infos[2] || infos[1] || infos[0])?.probabilityInfo)
+    pick(info[0]?.probabilityInfo),
+    pick((info[1]||info[0])?.probabilityInfo),
+    pick((info[2]||info[1]||info[0])?.probabilityInfo),
   ];
 }
-
-function isPrime(line) {
-  if (!line) return false;
-  return line.includes("+12%") || line.includes("+10%") || line.includes("+18%") ||
-         line.includes("+9%") || line.includes("per 10 Character Levels: +2");
+function checkRankUp() {
+  if (!document.getElementById('rankup-enabled').checked || currentGrade==='legendary') return false;
+  return Math.random()*100 < (RANKUP_CHANCE[currentPot][currentGrade]||0);
 }
+function isPrime(l) { return /\+12%|\+10%|\+18%|\+40%|\+30%|\+35%|Levels: \+2/.test(l||''); }
 
-function checkWanted(lines) {
-  const wantedRaw = [0,1,2].map(i => {
-    const el = document.getElementById(`want-${i}`);
-    return el ? el.value : '';
-  }).filter(x => x !== '');
-
-  if (wantedRaw.length === 0) return false;
-
-  let pool = [...lines];
-  for (let req of wantedRaw) {
-    const idx = pool.indexOf(req);
-    if (idx === -1) return false;
-    pool.splice(idx, 1);
-  }
+// ── WANTED CHECK ──
+const SVM = {
+  "ATT: +9%":{f:"ATT_PCT",v:9},"ATT: +12%":{f:"ATT_PCT",v:12},
+  "Magic ATT: +9%":{f:"MATT_PCT",v:9},"Magic ATT: +12%":{f:"MATT_PCT",v:12},
+  "STR : +6%":{f:"STR",v:6},"STR : +9%":{f:"STR",v:9},"STR : +12%":{f:"STR",v:12},
+  "DEX : +6%":{f:"DEX",v:6},"DEX : +9%":{f:"DEX",v:9},"DEX : +12%":{f:"DEX",v:12},
+  "INT : +6%":{f:"INT",v:6},"INT : +9%":{f:"INT",v:9},"INT : +12%":{f:"INT",v:12},
+  "LUK : +6%":{f:"LUK",v:6},"LUK : +9%":{f:"LUK",v:9},"LUK : +12%":{f:"LUK",v:12},
+  "All Stats: +6%":{f:"ALLSTAT",v:6},"All Stats: +9%":{f:"ALLSTAT",v:9},
+  "Damage: +9%":{f:"DMG",v:9},"Damage: +12%":{f:"DMG",v:12},
+  "Boss Damage: +12%":{f:"BOSS",v:12},"Boss Damage: +18%":{f:"BOSS",v:18},
+  "Boss Damage: +30%":{f:"BOSS",v:30},"Boss Damage: +35%":{f:"BOSS",v:35},"Boss Damage: +40%":{f:"BOSS",v:40},
+  "DEF Ignored: +4%":{f:"IED",v:4},"DEF Ignored: +5%":{f:"IED",v:5},
+  "DEF Ignored: +30%":{f:"IED",v:30},"DEF Ignored: +35%":{f:"IED",v:35},"DEF Ignored: +40%":{f:"IED",v:40},
+  "Critical Rate: +9%":{f:"CRITRATE",v:9},"Critical Rate: +12%":{f:"CRITRATE",v:12},
+  "Critical Damage: +1%":{f:"CRITDMG",v:1},"Critical Damage: +3%":{f:"CRITDMG",v:3},"Critical Damage: +8%":{f:"CRITDMG",v:8},
+  "Max HP: +7%":{f:"HP",v:7},"Max HP: +10%":{f:"HP",v:10},
+  "Max MP: +7%":{f:"MP",v:7},"Max MP: +10%":{f:"MP",v:10},
+  "STR per 10 Character Levels: +1":{f:"STR_LV",v:1},"STR per 10 Character Levels: +2":{f:"STR_LV",v:2},
+  "DEX per 10 Character Levels: +1":{f:"DEX_LV",v:1},"DEX per 10 Character Levels: +2":{f:"DEX_LV",v:2},
+  "INT per 10 Character Levels: +1":{f:"INT_LV",v:1},"INT per 10 Character Levels: +2":{f:"INT_LV",v:2},
+  "LUK per 10 Character Levels: +1":{f:"LUK_LV",v:1},"LUK per 10 Character Levels: +2":{f:"LUK_LV",v:2},
+  "ATT per 10 Character Levels: +1":{f:"ATT_LV",v:1},
+  "M. ATT per 10 Character Levels: +1":{f:"MATT_LV",v:1},
+};
+function sbf(lines){const t={};for(let l of lines){const e=SVM[l];if(e)t[e.f]=(t[e.f]||0)+e.v;}return t;}
+function getWanted(){return[0,1,2].map(i=>document.getElementById(`want-${i}`)?.value||'');}
+function anyWantedSet(){return getWanted().some(x=>x!=='');}
+function checkWanted(lines){
+  const wanted=getWanted().filter(x=>x!=='');
+  if(!wanted.length)return false;
+  const mw={},ew=[];
+  for(let w of wanted){const e=SVM[w];if(e)mw[e.f]=(mw[e.f]||0)+e.v;else ew.push(w);}
+  const r=sbf(lines);
+  for(let[f,n]of Object.entries(mw)){if((r[f]||0)<n)return false;}
+  const pool=[...lines];
+  for(let req of ew){const i=pool.indexOf(req);if(i===-1)return false;pool.splice(i,1);}
   return true;
 }
-
-// ====================== UI UPDATES ======================
-function updateResult(lines, hit) {
-  document.getElementById('roll-label').textContent = `Roll #${totalRolls.toLocaleString()}`;
-  const c = document.getElementById('result-lines');
-  c.innerHTML = lines.map((l, i) => `
-    <div class="line-row">
-      <span class="line-num">${i+1}</span>
-      <span class="line-name">${l}</span>
-      <span class="badge ${isPrime(l) ? 'badge-prime' : 'badge-normal'}">${isPrime(l) ? 'Prime' : 'Normal'}</span>
-    </div>
-  `).join('') + (hit ? '<div class="hit-notice">✓ Wanted lines matched!</div>' : '');
+function gradeMetTarget(){
+  const t=document.getElementById('target-grade')?.value||'legendary';
+  return GRADE_ORDER.indexOf(currentGrade)>=GRADE_ORDER.indexOf(t);
 }
 
-function updateStats() {
-  document.getElementById('s-total').textContent = totalRolls.toLocaleString();
-  document.getElementById('s-hits').textContent = wantedHits.toLocaleString();
-  document.getElementById('s-rate').textContent = totalRolls > 0 ? ((wantedHits / totalRolls) * 100).toFixed(2) + '%' : '—';
-  // Removed s-best since we no longer have that column
-}
-
-function updateHistory() {
-  const c = document.getElementById('history-list');
-  const show = history.slice(0, 200);
-  if (show.length === 0) {
-    c.innerHTML = '<div class="empty-note">No rolls yet.</div>';
-    return;
-  }
-  c.innerHTML = show.map(h => `
-    <div class="history-item ${h.hit ? 'is-hit' : ''}">
-      <span class="history-num">#${h.num}</span>
-      <span class="history-lines">${h.lines.join(' · ')}</span>
-      ${h.hit ? '<span class="history-hit-badge">HIT</span>' : ''}
-    </div>
-  `).join('');
-}
-
-// ====================== ROLL FUNCTIONS ======================
+// ── SINGLE ROLL ──
 function doRoll() {
-  const lines = rollOnce();
-  totalRolls++;
-  const hit = checkWanted(lines);
-  if (hit) {
-    wantedHits++;
-    if (!bestRoll) bestRoll = lines;
+  const info=getGradeData(currentPot,currentItem,currentGrade);
+  if(!info?.length){alert('No data for this grade. Run fetch_data.py first.');return;}
+  const didRankUp=checkRankUp();
+  let rankedUpTo=null;
+  if(didRankUp){
+    const ci=GRADE_ORDER.indexOf(currentGrade);
+    if(ci<GRADE_ORDER.length-1){
+      rankedUpTo=GRADE_ORDER[ci+1]; currentGrade=rankedUpTo; rankUpCount++;
+      updateHeaderGrade(); updateGradeTrack(); applyTheme(); buildWanted();
+    }
   }
-  history.unshift({num: totalRolls, lines, hit});
-  updateResult(lines, hit);
-  updateStats();
-  updateHistory();
+  const rollInfo=getGradeData(currentPot,currentItem,currentGrade)||info;
+  const lines=rollOnce(rollInfo);
+  totalRolls++;
+  const hit=checkWanted(lines);
+  if(hit)wantedHits++;
+  history.unshift({num:totalRolls,lines,hit,rankedUpTo,grade:currentGrade});
+  updateResult(lines,hit,rankedUpTo); updateStats(); updateHistory();
 }
 
-function doAutoRoll() {
-  if (!anyWantedSet()) {
-    document.getElementById('auto-summary').innerHTML = 
-      '<div style="font-size:13px;color:#c0392b;margin-top:4px;">Please set at least one Wanted Line first.</div>';
+// ── AUTO ROLL ──
+function doAutoRoll(){
+  const hasWanted=anyWantedSet();
+  const targetGrade=document.getElementById('target-grade')?.value||'legendary';
+  if(!hasWanted && targetGrade===startGrade){
+    document.getElementById('auto-summary').innerHTML=
+      '<div style="font-size:13px;color:#c0392b;margin-top:4px;">Set at least one Wanted Line, or choose a higher target grade.</div>';
     return;
   }
+  const maxRolls=Math.min(parseInt(document.getElementById('auto-max').value)||1000,100000);
+  const btn=document.getElementById('btn-auto'); btn.disabled=true;
+  document.getElementById('auto-summary').innerHTML='';
+  let rolled=0; const hits=[],rankUps=[];
 
-  const maxRolls = parseInt(document.getElementById('auto-max').value) || 1000;
-  const btn = document.getElementById('btn-auto');
-  btn.disabled = true;
-  document.getElementById('auto-summary').innerHTML = '';
-
-  let rolled = 0;
-  const results = [];
-
-  function chunk() {
-    const end = Math.min(rolled + 2000, maxRolls);
-    while (rolled < end) {
-      const lines = rollOnce();
-      rolled++;
-      totalRolls++;
-      const hit = checkWanted(lines);
-      if (hit) {
-        wantedHits++;
-        if (!bestRoll) bestRoll = lines;
-        results.push({num: totalRolls, lines, hit: true});
-        history.unshift({num: totalRolls, lines, hit: true});
-      } else {
-        history.unshift({num: totalRolls, lines, hit: false});
+  function chunk(){
+    const end=Math.min(rolled+1000,maxRolls);
+    while(rolled<end){
+      const info=getGradeData(currentPot,currentItem,currentGrade);
+      if(!info?.length)break;
+      const didRankUp=checkRankUp(); let rankedUpTo=null;
+      if(didRankUp){
+        const ci=GRADE_ORDER.indexOf(currentGrade);
+        if(ci<GRADE_ORDER.length-1){
+          rankedUpTo=GRADE_ORDER[ci+1]; currentGrade=rankedUpTo; rankUpCount++;
+          rankUps.push({num:totalRolls+1,from:GRADE_ORDER[ci],to:rankedUpTo});
+          history.unshift({num:totalRolls+1,lines:[],hit:false,rankedUpTo,grade:rankedUpTo,isRankUpEvent:true});
+          updateGradeTrack(); updateHeaderGrade();
+        }
       }
+      const rollInfo=getGradeData(currentPot,currentItem,currentGrade)||info;
+      const lines=rollOnce(rollInfo); rolled++; totalRolls++;
+      const hit=checkWanted(lines);
+      if(hit){wantedHits++;hits.push({num:totalRolls,lines,grade:currentGrade});}
+      history.unshift({num:totalRolls,lines,hit,rankedUpTo,grade:currentGrade});
+      if(gradeMetTarget()&&(!hasWanted||hit))break;
     }
-
-    document.getElementById('auto-progress').textContent = `${rolled.toLocaleString()} / ${maxRolls.toLocaleString()} rolled...`;
-    updateStats();
-
-    if (rolled < maxRolls) {
-      setTimeout(chunk, 0);
-    } else {
-      btn.disabled = false;
-      document.getElementById('auto-progress').textContent = '';
-      if (history.length > 200) history = history.slice(0, 200);
-      updateHistory();
-      showAutoSummary(rolled, results);
-    }
+    document.getElementById('auto-progress').textContent=
+      `${rolled.toLocaleString()} / ${maxRolls.toLocaleString()} rolled...`;
+    updateStats(); applyTheme();
+    const stop=rolled>=maxRolls||(gradeMetTarget()&&(!hasWanted||hits.length>0));
+    if(!stop){setTimeout(chunk,0);return;}
+    btn.disabled=false;
+    document.getElementById('auto-progress').textContent='';
+    if(history.length>200)history=history.slice(0,200);
+    updateHistory(); buildWanted(); showAutoSummary(rolled,hits,rankUps);
   }
   chunk();
 }
 
-function anyWantedSet() {
-  return [0,1,2].some(i => {
-    const el = document.getElementById(`want-${i}`);
-    return el && el.value !== '';
-  });
-}
-
-function showAutoSummary(rolled, hitResults) {
-  const c = document.getElementById('auto-summary');
-  if (hitResults.length === 0) {
-    c.innerHTML = `<div class="summary-box" style="background:#FAECE7;border-color:#F5C4B3;">
-      <div class="sum-title" style="color:#712B13;">No hits in ${rolled.toLocaleString()} rolls</div>
-      <div class="sum-body" style="color:#993C1D;">The wanted combination did not appear.</div>
-    </div>`;
-    return;
-  }
-  const avg = (rolled / hitResults.length).toFixed(1);
-  const listHTML = hitResults.slice(0, 20).map(r => `
-    <div style="font-size:12px;color:#0F6E56;padding:2px 0;border-bottom:1px solid #9FE1CB66;">
-      <span style="color:#bbb;min-width:28px;display:inline-block;">#${r.num}</span>
-      ${r.lines.join(' · ')}
+// ── UI UPDATES ──
+function updateResult(lines,hit,rankedUpTo){
+  document.getElementById('roll-label').textContent=
+    `Roll #${totalRolls.toLocaleString()} · ${GRADE_ICON[currentGrade]} ${GRADE_LABEL[currentGrade]}`;
+  let html=lines.map((l,i)=>
+    `<div class="line-row">
+      <span class="line-num">${i+1}</span>
+      <span class="line-name">${l}</span>
+      <span class="badge ${(i===0||isPrime(l))?'badge-prime':'badge-normal'}">${(i===0||isPrime(l))?'Prime':'Normal'}</span>
     </div>`).join('');
-  const more = hitResults.length > 20 ? `<div style="font-size:11px;color:#888;margin-top:4px;">... and ${hitResults.length - 20} more hits</div>` : '';
-
-  c.innerHTML = `<div class="summary-box">
-    <div class="sum-title">Auto Roll Complete — ${hitResults.length} hit${hitResults.length > 1 ? 's' : ''} in ${rolled.toLocaleString()} rolls</div>
-    <div class="sum-body">Average rolls per hit: <strong>${avg}</strong></div>
-    <div style="margin-top:10px;">${listHTML}${more}</div>
-  </div>`;
+  if(rankedUpTo)html+=`<div class="rankup-notice rankup-to-${rankedUpTo}">⬆ Ranked up to ${GRADE_ICON[rankedUpTo]} ${GRADE_LABEL[rankedUpTo]}!</div>`;
+  if(hit)html+='<div class="hit-notice">✓ Wanted lines matched!</div>';
+  document.getElementById('result-lines').innerHTML=html;
+}
+function updateStats(){
+  document.getElementById('s-total').textContent=totalRolls.toLocaleString();
+  document.getElementById('s-rankups').textContent=rankUpCount.toLocaleString();
+  document.getElementById('s-hits').textContent=wantedHits.toLocaleString();
+  document.getElementById('s-rate').textContent=totalRolls>0?((wantedHits/totalRolls)*100).toFixed(2)+'%':'—';
+}
+function gpHtml(grade){
+  const c={rare:'#2e8b57',epic:'#7b2d8b',unique:'#c9940a',legendary:'#d4712a'};
+  return `<span class="history-grade-pill" style="background:${c[grade]||'#aaa'};color:#fff;">${GRADE_LABEL[grade]||grade}</span>`;
+}
+function updateHistory(){
+  const c=document.getElementById('history-list');
+  if(!history.length){c.innerHTML='<div class="empty-note">No rolls yet.</div>';return;}
+  c.innerHTML=history.slice(0,200).map(h=>{
+    if(h.isRankUpEvent)return`<div class="history-item is-rankup">
+      <span class="history-num">#${h.num}</span>
+      <span class="history-lines">⬆ Ranked up to ${GRADE_LABEL[h.rankedUpTo]||h.rankedUpTo}!</span>
+      <span class="history-rankup-badge">RANK UP</span>${gpHtml(h.grade)}</div>`;
+    return`<div class="history-item ${h.hit?'is-hit':''}">
+      <span class="history-num">#${h.num}</span>
+      <span class="history-lines">${h.lines.join(' · ')}</span>
+      ${h.hit?'<span class="history-hit-badge">HIT</span>':''}
+      ${h.rankedUpTo?`<span class="history-rankup-badge">⬆${GRADE_LABEL[h.rankedUpTo]}</span>`:''}
+      ${gpHtml(h.grade)}</div>`;
+  }).join('');
+}
+function showAutoSummary(rolled,hits,rankUps){
+  let html='';
+  if(rankUps.length){
+    html+=`<div class="summary-box" style="background:#fff8ee;border:1px solid #f0c080;margin-bottom:8px;">
+      <div class="sum-title" style="color:#7a4400;">⬆ ${rankUps.length} Rank-Up${rankUps.length>1?'s':''} in ${rolled.toLocaleString()} rolls</div>
+      <div class="sum-body" style="color:#a05000;">${rankUps.slice(0,5).map(r=>`Roll #${r.num}: ${GRADE_LABEL[r.from]} → ${GRADE_LABEL[r.to]}`).join('<br>')}${rankUps.length>5?`<br>...and ${rankUps.length-5} more`:''}</div>
+    </div>`;
+  }
+  if(!hits.length){
+    html+=`<div class="summary-box summary-red-err">
+      <div class="sum-title">No wanted-line hits in ${rolled.toLocaleString()} rolls</div>
+      <div class="sum-body">Try more rolls or loosen your wanted lines. Current grade: ${GRADE_LABEL[currentGrade]}.</div>
+    </div>`;
+  } else {
+    const avg=(rolled/hits.length).toFixed(1);
+    const rows=hits.slice(0,20).map(r=>
+      `<div class="hit-list-row"><span class="hit-list-num">#${r.num}</span>${r.lines.join(' · ')} ${gpHtml(r.grade)}</div>`).join('');
+    const more=hits.length>20?`<div style="font-size:11px;color:#888;margin-top:6px;">...and ${hits.length-20} more hits</div>`:'';
+    html+=`<div class="summary-box summary-green">
+      <div class="sum-title">${hits.length} hit${hits.length>1?'s':''} in ${rolled.toLocaleString()} rolls — avg 1 per ${avg} rolls</div>
+      <div class="sum-body" style="margin-bottom:8px;">Matching rolls:</div>${rows}${more}
+    </div>`;
+  }
+  document.getElementById('auto-summary').innerHTML=html;
+}
+function doReset(){
+  totalRolls=0;wantedHits=0;rankUpCount=0;history=[];currentGrade=startGrade;
+  document.getElementById('result-lines').innerHTML='<div class="empty-note">Press Roll to start cubing...</div>';
+  document.getElementById('roll-label').textContent='No roll yet';
+  document.getElementById('auto-summary').innerHTML='';
+  document.getElementById('auto-progress').textContent='';
+  updateStats();updateHistory();updateHeaderGrade();updateGradeTrack();applyTheme();buildWanted();
 }
 
-function doReset() {
-  totalRolls = 0; wantedHits = 0; history = []; bestRoll = null;
-  document.getElementById('result-lines').innerHTML = '<div class="empty-note">Press Roll to start cubing...</div>';
-  document.getElementById('roll-label').textContent = 'No roll yet';
-  document.getElementById('auto-summary').innerHTML = '';
-  document.getElementById('auto-progress').textContent = '';
-  updateStats();
-  updateHistory();
+// ── INIT ──
+async function init(){
+  applyTheme();updateGradeButtons();updateGradeTrack();updateTargetGradeOptions();
+  await loadFile(currentPot,currentItem);
+  buildWanted();updateStats();
 }
-
-// ====================== ITEM CHANGE & INIT ======================
-async function onItemChange() {
-  currentPartsType = document.getElementById('item-type').value;
-  const data = await loadItemData(currentPartsType);
-  if (!data) return;
-
-  document.querySelector('.sub').textContent = 
-    `${itemDatabase[currentPartsType].name} · Lv.100 · Bonus Cube`;
-
-  buildWanted();
-  doReset();
-}
-
-async function init() {
-  document.getElementById('item-type').value = "PartsType_WEAPON";
-  await loadItemData("PartsType_WEAPON");
-  buildWanted();
-  updateStats();
-}
-
 init();
 </script>
+</body>
+</html>
