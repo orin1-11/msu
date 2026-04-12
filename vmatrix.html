@@ -4,188 +4,213 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>V Matrix Calculator</title>
-
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; padding: 24px 16px; }
-.container { max-width: 480px; margin: 0 auto; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; padding: 24px 16px; }
+  .container { max-width: 480px; margin: 0 auto; }
 
-.site-nav { display: flex; margin-bottom: 24px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
-.nav-tab { flex: 1; padding: 11px; text-align: center; font-size: 13px; font-weight: 600; color: #999; border-right: 1px solid #ddd; cursor: pointer; }
-.nav-tab.active { background: #1a1a1a; color: #fff; }
-.nav-tab:last-child { border-right: none; }
+  /* ── SITE NAV ── */
+  .site-nav { display: flex; gap: 0; margin-bottom: 24px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
+  .nav-tab {
+    flex: 1; padding: 11px 8px; text-align: center;
+    font-size: 13px; font-weight: 600; border: none; background: #fff;
+    color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-family: inherit; text-decoration: none;
+  }
+  .nav-tab:last-child { border-right: none; }
+  .nav-tab .nav-icon { font-size: 17px; line-height: 1; }
+  .nav-tab .nav-icon-img { width: 20px; height: 20px; object-fit: contain; }
+  .nav-tab .nav-label { font-size: 11px; letter-spacing: 0.03em; }
+  .nav-tab.active { background: #1a1a1a; color: #fff; }
+  .nav-tab:not(.active):hover { background: #f5f4f0; color: #555; }
 
-.sim-header { margin-bottom: 20px; }
-.sim-header h1 { font-size: 20px; }
-.sim-header .sub { font-size: 13px; color: #888; }
+  /* ── HEADER ── */
+  .sim-header { margin-bottom: 20px; }
+  .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+  .sim-header .sub { font-size: 13px; color: #888; }
 
-.card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; }
+  /* ── NODE TYPE TABS ── */
+  .type-tabs { display: flex; gap: 0; margin-bottom: 16px; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
+  .type-tab {
+    flex: 1; padding: 9px 10px; text-align: center; cursor: pointer;
+    font-size: 13px; font-weight: 600; border: none; background: #fff;
+    color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd;
+    font-family: inherit;
+  }
+  .type-tab:last-child { border-right: none; }
+  .type-tab.active { background: #534AB7; color: #fff; }
+  .type-tab:not(.active):hover { background: #f5f4f0; color: #555; }
 
-.row { display: flex; gap: 12px; margin-bottom: 14px; }
-.field { flex: 1; }
-.field label { font-size: 12px; color: #999; display: block; margin-bottom: 6px; }
+  /* ── CARD ── */
+  .card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; }
+  .card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
 
-.wanted-select { width: 100%; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
+  .row { display: flex; gap: 12px; margin-bottom: 14px; }
+  .field { flex: 1; }
+  .field label { font-size: 12px; color: #999; display: block; margin-bottom: 6px; }
+  .wanted-select { width: 100%; font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; cursor: pointer; outline: none; font-family: inherit; }
+  .wanted-select:focus { border-color: #534AB7; }
 
-.slider-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
-.slider-header span { font-size: 14px; color: #999; }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .slider-header span { font-size: 12px; color: #999; }
+  .slider-header strong { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+  input[type=range] { width: 100%; accent-color: #534AB7; margin-bottom: 4px; }
+  .slider-hint { font-size: 11px; color: #bbb; }
 
-input[type=range] { width: 100%; accent-color: #0F6E56; }
-
-.slider-hint { font-size: 11px; color: #bbb; }
-
-.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.metric { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 14px 16px; }
-.metric-label { font-size: 10px; color: #888; }
-.metric-val { font-size: 22px; font-weight: 600; }
-.metric-val.green { color: #0F6E56; }
+  /* ── METRICS ── */
+  .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .metric { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 14px 16px; }
+  .metric-label { font-size: 10px; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .metric-val { font-size: 24px; font-weight: 600; color: #1a1a1a; }
+  .metric-val.purple { color: #534AB7; }
 </style>
 </head>
-
 <body>
 <div class="container">
 
-<div class="site-nav">
-  <div class="nav-tab active" id="tabSkill">Skill Node</div>
-  <div class="nav-tab" id="tabBoost">Boost Node</div>
-</div>
+  <!-- SITE NAV -->
+  <nav class="site-nav">
+    <a class="nav-tab" href="index.html">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a class="nav-tab" href="cube.html">
+      <img class="nav-icon-img" src="images/RED.webp" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=font-size:17px>🎲</span>')" alt="">
+      <span class="nav-label">Cube Sim</span>
+    </a>
+    <a class="nav-tab" href="symbols.html">
+      <span class="nav-icon">✦</span>
+      <span class="nav-label">Symbols</span>
+    </a>
+    <a class="nav-tab active" href="vmatrix.html">
+      <span class="nav-icon">◈</span>
+      <span class="nav-label">V Matrix</span>
+    </a>
+  </nav>
 
-<div class="sim-header">
-  <h1>V Matrix Calculator</h1>
-  <p class="sub">Skill / Boost node cost</p>
-</div>
+  <!-- HEADER -->
+  <div class="sim-header">
+    <h1>V Matrix Calculator</h1>
+    <p class="sub">Skill node and Boost node upgrade costs</p>
+  </div>
 
-<div class="card">
-  <div class="row">
-    <div class="field">
-      <label>Current level</label>
-      <select id="curLv" class="wanted-select"></select>
+  <!-- NODE TYPE -->
+  <div class="type-tabs">
+    <button class="type-tab active" id="tabSkill" onclick="setType('skill')">Skill Node</button>
+    <button class="type-tab"        id="tabBoost" onclick="setType('boost')">Boost Node</button>
+  </div>
+
+  <!-- SETUP -->
+  <div class="card">
+    <div class="card-title">Setup</div>
+    <div class="row">
+      <div class="field">
+        <label>Current level</label>
+        <select id="curLv" class="wanted-select"></select>
+      </div>
+      <div class="field">
+        <label>Target level</label>
+        <select id="tgtLv" class="wanted-select"></select>
+      </div>
     </div>
-    <div class="field">
-      <label>Target level</label>
-      <select id="tgtLv" class="wanted-select"></select>
+    <div>
+      <div class="slider-header">
+        <span>Nodes at current level</span>
+        <strong id="sliderVal">0</strong>
+      </div>
+      <input type="range" id="slider" min="0" max="2" value="0" step="1">
+      <div class="slider-hint" id="sliderHint"></div>
     </div>
   </div>
 
-  <div>
-    <div class="slider-header">
-      <span>Nodes at current level</span>
-      <span id="val" style="font-weight: normal; color: black;">0</span>
+  <!-- RESULTS -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Nodes needed</div>
+      <div class="metric-val purple" id="mNeed">0</div>
     </div>
-    <input type="range" id="slider" min="0" value="0">
-    <div class="slider-hint" id="hint"></div>
+    <div class="metric">
+      <div class="metric-label">Total nodes (full range)</div>
+      <div class="metric-val" id="mTotal">0</div>
+    </div>
   </div>
-</div>
-
-<div class="metrics">
-  <div class="metric">
-    <div class="metric-label">Nodes needed</div>
-    <div class="metric-val green" id="need">0</div>
-  </div>
-  <div class="metric">
-    <div class="metric-label">Total nodes</div>
-    <div class="metric-val" id="total">0</div>
-  </div>
-</div>
 
 </div>
-
 <script>
-// ===== DATA =====
 const SKILL = [
-{lvl:1,node:2,nodeCum:1},{lvl:2,node:1,nodeCum:3},{lvl:3,node:1,nodeCum:4},
-{lvl:4,node:1,nodeCum:5},{lvl:5,node:2,nodeCum:6},{lvl:6,node:2,nodeCum:8},
-{lvl:7,node:1,nodeCum:10},{lvl:8,node:2,nodeCum:11},{lvl:9,node:2,nodeCum:13},
-{lvl:10,node:2,nodeCum:15},{lvl:11,node:2,nodeCum:17},{lvl:12,node:2,nodeCum:19},
-{lvl:13,node:3,nodeCum:21},{lvl:14,node:2,nodeCum:24},{lvl:15,node:2,nodeCum:26},
-{lvl:16,node:3,nodeCum:28},{lvl:17,node:3,nodeCum:31},{lvl:18,node:3,nodeCum:34},
-{lvl:19,node:2,nodeCum:37},{lvl:20,node:3,nodeCum:39},{lvl:21,node:4,nodeCum:42},
-{lvl:22,node:3,nodeCum:46},{lvl:23,node:3,nodeCum:49},{lvl:24,node:3,nodeCum:52},
-{lvl:25,node:0,nodeCum:55}
+  {node:2},{node:1},{node:1},{node:1},{node:2},{node:2},{node:1},{node:2},{node:2},{node:2},
+  {node:2},{node:2},{node:3},{node:2},{node:2},{node:3},{node:3},{node:3},{node:2},{node:3},
+  {node:4},{node:3},{node:3},{node:3},{node:0}
 ];
-
 const BOOST = [
-{lvl:1,node:2,nodeCum:1},{lvl:2,node:1,nodeCum:3},{lvl:3,node:2,nodeCum:4},
-{lvl:4,node:2,nodeCum:6},{lvl:5,node:2,nodeCum:8},{lvl:6,node:3,nodeCum:10},
-{lvl:7,node:2,nodeCum:13},{lvl:8,node:4,nodeCum:15},{lvl:9,node:3,nodeCum:19},
-{lvl:10,node:4,nodeCum:22},{lvl:11,node:4,nodeCum:26},{lvl:12,node:4,nodeCum:30},
-{lvl:13,node:5,nodeCum:34},{lvl:14,node:5,nodeCum:39},{lvl:15,node:5,nodeCum:44},
-{lvl:16,node:6,nodeCum:49},{lvl:17,node:6,nodeCum:55},{lvl:18,node:6,nodeCum:61},
-{lvl:19,node:7,nodeCum:67},{lvl:20,node:6,nodeCum:74},{lvl:21,node:8,nodeCum:80},
-{lvl:22,node:7,nodeCum:88},{lvl:23,node:8,nodeCum:95},{lvl:24,node:8,nodeCum:103},
-{lvl:25,node:0,nodeCum:111}
+  {node:2},{node:1},{node:2},{node:2},{node:2},{node:3},{node:2},{node:4},{node:3},{node:4},
+  {node:4},{node:4},{node:5},{node:5},{node:5},{node:6},{node:6},{node:6},{node:7},{node:6},
+  {node:8},{node:7},{node:8},{node:8},{node:0}
 ];
 
+// Build cumulative from index 0
+function buildCum(data) {
+  let cum = [0]; // cum[i] = total nodes to reach level i+1 from level 1
+  for (let i = 0; i < data.length; i++) cum.push(cum[i] + data[i].node);
+  return cum;
+}
+let CUM = buildCum(SKILL);
 let DATA = SKILL;
 
-// elements
-const cur = document.getElementById('curLv');
-const tgt = document.getElementById('tgtLv');
+const curEl = document.getElementById('curLv');
+const tgtEl = document.getElementById('tgtLv');
 const slider = document.getElementById('slider');
-const tabSkill = document.getElementById('tabSkill');
-const tabBoost = document.getElementById('tabBoost');
 
-// fill dropdown
 for (let i = 1; i <= 25; i++) {
-  cur.innerHTML += `<option value="${i}">${i}</option>`;
-  tgt.innerHTML += `<option value="${i}">${i}</option>`;
+  curEl.innerHTML += `<option value="${i}">${i}</option>`;
+  tgtEl.innerHTML += `<option value="${i}">${i}</option>`;
 }
-tgt.value = 25;
+tgtEl.value = 25;
+
+function setType(t) {
+  DATA = t === 'skill' ? SKILL : BOOST;
+  CUM  = buildCum(DATA);
+  document.getElementById('tabSkill').className = 'type-tab' + (t==='skill'?' active':'');
+  document.getElementById('tabBoost').className = 'type-tab' + (t==='boost'?' active':'');
+  slider.value = 0;
+  sync();
+}
 
 function calc() {
-  const c = +cur.value;
-  const t = +tgt.value;
-  const have = +slider.value;
+  const c    = parseInt(curEl.value);
+  const t    = parseInt(tgtEl.value);
+  const have = parseInt(slider.value);
+  const maxAtCur = DATA[c - 1].node;
 
-  const max = DATA[c-1].node;
-  slider.max = max;
-
-  document.getElementById('val').textContent = have;
-  document.getElementById('hint').textContent = `need ${max} to level up`;
+  slider.max = Math.max(0, maxAtCur - 1);
+  if (parseInt(slider.value) > slider.max) slider.value = 0;
+  document.getElementById('sliderVal').textContent = slider.value;
+  document.getElementById('sliderHint').textContent = maxAtCur > 0 ? `need ${maxAtCur} to level up` : 'max level';
 
   if (t <= c) {
-    need.textContent = 0;
-    total.textContent = 0;
+    document.getElementById('mNeed').textContent  = '0';
+    document.getElementById('mTotal').textContent = '0';
     return;
   }
 
-  const totalNodes = DATA[t-1].nodeCum - DATA[c-1].nodeCum;
-  const remain = Math.max(0, totalNodes - have);
-
-  need.textContent = remain.toLocaleString();
-  total.textContent = totalNodes.toLocaleString();
+  const total    = CUM[t - 1] - CUM[c - 1];
+  const needed   = Math.max(0, total - have);
+  document.getElementById('mNeed').textContent  = needed.toLocaleString();
+  document.getElementById('mTotal').textContent = total.toLocaleString();
 }
 
 function sync() {
-  const c = +cur.value;
-
-  [...tgt.options].forEach(o => o.disabled = +o.value <= c);
-
-  if (+tgt.value <= c) tgt.value = Math.min(c+1,25);
-
+  const c = parseInt(curEl.value);
+  [...tgtEl.options].forEach(o => o.disabled = parseInt(o.value) <= c);
+  if (parseInt(tgtEl.value) <= c) tgtEl.value = Math.min(c + 1, 25);
   slider.value = 0;
   calc();
 }
 
-// toggle
-tabSkill.onclick = () => {
-  DATA = SKILL;
-  tabSkill.classList.add('active');
-  tabBoost.classList.remove('active');
-  sync();
-};
-
-tabBoost.onclick = () => {
-  DATA = BOOST;
-  tabBoost.classList.add('active');
-  tabSkill.classList.remove('active');
-  sync();
-};
-
-cur.onchange = sync;
-tgt.onchange = calc;
-slider.oninput = calc;
-
+curEl.addEventListener('change', sync);
+tgtEl.addEventListener('change', calc);
+slider.addEventListener('input', calc);
 sync();
 </script>
 </body>
