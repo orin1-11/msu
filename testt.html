@@ -3,683 +3,446 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MapleStory Cube Simulator</title>
+<title>Legion Calculator</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; padding: 24px 16px; }
-  .container { max-width: 760px; margin: 0 auto; }
+  .container { max-width: 860px; margin: 0 auto; }
 
-  .pot-tabs { display: flex; gap: 0; margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
-  .pot-tab {
-    flex: 1; padding: 13px 10px; text-align: center; cursor: pointer;
-    font-size: 14px; font-weight: 600; border: none; background: #fff;
-    color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd;
-    display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: inherit;
-  }
-  .pot-tab:last-child { border-right: none; }
-  .pot-tab .tab-icon { font-size: 20px; line-height: 1; width: 24px; height: 24px; object-fit: contain; }
-  .pot-tab .tab-label { font-size: 11px; letter-spacing: 0.03em; }
-  .pot-tab.active-bpot       { background: #1a1a1a; color: #fff; }
-  .pot-tab.active-mpot-red   { background: #c0392b; color: #fff; }
-  .pot-tab.active-mpot-black { background: #2c2c2c; color: #fff; }
+  /* NAV */
+  .site-nav { display: flex; gap: 0; margin-bottom: 24px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
+  .nav-tab { flex: 1; padding: 11px 8px; text-align: center; font-size: 13px; font-weight: 600; border: none; background: #fff; color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: inherit; text-decoration: none; }
+  .nav-tab:last-child { border-right: none; }
+  .nav-tab .nav-icon { font-size: 17px; line-height: 1; }
+  .nav-tab .nav-icon-img { width: 20px; height: 20px; object-fit: contain; }
+  .nav-tab .nav-label { font-size: 11px; letter-spacing: 0.03em; }
+  .nav-tab.active { background: #1a1a1a; color: #fff; }
+  .nav-tab:not(.active):hover { background: #f5f4f0; color: #555; }
 
-  .grade-pill { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; vertical-align: middle; margin-left: 4px; }
-  .gpill-rare      { background: #2e8b57; color: #fff; }
-  .gpill-epic      { background: #7b2d8b; color: #fff; }
-  .gpill-unique    { background: #c9940a; color: #fff; }
-  .gpill-legendary { background: #d4712a; color: #fff; }
-
+  /* HEADER */
   .sim-header { margin-bottom: 20px; }
-  .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
   .sim-header .sub { font-size: 13px; color: #888; }
-  .cube-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px; }
-  .badge-bpot  { background: #1a1a1a; color: #fff; }
-  .badge-red   { background: #c0392b; color: #fff; }
-  .badge-black { background: #2c2c2c; color: #fff; }
 
-  .current-grade-bar {
-    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
-    background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 10px 16px;
-  }
-  .cg-label { font-size: 12px; color: #888; }
-  .cg-track { display: flex; gap: 6px; align-items: center; flex: 1; }
-  .cg-step { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: #ccc; }
-  .cg-step.done  { color: #2e8b57; }
-  .cg-step.doing { color: #d4712a; font-weight: 700; }
-  .cg-step .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-  .cg-arrow { color: #ccc; font-size: 10px; }
-  .cg-arrow.done { color: #2e8b57; }
-  .rank-up-chance { font-size: 11px; color: #888; margin-left: auto; white-space: nowrap; }
-  .rank-up-chance b { color: #d4712a; }
-
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-  .stat { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 12px; text-align: center; }
-  .stat-label { font-size: 10px; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
-  .stat-val { font-size: 20px; font-weight: 600; color: #1a1a1a; }
-  .stat-val.highlight { color: #d4712a; }
-
+  /* CARDS */
   .card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; }
   .card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
 
-  .wanted-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .wanted-label { font-size: 12px; color: #999; min-width: 44px; }
-  .wanted-select { flex: 1; font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; cursor: pointer; outline: none; font-family: inherit; }
-  .wanted-select:focus { border-color: #534AB7; }
+  /* FORM GRID */
+  .inputs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  @media (max-width: 600px) { .inputs-grid { grid-template-columns: 1fr 1fr; } }
+  .field label { font-size: 12px; color: #999; display: block; margin-bottom: 6px; }
+  .field input, .field textarea { width: 100%; font-size: 13px; padding: 7px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; outline: none; font-family: inherit; }
+  .field input:focus, .field textarea:focus { border-color: #534AB7; }
+  .field textarea { resize: vertical; min-height: 80px; font-size: 12px; }
 
-  .grade-bar { display: flex; gap: 6px; }
-  .grade-btn {
-    flex: 1; padding: 9px 6px; border-radius: 10px; border: 2px solid #e0ddd5;
-    font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s;
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-    font-family: inherit; background: #fff; color: #999;
+  .btn-load { margin-top: 12px; padding: 9px 20px; border-radius: 8px; border: 1px solid #534AB7; background: #EEEDFE; color: #534AB7; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.1s; }
+  .btn-load:hover { background: #e0ddf8; }
+  .btn-load:active { transform: scale(0.97); }
+
+  /* SUMMARY STATS */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+  @media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 12px; text-align: center; }
+  .stat-label { font-size: 10px; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .stat-val { font-size: 20px; font-weight: 600; color: #1a1a1a; }
+  .stat-val.purple { color: #534AB7; }
+  .stat-val.green  { color: #0F6E56; }
+  .stat-val.orange { color: #c0392b; }
+
+  /* CHARACTER LIST */
+  .char-list { display: flex; flex-direction: column; gap: 6px; }
+  .char-row {
+    display: flex; align-items: center; gap: 12px;
+    background: #fafafa; border: 1px solid #e0ddd5; border-radius: 10px;
+    padding: 8px 12px; transition: border-color 0.1s;
   }
-  .grade-btn .grade-icon { font-size: 16px; }
-  .grade-btn.active-rare      { background: #e8f4e8; border-color: #2e8b57; color: #1a5c34; }
-  .grade-btn.active-epic      { background: #f0e8f8; border-color: #7b2d8b; color: #52007a; }
-  .grade-btn.active-unique    { background: #fff8e0; border-color: #c9940a; color: #7a5500; }
-  .grade-btn.active-legendary { background: #fff0e0; border-color: #d4712a; color: #8a3a00; }
+  .char-row.is-done { background: #E1F5EE; border-color: #9FE1CB; }
+  .char-row.is-excluded { opacity: 0.4; border-style: dashed; }
+  .char-rank { font-size: 11px; color: #bbb; min-width: 22px; font-weight: 600; }
+  .char-img { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; background: #eee; flex-shrink: 0; }
+  .char-img-placeholder { width: 36px; height: 36px; border-radius: 6px; background: #e0ddd5; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #999; }
+  .char-info { flex: 1; min-width: 0; }
+  .char-name { font-size: 13px; font-weight: 600; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .char-job  { font-size: 11px; color: #888; }
+  .char-level-now { font-size: 13px; font-weight: 600; color: #1a1a1a; min-width: 36px; text-align: right; }
+  .char-arrow { font-size: 12px; color: #bbb; padding: 0 4px; }
+  .char-level-target { font-size: 13px; font-weight: 600; color: #534AB7; min-width: 36px; text-align: center; }
+  .char-need { font-size: 12px; font-weight: 600; min-width: 70px; text-align: right; }
+  .char-need.pos { color: #c0392b; }
+  .char-need.done { color: #0F6E56; }
+  .char-badge { font-size: 10px; padding: 2px 7px; border-radius: 5px; font-weight: 700; flex-shrink: 0; }
+  .badge-done     { background: #E1F5EE; color: #085041; }
+  .badge-excluded { background: #f0efe8; color: #888; }
+  .badge-counted  { background: #EEEDFE; color: #3C3489; }
 
-  .target-grade-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding-top: 12px; border-top: 1px solid #f0efe8; }
-  .target-grade-row label { font-size: 13px; color: #555; min-width: 90px; font-weight: 600; }
-  .target-grade-row select { font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; cursor: pointer; outline: none; font-family: inherit; flex: 1; }
+  /* PROGRESS BAR */
+  .progress-wrap { background: #f0efe8; border-radius: 99px; height: 6px; overflow: hidden; margin-top: 4px; }
+  .progress-fill { height: 100%; background: #534AB7; border-radius: 99px; transition: width 0.3s; }
+  .progress-fill.done { background: #0F6E56; }
 
-  .line-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f5f4f0; }
-  .line-row:last-of-type { border-bottom: none; }
-  .line-num { font-size: 12px; color: #bbb; min-width: 16px; }
-  .line-name { flex: 1; font-size: 14px; color: #1a1a1a; }
-  .badge { font-size: 11px; padding: 2px 9px; border-radius: 6px; font-weight: 500; }
-  .badge-prime  { background: #EEEDFE; color: #3C3489; }
-  .badge-normal { background: #f0efe8; color: #888; }
-  .hit-notice    { margin-top: 8px; font-size: 12px; color: #534AB7; font-weight: 600; }
-  .rankup-notice { margin-top: 8px; font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 6px; }
-  .rankup-to-epic      { background: #f0e8f8; color: #7b2d8b; }
-  .rankup-to-unique    { background: #fff8e0; color: #7a5500; }
-  .rankup-to-legendary { background: #fff0e0; color: #8a3a00; }
+  .empty-note { font-size: 13px; color: #bbb; padding: 8px 0; text-align: center; }
+  .error-note { font-size: 13px; color: #c0392b; padding: 6px 0; }
 
-  .btn-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-  button { padding: 9px 20px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #1a1a1a; font-size: 14px; cursor: pointer; transition: background 0.1s, transform 0.05s; font-family: inherit; }
-  button:hover { background: #f0efe8; }
-  button:active { transform: scale(0.97); }
-  .btn-roll { font-weight: 600; }
-  .btn-roll-bpot  { border-color: #534AB7; color: #534AB7; background: #EEEDFE; }
-  .btn-roll-bpot:hover  { background: #e0ddf8; }
-  .btn-roll-red   { border-color: #c0392b; color: #c0392b; background: #fdf0ef; }
-  .btn-roll-red:hover   { background: #faddda; }
-  .btn-roll-black { border-color: #2c2c2c; color: #2c2c2c; background: #f0f0f0; }
-  .btn-roll-black:hover { background: #e4e4e4; }
-  .btn-auto { border-color: #0F6E56; color: #0F6E56; font-weight: 600; background: #E1F5EE; }
-  .btn-auto:hover { background: #c5eddf; }
-  .btn-auto:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-reset { color: #999; }
-
-  .auto-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-  .auto-row label { font-size: 13px; color: #666; }
-  .auto-input { width: 100px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px; background: #fafafa; color: #1a1a1a; outline: none; font-family: inherit; }
-  .auto-input:focus { border-color: #534AB7; }
-  .auto-progress { font-size: 12px; color: #888; }
-
-  .rankup-toggle { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
-  .toggle-switch input { opacity: 0; width: 0; height: 0; }
-  .slider { position: absolute; cursor: pointer; top:0; left:0; right:0; bottom:0; background:#ccc; border-radius:22px; transition:.3s; }
-  .slider:before { position:absolute; content:""; height:16px; width:16px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.3s; }
-  input:checked + .slider { background: #d4712a; }
-  input:checked + .slider:before { transform: translateX(18px); }
-  .toggle-label { font-size: 13px; color: #555; }
-
-  .history-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
-  .history-item { background: #fafafa; border-radius: 8px; padding: 6px 10px; font-size: 12px; color: #555; display: flex; gap: 8px; align-items: center; border: 1px solid transparent; flex-wrap: wrap; }
-  .history-item.is-hit    { background: #EEEDFE; border-color: #c8c4f0; }
-  .history-item.is-rankup { background: #fff0e0; border-color: #f0c080; }
-  .history-num  { color: #bbb; min-width: 28px; font-size: 11px; }
-  .history-lines { flex: 1; line-height: 1.5; min-width: 0; }
-  .history-hit-badge    { font-size: 10px; background: #534AB7; color: #fff; padding: 1px 7px; border-radius: 5px; font-weight: 600; flex-shrink: 0; }
-  .history-rankup-badge { font-size: 10px; background: #d4712a; color: #fff; padding: 1px 7px; border-radius: 5px; font-weight: 600; flex-shrink: 0; }
-  .history-grade-pill { font-size: 10px; padding: 1px 6px; border-radius: 5px; font-weight: 700; flex-shrink: 0; }
-  .history-list::-webkit-scrollbar { width: 4px; }
-  .history-list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
-
-  .summary-box { border-radius: 10px; padding: 12px 16px; margin-bottom: 4px; }
-  .summary-green   { background: #E1F5EE; border: 1px solid #9FE1CB; }
-  .summary-red-err { background: #FAECE7; border: 1px solid #F5C4B3; }
-  .summary-box .sum-title { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
-  .summary-green   .sum-title { color: #085041; }
-  .summary-red-err .sum-title { color: #712B13; }
-  .summary-box .sum-body { font-size: 13px; line-height: 1.6; }
-  .summary-green   .sum-body { color: #0F6E56; }
-  .summary-red-err .sum-body { color: #993C1D; }
-  .hit-list-row { font-size: 12px; color: #0F6E56; padding: 3px 0; border-bottom: 1px solid #9FE1CB44; }
-  .hit-list-num { color: #bbb; min-width: 32px; display: inline-block; }
-
-  .empty-note   { font-size: 13px; color: #bbb; padding: 4px 0; }
-  .loading-note { font-size: 13px; color: #aaa; padding: 4px 0; font-style: italic; }
-  .error-note   { font-size: 13px; color: #c0392b; padding: 4px 0; }
+  /* LEGEND */
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; font-size: 11px; color: #888; align-items: center; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+  .list-header { display: flex; align-items: center; gap: 12px; padding: 0 12px 6px; font-size: 10px; color: #bbb; text-transform: uppercase; letter-spacing: 0.05em; }
+  .lh-rank { min-width: 22px; }
+  .lh-img  { width: 36px; }
+  .lh-name { flex: 1; }
+  .lh-now  { min-width: 36px; text-align: right; }
+  .lh-arr  { padding: 0 4px; }
+  .lh-tgt  { min-width: 36px; text-align: center; }
+  .lh-need { min-width: 70px; text-align: right; }
+  .lh-badge { min-width: 60px; }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- TABS -->
-  <div class="pot-tabs">
-    <button class="pot-tab" id="tab-mpot-red" onclick="switchPot('mpot-red')">
-      <img class="tab-icon" src="images/RED.webp" onerror="this.outerHTML='<span class=tab-icon>🟥</span>'" alt="">
-      <span class="tab-label">Red Cube</span>
-    </button>
-    <button class="pot-tab" id="tab-mpot-black" onclick="switchPot('mpot-black')">
-      <img class="tab-icon" src="images/BLACK.webp" onerror="this.outerHTML='<span class=tab-icon>⬛</span>'" alt="">
-      <span class="tab-label">Black Cube</span>
-    </button>
-    <button class="pot-tab" id="tab-bpot" onclick="switchPot('bpot')">
-      <img class="tab-icon" src="images/ADDITIONAL.webp" onerror="this.outerHTML='<span class=tab-icon>💠</span>'" alt="">
-      <span class="tab-label">Bonus Cube</span>
-    </button>
-  </div>
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a class="nav-tab" href="index.html">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a class="nav-tab" href="cube.html">
+      <img class="nav-icon-img" src="images/RED.webp" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=font-size:17px>🎲</span>')" alt="">
+      <span class="nav-label">Cube Sim</span>
+    </a>
+    <a class="nav-tab" href="symbols.html">
+      <span class="nav-icon">✦</span>
+      <span class="nav-label">Symbols</span>
+    </a>
+    <a class="nav-tab" href="vmatrix.html">
+      <span class="nav-icon">◈</span>
+      <span class="nav-label">V Matrix</span>
+    </a>
+    <a class="nav-tab active" href="legion.html">
+      <span class="nav-icon">⚔</span>
+      <span class="nav-label">Legion</span>
+    </a>
+  </nav>
 
   <!-- HEADER -->
   <div class="sim-header">
-    <h1>
-      Cube Simulator
-      <span class="cube-badge badge-bpot" id="cube-badge">BONUS</span>
-      <span class="grade-pill gpill-legendary" id="header-grade-pill">Legendary</span>
-    </h1>
-    <p class="sub" id="sim-sub">Weapon · Legendary · Lv.120</p>
+    <h1>Legion Calculator</h1>
+    <p class="sub">Plan which characters to level up for your target Legion score</p>
   </div>
 
-  <!-- SETUP -->
+  <!-- INPUTS -->
   <div class="card">
-    <div class="card-title">Setup</div>
-    <div class="wanted-row">
-      <span class="wanted-label">Item</span>
-      <select id="item-type" class="wanted-select" onchange="onItemChange()">
-        <option value="weapon">Weapon</option>
-        <option value="secondary">Secondary Weapon</option>
-        <option value="emblem">Emblem</option>
-        <option value="hat">Hat</option>
-        <option value="overall">Overall</option>
-        <option value="gloves">Gloves</option>
-        <option value="accessory">Accessory</option>
-      </select>
-    </div>
-    <div style="margin-bottom:0;">
-      <div style="font-size:12px;color:#999;margin-bottom:6px;">Start Grade</div>
-      <div class="grade-bar">
-        <button class="grade-btn" id="gbtn-rare"      onclick="setStartGrade('rare')">      <span class="grade-icon">🟢</span>Rare</button>
-        <button class="grade-btn" id="gbtn-epic"      onclick="setStartGrade('epic')">      <span class="grade-icon">🟣</span>Epic</button>
-        <button class="grade-btn" id="gbtn-unique"    onclick="setStartGrade('unique')">    <span class="grade-icon">🟡</span>Unique</button>
-        <button class="grade-btn active-legendary" id="gbtn-legendary" onclick="setStartGrade('legendary')"><span class="grade-icon">🟠</span>Legendary</button>
+    <div class="card-title">Settings</div>
+    <div class="inputs-grid">
+      <div class="field">
+        <label>Target legion level</label>
+        <input type="number" id="inp-legion" value="5500" min="0" placeholder="e.g. 5500">
+      </div>
+      <div class="field">
+        <label>Max characters to use</label>
+        <input type="number" id="inp-maxchar" value="40" min="1" max="200" placeholder="e.g. 40">
+      </div>
+      <div class="field">
+        <label>Target character level</label>
+        <input type="number" id="inp-target" value="200" min="1" max="300" placeholder="e.g. 200">
       </div>
     </div>
-  </div>
-
-  <!-- CURRENT GRADE TRACK -->
-  <div class="current-grade-bar">
-    <span class="cg-label">Grade:</span>
-    <div class="cg-track" id="grade-track"></div>
-    <span class="rank-up-chance" id="rankup-chance-label"></span>
+    <div class="field" style="margin-top:12px;">
+      <label>Paste your JSON data here</label>
+      <textarea id="inp-json" placeholder='Paste the characters JSON array here (the full JSON with "characters": [...])...'></textarea>
+    </div>
+    <button class="btn-load" onclick="loadAndCalc()">Calculate</button>
+    <div id="parse-error"></div>
   </div>
 
   <!-- STATS -->
-  <div class="stats">
-    <div class="stat"><div class="stat-label">Total Rolls</div><div class="stat-val" id="s-total">0</div></div>
-    <div class="stat"><div class="stat-label">Rank Ups</div><div class="stat-val highlight" id="s-rankups">0</div></div>
-    <div class="stat"><div class="stat-label">Wanted Hits</div><div class="stat-val" id="s-hits">0</div></div>
-    <div class="stat"><div class="stat-label">Hit Rate</div><div class="stat-val" id="s-rate">—</div></div>
+  <div class="stats" id="stats-row" style="display:none;">
+    <div class="stat"><div class="stat-label">Total characters</div><div class="stat-val" id="st-total">—</div></div>
+    <div class="stat"><div class="stat-label">Characters used</div><div class="stat-val purple" id="st-used">—</div></div>
+    <div class="stat"><div class="stat-label">Current legion</div><div class="stat-val" id="st-current">—</div></div>
+    <div class="stat"><div class="stat-label">Levels still needed</div><div class="stat-val orange" id="st-needed">—</div></div>
   </div>
 
-  <!-- WANTED LINES -->
-  <div class="card">
-    <div class="card-title">Wanted Lines <span style="font-weight:400;color:#aaa;font-size:10px;text-transform:none;">(options shown for current grade)</span></div>
-    <div id="wanted-lines"><div class="loading-note">Loading...</div></div>
-    <div class="target-grade-row">
-      <label>Auto-roll stops at:</label>
-      <select id="target-grade"><option value="legendary" selected>Legendary only</option></select>
-    </div>
-  </div>
+  <!-- WARNING / SUCCESS BANNER -->
+  <div id="reach-banner" style="display:none;margin-bottom:16px;border-radius:12px;padding:14px 18px;font-size:13px;line-height:1.6;"></div>
 
-  <!-- AUTO ROLL -->
-  <div class="card">
-    <div class="card-title">Auto Roll</div>
-    <div class="rankup-toggle">
-      <label class="toggle-switch">
-        <input type="checkbox" id="rankup-enabled" checked>
-        <span class="slider"></span>
-      </label>
-      <span class="toggle-label">Enable rank-up (rolls can promote grade)</span>
+  <!-- LIST -->
+  <div class="card" id="list-card" style="display:none;">
+    <div class="card-title">Character list <span id="list-subtitle" style="font-weight:400;color:#aaa;font-size:10px;text-transform:none;"></span></div>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#534AB7;"></span>Priority — needs leveling to hit target</span>
+      <span><span class="legend-dot" style="background:#0F6E56;"></span>Done — already at target level</span>
+      <span><span class="legend-dot" style="background:#ddd;"></span>Skip / Excluded — not needed</span>
     </div>
-    <div class="auto-row">
-      <label>Max rolls:</label>
-      <input class="auto-input" type="number" id="auto-max" value="1000" min="1" max="100000">
-      <span class="auto-progress" id="auto-progress"></span>
+    <div class="list-header">
+      <span class="lh-rank">#</span>
+      <span class="lh-img"></span>
+      <span class="lh-name">Name · Job</span>
+      <span class="lh-now">Level</span>
+      <span class="lh-arr"></span>
+      <span class="lh-tgt">Target</span>
+      <span class="lh-need">Levels needed</span>
+      <span class="lh-badge"></span>
     </div>
-    <div class="btn-row" style="margin-bottom:0;">
-      <button class="btn-auto" id="btn-auto" onclick="doAutoRoll()">Auto Roll</button>
-    </div>
-    <div id="auto-summary" style="margin-top:12px;"></div>
-  </div>
-
-  <!-- CURRENT RESULT -->
-  <div class="card">
-    <div class="card-title">Current Roll &nbsp;<span id="roll-label" style="font-size:11px;color:#bbb;font-weight:400;">No roll yet</span></div>
-    <div id="result-lines"><div class="empty-note">Press Roll to start cubing...</div></div>
-  </div>
-
-  <!-- ROLL BUTTONS -->
-  <div class="btn-row">
-    <button class="btn-roll btn-roll-bpot" id="btn-roll" onclick="doRoll()">Roll Bonus Cube</button>
-    <button class="btn-reset" onclick="doReset()">Reset All</button>
-  </div>
-
-  <!-- HISTORY -->
-  <div class="card">
-    <div class="card-title">Roll History</div>
-    <div class="history-list" id="history-list">
-      <div class="empty-note">No rolls yet.</div>
-    </div>
+    <div class="char-list" id="char-list"></div>
   </div>
 
 </div>
+
 <script>
-// =============================================
-// JSON FILE FORMAT (new multi-grade format):
-//
-// data/bpot/weapon.json:
-// {
-//   "rare":      [ ...probabilityInfos array... ],
-//   "epic":      [ ...probabilityInfos array... ],
-//   "unique":    [ ...probabilityInfos array... ],
-//   "legendary": [ ...probabilityInfos array... ]
-// }
-//
-// BACKWARD COMPATIBLE: if your existing files are a plain array [],
-// they will be treated as legendary-only automatically.
-//
-// To generate all files for all grades, run fetch_data.py once.
-// =============================================
+// Legion level contribution per character level bracket
+// Each character contributes levels to the legion score based on their level
+// Standard MSN legion: every character level counts directly
+// Legion score = sum of all character levels (up to max char count, sorted highest first)
 
-const GRADE_ORDER = ['rare','epic','unique','legendary'];
-const GRADE_LABEL = { rare:'Rare', epic:'Epic', unique:'Unique', legendary:'Legendary' };
-const GRADE_ICON  = { rare:'🟢', epic:'🟣', unique:'🟡', legendary:'🟠' };
-const ITEM_LABELS = {
-  weapon:'Weapon', secondary:'Secondary Weapon', emblem:'Emblem',
-  hat:'Hat', overall:'Overall', gloves:'Gloves', accessory:'Accessory'
-};
-
-const RANKUP_CHANCE = {
-  'bpot':       { rare:4.7619, epic:1.9608, unique:0.4975, legendary:0 },
-  'mpot-red':   { rare:2.0,    epic:1.0,    unique:0.2,    legendary:0 },
-  'mpot-black': { rare:2.0,    epic:1.0,    unique:0.2,    legendary:0 },
-};
-
-// ── STATE ──
-let currentPot   = 'bpot';
-let currentItem  = 'weapon';
-let startGrade   = 'legendary';
-let currentGrade = 'legendary';
-let fileCache    = {};  // key `pot|item` -> { rare:[...], epic:[...], unique:[...], legendary:[...] }
-let totalRolls=0, wantedHits=0, rankUpCount=0, history=[];
-
-// ── DATA PATHS (local JSON) ──
-function dataPath(pot, item) {
-  if (pot === 'bpot')        return `data/bpot/${item}.json`;
-  if (pot === 'mpot-red')    return `data/mpot/red/${item}.json`;
-  if (pot === 'mpot-black')  return `data/mpot/black/${item}.json`;
+function parseLegionData(jsonStr) {
+  const data = JSON.parse(jsonStr.trim());
+  const arr = data.characters || data;
+  return arr.map(item => {
+    const c = item.character;
+    return {
+      name:     c.name,
+      job:      c.job?.jobName || '—',
+      level:    c.level || 0,
+      imageUrl: c.imageUrl || '',
+      worldId:  c.worldId || '',
+      expr:     parseFloat(c.expr) || 0,
+    };
+  }).filter(c => c.level > 0);
 }
 
-async function loadFile(pot, item) {
-  const key = `${pot}|${item}`;
-  if (fileCache[key]) return fileCache[key];
+function loadAndCalc() {
+  const errEl = document.getElementById('parse-error');
+  errEl.innerHTML = '';
+  document.getElementById('reach-banner').style.display = 'none';
+
+  const jsonStr   = document.getElementById('inp-json').value.trim();
+  const legionTgt = parseInt(document.getElementById('inp-legion').value) || 5500;
+  const maxChar   = parseInt(document.getElementById('inp-maxchar').value) || 40;
+  const charTgt   = parseInt(document.getElementById('inp-target').value) || 200;
+
+  if (!jsonStr) {
+    errEl.innerHTML = '<div class="error-note">Please paste your JSON data first.</div>';
+    return;
+  }
+
+  let chars;
   try {
-    const r = await fetch(dataPath(pot, item));
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const json = await r.json();
-    // Backward compat: old files are plain arrays (legendary only)
-    if (Array.isArray(json)) {
-      fileCache[key] = { rare:[], epic:[], unique:[], legendary: json };
-    } else {
-      fileCache[key] = { rare:[], epic:[], unique:[], legendary:[], ...json };
-    }
-    return fileCache[key];
+    chars = parseLegionData(jsonStr);
   } catch(e) {
-    console.error('Load failed:', dataPath(pot, item), e);
-    return null;
-  }
-}
-
-function getGradeData(pot, item, grade) {
-  return fileCache[`${pot}|${item}`]?.[grade] || null;
-}
-
-// ── SWITCHING ──
-function switchPot(pot) { currentPot=pot; currentGrade=startGrade; refreshAll(); }
-function onItemChange() { currentItem=document.getElementById('item-type').value; currentGrade=startGrade; refreshAll(); }
-function setStartGrade(g) { startGrade=g; currentGrade=g; updateTargetGradeOptions(); refreshAll(); }
-
-// ── REFRESH ──
-async function refreshAll() {
-  applyTheme(); updateGradeButtons(); updateGradeTrack();
-  document.getElementById('wanted-lines').innerHTML = '<div class="loading-note">Loading...</div>';
-  const ok = await loadFile(currentPot, currentItem);
-  if (!ok) {
-    document.getElementById('wanted-lines').innerHTML =
-      '<div class="error-note">Failed to load data. Run <b>fetch_data.py</b> first, then serve with: <code>python -m http.server 8080</code></div>';
+    errEl.innerHTML = `<div class="error-note">JSON parse error: ${e.message}</div>`;
     return;
   }
-  buildWanted(); doReset();
-}
 
-// ── THEME ──
-function applyTheme() {
-  ['bpot','mpot-red','mpot-black'].forEach(p => {
-    document.getElementById(`tab-${p}`).className = `pot-tab${currentPot===p ? ` active-${p}` : ''}`;
+  if (!chars.length) {
+    errEl.innerHTML = '<div class="error-note">No characters found in the JSON.</div>';
+    return;
+  }
+
+  // Sort by level descending — highest level chars are most valuable for legion
+  chars.sort((a, b) => b.level - a.level);
+
+  // Mark which chars are "counted" (top maxChar by level)
+  chars.forEach((c, i) => {
+    c.rank = i + 1;
+    c.counted = i < maxChar;
   });
-  const badge=document.getElementById('cube-badge'), btn=document.getElementById('btn-roll');
-  const cfg = {
-    'bpot':       ['BONUS','badge-bpot','btn-roll btn-roll-bpot','Roll Bonus Cube'],
-    'mpot-red':   ['RED','badge-red','btn-roll btn-roll-red','Roll Red Cube'],
-    'mpot-black': ['BLACK','badge-black','btn-roll btn-roll-black','Roll Black Cube'],
-  }[currentPot];
-  badge.textContent=cfg[0]; badge.className=`cube-badge ${cfg[1]}`;
-  btn.className=cfg[2]; btn.textContent=cfg[3];
-  document.getElementById('sim-sub').textContent =
-    `${ITEM_LABELS[currentItem]} · ${GRADE_LABEL[currentGrade]} · Lv.120`;
-}
 
-function updateGradeButtons() {
-  GRADE_ORDER.forEach(g => {
-    document.getElementById(`gbtn-${g}`).className = `grade-btn${g===startGrade ? ` active-${g}` : ''}`;
+  // Current legion = sum of levels of counted characters
+  const currentLegion = chars
+    .filter(c => c.counted)
+    .reduce((s, c) => s + c.level, 0);
+
+  const legionGap = Math.max(0, legionTgt - currentLegion);
+
+  // ── SMART ASSIGNMENT ──
+  // Strategy: level up the LOWEST counted chars first (most gain per char).
+  // We only assign as many levels as needed to close the legion gap exactly.
+  // chars already at/above charTgt contribute 0 extra levels.
+
+  // Reset all
+  chars.forEach(c => {
+    c.levelsNeeded  = 0;
+    c.isActive      = false; // this char is part of the plan to reach target
+    c.isDone        = false; // already at or above charTgt
   });
-}
 
-function updateHeaderGrade() {
-  const p=document.getElementById('header-grade-pill');
-  p.textContent=GRADE_LABEL[currentGrade]; p.className=`grade-pill gpill-${currentGrade}`;
-  document.getElementById('sim-sub').textContent =
-    `${ITEM_LABELS[currentItem]} · ${GRADE_LABEL[currentGrade]} · Lv.120`;
-}
+  // Work through counted chars sorted lowest level first
+  const countedByAsc = chars.filter(c => c.counted).sort((a, b) => a.level - b.level);
 
-function updateGradeTrack() {
-  const enabled = document.getElementById('rankup-enabled').checked;
-  const c=document.getElementById('grade-track'); c.innerHTML='';
-  const si=GRADE_ORDER.indexOf(startGrade);
-  for (let i=si; i<GRADE_ORDER.length; i++) {
-    const g=GRADE_ORDER[i], ci=GRADE_ORDER.indexOf(currentGrade);
-    if (i>si) {
-      const a=document.createElement('span');
-      a.className='cg-arrow'+(ci>i?' done':''); a.textContent='›'; c.appendChild(a);
-    }
-    const s=document.createElement('span');
-    s.className='cg-step'+(ci>i?' done':g===currentGrade?' doing':'');
-    s.innerHTML=`<span class="dot"></span>${GRADE_LABEL[g]}`; c.appendChild(s);
-  }
-  const cl=document.getElementById('rankup-chance-label');
-  cl.innerHTML = (!enabled||currentGrade==='legendary') ? '' :
-    `Rank-up: <b>${RANKUP_CHANCE[currentPot][currentGrade]}%</b>`;
-}
+  let remaining = legionGap;
 
-function updateTargetGradeOptions() {
-  const sel=document.getElementById('target-grade');
-  const si=GRADE_ORDER.indexOf(startGrade); sel.innerHTML='';
-  for (let i=si; i<GRADE_ORDER.length; i++) {
-    const g=GRADE_ORDER[i], o=document.createElement('option');
-    o.value=g;
-    o.textContent = i===GRADE_ORDER.length-1 ? `${GRADE_LABEL[g]} only` :
-                    i===si                    ? `${GRADE_LABEL[g]} (any)` :
-                    `${GRADE_LABEL[g]} or above`;
-    if (g==='legendary'||i===GRADE_ORDER.length-1) o.selected=true;
-    sel.appendChild(o);
-  }
-}
-
-// ── BUILD WANTED ──
-function buildWanted() {
-  const info=getGradeData(currentPot,currentItem,currentGrade);
-  const c=document.getElementById('wanted-lines');
-
-  // Save current selections before rebuilding
-  const saved=[0,1,2].map(i=>document.getElementById(`want-${i}`)?.value||'');
-
-  c.innerHTML='';
-  if (!info?.length) {
-    c.innerHTML=`<div class="error-note">No data for ${GRADE_LABEL[currentGrade]}. Run <b>fetch_data.py</b> to download all grades.</div>`;
-    return;
-  }
-  const lc=Math.min(3,info.length);
-  for (let i=0; i<lc; i++) {
-    const opts=(info[i]?.probabilityInfo||[]).map(x=>x.optionDescription);
-    const row=document.createElement('div'); row.className='wanted-row';
-    row.innerHTML=`<span class="wanted-label">Line ${i+1}</span>
-      <select class="wanted-select" id="want-${i}">
-        <option value="">— Any —</option>
-        ${opts.map(o=>`<option value="${o}">${o}</option>`).join('')}
-      </select>`;
-    c.appendChild(row);
-    // Restore saved value if it still exists in the new option list
-    if (saved[i]) {
-      const sel=document.getElementById(`want-${i}`);
-      if ([...sel.options].some(o=>o.value===saved[i])) sel.value=saved[i];
-    }
-  }
-}
-
-// ── PICK / ROLL ──
-function pick(list) {
-  if (!list?.length) return 'No Option';
-  let r=Math.random()*100, s=0;
-  for (let x of list) { s+=parseFloat(x.probability); if(r<=s) return x.optionDescription; }
-  return list[list.length-1].optionDescription;
-}
-function rollOnce(info) {
-  if (!info?.length) return ['No Data','No Data','No Data'];
-  return [
-    pick(info[0]?.probabilityInfo),
-    pick((info[1]||info[0])?.probabilityInfo),
-    pick((info[2]||info[1]||info[0])?.probabilityInfo),
-  ];
-}
-function checkRankUp() {
-  if (!document.getElementById('rankup-enabled').checked || currentGrade==='legendary') return false;
-  return Math.random()*100 < (RANKUP_CHANCE[currentPot][currentGrade]||0);
-}
-function isPrime(l) { return /\+12%|\+10%|\+18%|\+40%|\+30%|\+35%|Levels: \+2/.test(l||''); }
-
-// ── WANTED CHECK ──
-const SVM = {
-  "ATT: +9%":{f:"ATT_PCT",v:9},"ATT: +12%":{f:"ATT_PCT",v:12},
-  "Magic ATT: +9%":{f:"MATT_PCT",v:9},"Magic ATT: +12%":{f:"MATT_PCT",v:12},
-  "STR : +6%":{f:"STR",v:6},"STR : +9%":{f:"STR",v:9},"STR : +12%":{f:"STR",v:12},
-  "DEX : +6%":{f:"DEX",v:6},"DEX : +9%":{f:"DEX",v:9},"DEX : +12%":{f:"DEX",v:12},
-  "INT : +6%":{f:"INT",v:6},"INT : +9%":{f:"INT",v:9},"INT : +12%":{f:"INT",v:12},
-  "LUK : +6%":{f:"LUK",v:6},"LUK : +9%":{f:"LUK",v:9},"LUK : +12%":{f:"LUK",v:12},
-  "All Stats: +6%":{f:"ALLSTAT",v:6},"All Stats: +9%":{f:"ALLSTAT",v:9},
-  "Damage: +9%":{f:"DMG",v:9},"Damage: +12%":{f:"DMG",v:12},
-  "Boss Damage: +12%":{f:"BOSS",v:12},"Boss Damage: +18%":{f:"BOSS",v:18},
-  "Boss Damage: +30%":{f:"BOSS",v:30},"Boss Damage: +35%":{f:"BOSS",v:35},"Boss Damage: +40%":{f:"BOSS",v:40},
-  "DEF Ignored: +4%":{f:"IED",v:4},"DEF Ignored: +5%":{f:"IED",v:5},
-  "DEF Ignored: +30%":{f:"IED",v:30},"DEF Ignored: +35%":{f:"IED",v:35},"DEF Ignored: +40%":{f:"IED",v:40},
-  "Critical Rate: +9%":{f:"CRITRATE",v:9},"Critical Rate: +12%":{f:"CRITRATE",v:12},
-  "Critical Damage: +1%":{f:"CRITDMG",v:1},"Critical Damage: +3%":{f:"CRITDMG",v:3},"Critical Damage: +8%":{f:"CRITDMG",v:8},
-  "Max HP: +7%":{f:"HP",v:7},"Max HP: +10%":{f:"HP",v:10},
-  "Max MP: +7%":{f:"MP",v:7},"Max MP: +10%":{f:"MP",v:10},
-  "STR per 10 Character Levels: +1":{f:"STR_LV",v:1},"STR per 10 Character Levels: +2":{f:"STR_LV",v:2},
-  "DEX per 10 Character Levels: +1":{f:"DEX_LV",v:1},"DEX per 10 Character Levels: +2":{f:"DEX_LV",v:2},
-  "INT per 10 Character Levels: +1":{f:"INT_LV",v:1},"INT per 10 Character Levels: +2":{f:"INT_LV",v:2},
-  "LUK per 10 Character Levels: +1":{f:"LUK_LV",v:1},"LUK per 10 Character Levels: +2":{f:"LUK_LV",v:2},
-  "ATT per 10 Character Levels: +1":{f:"ATT_LV",v:1},
-  "M. ATT per 10 Character Levels: +1":{f:"MATT_LV",v:1},
-};
-function sbf(lines){const t={};for(let l of lines){const e=SVM[l];if(e)t[e.f]=(t[e.f]||0)+e.v;}return t;}
-function getWanted(){return[0,1,2].map(i=>document.getElementById(`want-${i}`)?.value||'');}
-function anyWantedSet(){return getWanted().some(x=>x!=='');}
-function checkWanted(lines){
-  const wanted=getWanted().filter(x=>x!=='');
-  if(!wanted.length)return false;
-  const mw={},ew=[];
-  for(let w of wanted){const e=SVM[w];if(e)mw[e.f]=(mw[e.f]||0)+e.v;else ew.push(w);}
-  const r=sbf(lines);
-  for(let[f,n]of Object.entries(mw)){if((r[f]||0)<n)return false;}
-  const pool=[...lines];
-  for(let req of ew){const i=pool.indexOf(req);if(i===-1)return false;pool.splice(i,1);}
-  return true;
-}
-function gradeMetTarget(){
-  const t=document.getElementById('target-grade')?.value||'legendary';
-  return GRADE_ORDER.indexOf(currentGrade)>=GRADE_ORDER.indexOf(t);
-}
-
-// ── SINGLE ROLL ──
-function doRoll() {
-  const info=getGradeData(currentPot,currentItem,currentGrade);
-  if(!info?.length){alert('No data for this grade. Run fetch_data.py first.');return;}
-  const didRankUp=checkRankUp();
-  let rankedUpTo=null;
-  if(didRankUp){
-    const ci=GRADE_ORDER.indexOf(currentGrade);
-    if(ci<GRADE_ORDER.length-1){
-      rankedUpTo=GRADE_ORDER[ci+1]; currentGrade=rankedUpTo; rankUpCount++;
-      updateHeaderGrade(); updateGradeTrack(); applyTheme(); buildWanted();
-    }
-  }
-  const rollInfo=getGradeData(currentPot,currentItem,currentGrade)||info;
-  const lines=rollOnce(rollInfo);
-  totalRolls++;
-  const hit=checkWanted(lines);
-  if(hit)wantedHits++;
-  history.unshift({num:totalRolls,lines,hit,rankedUpTo,grade:currentGrade});
-  updateResult(lines,hit,rankedUpTo); updateStats(); updateHistory();
-}
-
-// ── AUTO ROLL ──
-function doAutoRoll(){
-  const hasWanted=anyWantedSet();
-  const targetGrade=document.getElementById('target-grade')?.value||'legendary';
-  if(!hasWanted && targetGrade===startGrade){
-    document.getElementById('auto-summary').innerHTML=
-      '<div style="font-size:13px;color:#c0392b;margin-top:4px;">Set at least one Wanted Line, or choose a higher target grade.</div>';
-    return;
-  }
-  const maxRolls=Math.min(parseInt(document.getElementById('auto-max').value)||1000,100000);
-  const btn=document.getElementById('btn-auto'); btn.disabled=true;
-  document.getElementById('auto-summary').innerHTML='';
-  let rolled=0; const hits=[],rankUps=[];
-
-  function chunk(){
-    const end=Math.min(rolled+1000,maxRolls);
-    while(rolled<end){
-      const info=getGradeData(currentPot,currentItem,currentGrade);
-      if(!info?.length)break;
-      const didRankUp=checkRankUp(); let rankedUpTo=null;
-      if(didRankUp){
-        const ci=GRADE_ORDER.indexOf(currentGrade);
-        if(ci<GRADE_ORDER.length-1){
-          rankedUpTo=GRADE_ORDER[ci+1]; currentGrade=rankedUpTo; rankUpCount++;
-          rankUps.push({num:totalRolls+1,from:GRADE_ORDER[ci],to:rankedUpTo});
-          history.unshift({num:totalRolls+1,lines:[],hit:false,rankedUpTo,grade:rankedUpTo,isRankUpEvent:true});
-          updateGradeTrack(); updateHeaderGrade();
-        }
-      }
-      const rollInfo=getGradeData(currentPot,currentItem,currentGrade)||info;
-      const lines=rollOnce(rollInfo); rolled++; totalRolls++;
-      const hit=checkWanted(lines);
-      if(hit){wantedHits++;hits.push({num:totalRolls,lines,grade:currentGrade});}
-      history.unshift({num:totalRolls,lines,hit,rankedUpTo,grade:currentGrade});
-      if(gradeMetTarget()&&(!hasWanted||hit))break;
-    }
-    document.getElementById('auto-progress').textContent=
-      `${rolled.toLocaleString()} / ${maxRolls.toLocaleString()} rolled...`;
-    updateStats(); applyTheme();
-    const stop=rolled>=maxRolls||(gradeMetTarget()&&(!hasWanted||hits.length>0));
-    if(!stop){setTimeout(chunk,0);return;}
-    btn.disabled=false;
-    document.getElementById('auto-progress').textContent='';
-    if(history.length>200)history=history.slice(0,200);
-    updateHistory(); buildWanted(); showAutoSummary(rolled,hits,rankUps);
-  }
-  chunk();
-}
-
-// ── UI UPDATES ──
-function updateResult(lines,hit,rankedUpTo){
-  document.getElementById('roll-label').textContent=
-    `Roll #${totalRolls.toLocaleString()} · ${GRADE_ICON[currentGrade]} ${GRADE_LABEL[currentGrade]}`;
-  let html=lines.map((l,i)=>
-    `<div class="line-row">
-      <span class="line-num">${i+1}</span>
-      <span class="line-name">${l}</span>
-      <span class="badge ${(i===0||isPrime(l))?'badge-prime':'badge-normal'}">${(i===0||isPrime(l))?'Prime':'Normal'}</span>
-    </div>`).join('');
-  if(rankedUpTo)html+=`<div class="rankup-notice rankup-to-${rankedUpTo}">⬆ Ranked up to ${GRADE_ICON[rankedUpTo]} ${GRADE_LABEL[rankedUpTo]}!</div>`;
-  if(hit)html+='<div class="hit-notice">✓ Wanted lines matched!</div>';
-  document.getElementById('result-lines').innerHTML=html;
-}
-function updateStats(){
-  document.getElementById('s-total').textContent=totalRolls.toLocaleString();
-  document.getElementById('s-rankups').textContent=rankUpCount.toLocaleString();
-  document.getElementById('s-hits').textContent=wantedHits.toLocaleString();
-  document.getElementById('s-rate').textContent=totalRolls>0?((wantedHits/totalRolls)*100).toFixed(2)+'%':'—';
-}
-function gpHtml(grade){
-  const c={rare:'#2e8b57',epic:'#7b2d8b',unique:'#c9940a',legendary:'#d4712a'};
-  return `<span class="history-grade-pill" style="background:${c[grade]||'#aaa'};color:#fff;">${GRADE_LABEL[grade]||grade}</span>`;
-}
-function updateHistory(){
-  const c=document.getElementById('history-list');
-  if(!history.length){c.innerHTML='<div class="empty-note">No rolls yet.</div>';return;}
-  c.innerHTML=history.slice(0,200).map(h=>{
-    if(h.isRankUpEvent)return`<div class="history-item is-rankup">
-      <span class="history-num">#${h.num}</span>
-      <span class="history-lines">⬆ Ranked up to ${GRADE_LABEL[h.rankedUpTo]||h.rankedUpTo}!</span>
-      <span class="history-rankup-badge">RANK UP</span>${gpHtml(h.grade)}</div>`;
-    return`<div class="history-item ${h.hit?'is-hit':''}">
-      <span class="history-num">#${h.num}</span>
-      <span class="history-lines">${h.lines.join(' · ')}</span>
-      ${h.hit?'<span class="history-hit-badge">HIT</span>':''}
-      ${h.rankedUpTo?`<span class="history-rankup-badge">⬆${GRADE_LABEL[h.rankedUpTo]}</span>`:''}
-      ${gpHtml(h.grade)}</div>`;
-  }).join('');
-}
-function showAutoSummary(rolled,hits,rankUps){
-  let html='';
-  if(rankUps.length){
-    html+=`<div class="summary-box" style="background:#fff8ee;border:1px solid #f0c080;margin-bottom:8px;">
-      <div class="sum-title" style="color:#7a4400;">⬆ ${rankUps.length} Rank-Up${rankUps.length>1?'s':''} in ${rolled.toLocaleString()} rolls</div>
-      <div class="sum-body" style="color:#a05000;">${rankUps.slice(0,5).map(r=>`Roll #${r.num}: ${GRADE_LABEL[r.from]} → ${GRADE_LABEL[r.to]}`).join('<br>')}${rankUps.length>5?`<br>...and ${rankUps.length-5} more`:''}</div>
-    </div>`;
-  }
-  if(!hits.length){
-    html+=`<div class="summary-box summary-red-err">
-      <div class="sum-title">No wanted-line hits in ${rolled.toLocaleString()} rolls</div>
-      <div class="sum-body">Try more rolls or loosen your wanted lines. Current grade: ${GRADE_LABEL[currentGrade]}.</div>
-    </div>`;
+  if (legionGap <= 0) {
+    // Already at or above target — mark all as done
+    countedByAsc.forEach(c => { c.isDone = c.level >= charTgt; });
   } else {
-    const avg=(rolled/hits.length).toFixed(1);
-    const rows=hits.slice(0,20).map(r=>
-      `<div class="hit-list-row"><span class="hit-list-num">#${r.num}</span>${r.lines.join(' · ')} ${gpHtml(r.grade)}</div>`).join('');
-    const more=hits.length>20?`<div style="font-size:11px;color:#888;margin-top:6px;">...and ${hits.length-20} more hits</div>`:'';
-    html+=`<div class="summary-box summary-green">
-      <div class="sum-title">${hits.length} hit${hits.length>1?'s':''} in ${rolled.toLocaleString()} rolls — avg 1 per ${avg} rolls</div>
-      <div class="sum-body" style="margin-bottom:8px;">Matching rolls:</div>${rows}${more}
-    </div>`;
+    for (const c of countedByAsc) {
+      if (remaining <= 0) break;
+      if (c.level >= charTgt) {
+        c.isDone = true;
+        continue;
+      }
+      const canGive = charTgt - c.level; // max this char can contribute
+      const assign  = Math.min(canGive, remaining);
+      c.levelsNeeded = assign;
+      c.isActive     = true;
+      remaining -= assign;
+    }
+    // Mark remaining counted chars (above target or not needed) as done/skip
+    countedByAsc.forEach(c => {
+      if (c.level >= charTgt) c.isDone = true;
+    });
   }
-  document.getElementById('auto-summary').innerHTML=html;
-}
-function doReset(){
-  totalRolls=0;wantedHits=0;rankUpCount=0;history=[];currentGrade=startGrade;
-  // Clear dropdowns first so buildWanted() doesn't restore old selections on reset
-  [0,1,2].forEach(i=>{ const s=document.getElementById(`want-${i}`); if(s) s.value=''; });
-  document.getElementById('result-lines').innerHTML='<div class="empty-note">Press Roll to start cubing...</div>';
-  document.getElementById('roll-label').textContent='No roll yet';
-  document.getElementById('auto-summary').innerHTML='';
-  document.getElementById('auto-progress').textContent='';
-  updateStats();updateHistory();updateHeaderGrade();updateGradeTrack();applyTheme();buildWanted();
+
+  const totalNeeded  = chars.reduce((s, c) => s + c.levelsNeeded, 0);
+  const alreadyDone  = legionGap <= 0;
+  const canReach     = remaining <= 0; // greedy loop closed the gap fully
+  const shortfall    = remaining;      // > 0 means we couldn't reach target
+
+  // Max possible legion if ALL counted chars hit charTgt
+  const maxPossible = chars
+    .filter(c => c.counted)
+    .reduce((s, c) => s + Math.max(c.level, charTgt), 0);
+
+  // How many more chars (from excluded pool) would be needed to close shortfall
+  const excludedPool = chars.filter(c => !c.counted).sort((a,b) => b.level - a.level);
+  let extraCharsNeeded = 0, extraGap = shortfall;
+  for (const c of excludedPool) {
+    if (extraGap <= 0) break;
+    const give = Math.min(Math.max(0, charTgt - c.level), extraGap);
+    // actually just count how many more chars needed at charTgt
+    extraGap -= (charTgt - Math.min(c.level, charTgt));
+    extraCharsNeeded++;
+  }
+
+  // Show stats
+  document.getElementById('stats-row').style.display = 'grid';
+  document.getElementById('list-card').style.display  = 'block';
+  document.getElementById('st-total').textContent   = chars.length.toLocaleString();
+  document.getElementById('st-used').textContent    = Math.min(maxChar, chars.length).toLocaleString();
+  document.getElementById('st-current').textContent = currentLegion.toLocaleString();
+
+  const neededEl = document.getElementById('st-needed');
+  if (alreadyDone) {
+    neededEl.textContent = '✓ Reached!';
+    neededEl.style.color = '#0F6E56';
+  } else if (!canReach) {
+    neededEl.textContent = '✗ Can\'t reach';
+    neededEl.style.color = '#c0392b';
+  } else {
+    neededEl.textContent = totalNeeded.toLocaleString();
+    neededEl.style.color = '#c0392b';
+  }
+
+  document.getElementById('list-subtitle').textContent =
+    `sorted low → high · top ${Math.min(maxChar, chars.length)} counted · gap: ${legionGap.toLocaleString()} levels`;
+
+  // ── BANNER ──
+  const banner = document.getElementById('reach-banner');
+  if (alreadyDone) {
+    banner.style.display = 'block';
+    banner.style.background = '#E1F5EE';
+    banner.style.border = '1px solid #9FE1CB';
+    banner.style.color = '#085041';
+    banner.innerHTML = `<b style="color:#0F6E56;">✓ Already reached!</b> Your current legion (${currentLegion.toLocaleString()}) already meets the target of ${legionTgt.toLocaleString()}.`;
+  } else if (!canReach) {
+    banner.style.display = 'block';
+    banner.style.background = '#FAECE7';
+    banner.style.border = '1px solid #F5C4B3';
+    banner.style.color = '#712B13';
+    const maxPossibleStr = maxPossible.toLocaleString();
+    const shortfallStr   = shortfall.toLocaleString();
+    let advice = '';
+    if (excludedPool.length > 0) {
+      advice = ` Try increasing <b>Max characters</b> by ~${extraCharsNeeded} more, or lower the target legion level to <b>${(legionTgt - shortfall).toLocaleString()}</b>.`;
+    } else {
+      advice = ` You've used all available characters. Lower the target legion level to <b>${(legionTgt - shortfall).toLocaleString()}</b> or raise the character level target above ${charTgt}.`;
+    }
+    banner.innerHTML = `<b style="color:#993C1D;">✗ Cannot reach target.</b> Even leveling all ${Math.min(maxChar, chars.length)} counted characters to ${charTgt}, you can only reach <b>${maxPossibleStr}</b> — still <b>${shortfallStr} short</b> of ${legionTgt.toLocaleString()}.${advice}`;
+  } else {
+    banner.style.display = 'block';
+    banner.style.background = '#EEEDFE';
+    banner.style.border = '1px solid #AFA9EC';
+    banner.style.color = '#26215C';
+    banner.innerHTML = `<b style="color:#534AB7;">Plan ready.</b> Level up <b>${chars.filter(c=>c.isActive).length} characters</b> for a total of <b>${totalNeeded.toLocaleString()} levels</b> to reach ${legionTgt.toLocaleString()} from ${currentLegion.toLocaleString()}.`;
+  }
+
+  // List order: active chars first (asc level = most work needed),
+  // then done chars, then excluded
+  const activeChars   = chars.filter(c => c.counted && c.isActive && !c.isDone).sort((a,b) => a.level - b.level);
+  const doneChars     = chars.filter(c => c.counted && c.isDone);
+  const skippedChars  = chars.filter(c => c.counted && !c.isActive && !c.isDone); // counted but not needed
+  const excludedChars = chars.filter(c => !c.counted);
+  const sorted = [...activeChars, ...skippedChars, ...doneChars, ...excludedChars];
+
+  const listEl = document.getElementById('char-list');
+  listEl.innerHTML = '';
+
+  if (!sorted.length) {
+    listEl.innerHTML = '<div class="empty-note">No characters to display.</div>';
+    return;
+  }
+
+  sorted.forEach(c => {
+    const isExcluded = !c.counted;
+    const pct = Math.min(100, Math.round((c.level / charTgt) * 100));
+
+    // Badge
+    let badgeHtml = '';
+    if (c.isDone)        badgeHtml = '<span class="char-badge badge-done">Done</span>';
+    else if (isExcluded) badgeHtml = '<span class="char-badge badge-excluded">Excluded</span>';
+    else if (c.isActive) badgeHtml = '<span class="char-badge badge-counted">Priority</span>';
+    else                 badgeHtml = '<span class="char-badge" style="background:#f0efe8;color:#888;">Skip</span>';
+
+    // Levels needed column
+    let needHtml = '';
+    if (isExcluded) {
+      needHtml = '<span class="char-need" style="color:#bbb;">—</span>';
+    } else if (c.isDone) {
+      needHtml = '<span class="char-need done">✓ Done</span>';
+    } else if (c.isActive) {
+      needHtml = `<span class="char-need pos">+${c.levelsNeeded.toLocaleString()} lvls</span>`;
+    } else {
+      needHtml = '<span class="char-need" style="color:#bbb;">Not needed</span>';
+    }
+
+    // Target level shown only for active chars
+    const tgtDisplay = (isExcluded || (!c.isActive && !c.isDone)) ? '—' : charTgt;
+
+    const imgHtml = c.imageUrl
+      ? `<img class="char-img" src="${c.imageUrl}" alt="${c.name}" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
+        + `<div class="char-img-placeholder" style="display:none;">${c.name.slice(0,2).toUpperCase()}</div>`
+      : `<div class="char-img-placeholder">${c.name.slice(0,2).toUpperCase()}</div>`;
+
+    const rowClass = c.isDone ? 'char-row is-done'
+                   : (isExcluded || (!c.isActive && !c.isDone)) ? 'char-row is-excluded'
+                   : 'char-row';
+
+    const row = document.createElement('div');
+    row.className = rowClass;
+    row.innerHTML = `
+      <span class="char-rank">${c.rank}</span>
+      ${imgHtml}
+      <div class="char-info">
+        <div class="char-name">${c.name}</div>
+        <div class="char-job">${c.job} · ${c.worldId}</div>
+        <div class="progress-wrap"><div class="progress-fill ${c.isDone?'done':''}" style="width:${pct}%"></div></div>
+      </div>
+      <span class="char-level-now">${c.level}</span>
+      <span class="char-arrow">→</span>
+      <span class="char-level-target">${tgtDisplay}</span>
+      ${needHtml}
+      ${badgeHtml}
+    `;
+    listEl.appendChild(row);
+  });
 }
 
-// ── INIT ──
-async function init(){
-  applyTheme();updateGradeButtons();updateGradeTrack();updateTargetGradeOptions();
-  await loadFile(currentPot,currentItem);
-  buildWanted();updateStats();
-}
-init();
+// Auto-load if there's a default JSON (for convenience during testing)
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('inp-json').focus();
+});
 </script>
 </body>
 </html>
