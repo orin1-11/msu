@@ -149,8 +149,8 @@
       </div>
     </div>
     <div class="field" style="margin-top:12px;">
-      <label>Paste your JSON data here</label>
-      <textarea id="inp-json" placeholder='Paste the characters JSON array here (the full JSON with "characters": [...])...'></textarea>
+      <label>Enter wallet address</label>
+      <input id="inp-wallet" placeholder="0x..." />
     </div>
     <button class="btn-load" onclick="loadAndCalc()">Calculate</button>
     <div id="parse-error"></div>
@@ -196,8 +196,7 @@
 // Standard MSN legion: every character level counts directly
 // Legion score = sum of all character levels (up to max char count, sorted highest first)
 
-function parseLegionData(jsonStr) {
-  const data = JSON.parse(jsonStr.trim());
+function parseLegionData(data) {
   const arr = data.characters || data;
   return arr.map(item => {
     const c = item.character;
@@ -222,21 +221,26 @@ function loadAndCalc() {
   const maxChar   = parseInt(document.getElementById('inp-maxchar').value) || 40;
   const charTgt   = parseInt(document.getElementById('inp-target').value) || 200;
 
-  if (!jsonStr) {
-    errEl.innerHTML = '<div class="error-note">Please paste your JSON data first.</div>';
+  if (!wallet.startsWith("0x")) {
+    errEl.innerHTML = '<div class="error-note">Invalid wallet address.</div>';
     return;
   }
-
+ 
+  const url = `https://orin111.vercel.app/api/inventory?wallet=${wallet}`;
+ 
   let chars;
   try {
-    chars = parseLegionData(jsonStr);
+    const res = await fetch(url);
+    const data = await res.json();
+    chars = parseLegionData(data);
+   
   } catch(e) {
-    errEl.innerHTML = `<div class="error-note">JSON parse error: ${e.message}</div>`;
+    errEl.innerHTML = '<div class="error-note">Failed to fetch data.</div>';
     return;
   }
 
   if (!chars.length) {
-    errEl.innerHTML = '<div class="error-note">No characters found in the JSON.</div>';
+    errEl.innerHTML = '<div class="error-note">No characters found.</div>';
     return;
   }
 
