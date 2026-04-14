@@ -211,17 +211,17 @@ function parseLegionData(data) {
   }).filter(c => c.level > 0);
 }
 
-function loadAndCalc() {
+async function loadAndCalc() {
   const errEl = document.getElementById('parse-error');
   errEl.innerHTML = '';
   document.getElementById('reach-banner').style.display = 'none';
 
-  const jsonStr   = document.getElementById('inp-json').value.trim();
+  const wallet = document.getElementById('inp-wallet').value.trim();
   const legionTgt = parseInt(document.getElementById('inp-legion').value) || 5500;
   const maxChar   = parseInt(document.getElementById('inp-maxchar').value) || 40;
   const charTgt   = parseInt(document.getElementById('inp-target').value) || 200;
 
-  if (!wallet.startsWith("0x")) {
+  if (!wallet || !wallet.startsWith("0x")) {
     errEl.innerHTML = '<div class="error-note">Invalid wallet address.</div>';
     return;
   }
@@ -445,7 +445,7 @@ function loadAndCalc() {
 
 // Auto-load if there's a default JSON (for convenience during testing)
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('inp-json').focus();
+  document.getElementById('inp-wallet').focus();
 });
 </script>
 </body>
