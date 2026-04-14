@@ -263,7 +263,7 @@ async function fetchWalletData(wallet) {
   return { chars, fromCache: false };
 }
 
-async function loadAndCalc(forceRefresh = false) {
+window.loadAndCalc = async function(forceRefresh = false) {
   const errEl = document.getElementById('parse-error');
   errEl.innerHTML = '';
   document.getElementById('reach-banner').style.display = 'none';
