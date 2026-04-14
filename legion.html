@@ -39,8 +39,6 @@
   .btn-load { margin-top: 12px; padding: 9px 20px; border-radius: 8px; border: 1px solid #534AB7; background: #EEEDFE; color: #534AB7; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.1s; }
   .btn-load:hover { background: #e0ddf8; }
   .btn-load:active { transform: scale(0.97); }
-  .btn-refresh { margin-top: 0; padding: 9px 16px; border-radius: 8px; border: 1px solid #ddd; background: #fff; color: #888; font-size: 13px; cursor: pointer; font-family: inherit; transition: background 0.1s; }
-  .btn-refresh:hover { background: #f5f4f0; color: #555; }
 
   /* SUMMARY STATS */
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
@@ -151,16 +149,10 @@
       </div>
     </div>
     <div class="field" style="margin-top:12px;">
-      <label>Wallet address</label>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <input id="inp-wallet" placeholder="0x..." style="flex:1;">
-        <span id="cache-status" style="font-size:11px;color:#888;white-space:nowrap;"></span>
-      </div>
+      <label>Enter wallet address</label>
+      <input id="inp-wallet" placeholder="0x..." />
     </div>
-    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
-      <button class="btn-load" id="btn-calc" onclick="loadAndCalc(false)">Calculate</button>
-      <button class="btn-refresh" id="btn-refresh" onclick="loadAndCalc(true)" style="display:none;">Refresh data</button>
-    </div>
+    <button class="btn-load" onclick="loadAndCalc()">Calculate</button>
     <div id="parse-error"></div>
   </div>
 
@@ -199,11 +191,10 @@
 </div>
 
 <script>
-// ── CACHE ──
-// Stores fetched raw data per wallet address.
-// Structure: { [walletLower]: { data: parsedChars[], fetchedAt: timestamp } }
-const WALLET_CACHE = {};
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes — refresh automatically after this
+// Legion level contribution per character level bracket
+// Each character contributes levels to the legion score based on their level
+// Standard MSN legion: every character level counts directly
+// Legion score = sum of all character levels (up to max char count, sorted highest first)
 
 function parseLegionData(data) {
   const arr = data.characters || data;
@@ -212,208 +203,220 @@ function parseLegionData(data) {
     return {
       name:     c.name,
       job:      c.job?.jobName || '—',
-      className: c.job?.className || '—',
       level:    c.level || 0,
       imageUrl: c.imageUrl || '',
       worldId:  c.worldId || '',
+      expr:     parseFloat(c.expr) || 0,
     };
   }).filter(c => c.level > 0);
 }
 
-function setCacheStatus(msg, color) {
-  const el = document.getElementById('cache-status');
-  if (el) { el.textContent = msg; el.style.color = color || '#888'; }
-}
-
-function showRefreshBtn(show) {
-  const btn = document.getElementById('btn-refresh');
-  if (btn) btn.style.display = show ? 'inline-block' : 'none';
-}
-
-async function fetchWalletData(wallet) {
-  const key = wallet.toLowerCase();
-  const now = Date.now();
-  const cached = WALLET_CACHE[key];
-
-  // Return cache if fresh
-  if (cached && (now - cached.fetchedAt) < CACHE_TTL_MS) {
-    const ageSeconds = Math.round((now - cached.fetchedAt) / 1000);
-    setCacheStatus(`Using cached data (${ageSeconds}s ago)`, '#0F6E56');
-    showRefreshBtn(true);
-    return { chars: cached.chars, fromCache: true };
-  }
-
-  // Fetch fresh
-  setCacheStatus('Fetching...', '#888');
-  const url = `https://orin111.vercel.app/api/inventory?wallet=${wallet}`;
-  const res = await fetch(url);
-
-  if (res.status === 429) throw new Error('Rate limited — please wait a moment and try again.');
-  if (!res.ok) throw new Error(`API error ${res.status}`);
-
-  const data = await res.json();
-  if (data.error) throw new Error(data.error);
-
-  const chars = parseLegionData(data);
-  WALLET_CACHE[key] = { chars, fetchedAt: Date.now() };
-
-  const fetchedAt = new Date().toLocaleTimeString();
-  setCacheStatus(`Fetched at ${fetchedAt}`, '#888');
-  showRefreshBtn(true);
-  return { chars, fromCache: false };
-}
-
-window.loadAndCalc = async function(forceRefresh = false) {
+async function loadAndCalc() {
   const errEl = document.getElementById('parse-error');
   errEl.innerHTML = '';
   document.getElementById('reach-banner').style.display = 'none';
 
-  const wallet  = document.getElementById('inp-wallet').value.trim();
+  const wallet = document.getElementById('inp-wallet').value.trim();
   const legionTgt = parseInt(document.getElementById('inp-legion').value) || 5500;
   const maxChar   = parseInt(document.getElementById('inp-maxchar').value) || 40;
   const charTgt   = parseInt(document.getElementById('inp-target').value) || 200;
 
-  if (!wallet || !wallet.startsWith('0x')) {
-    errEl.innerHTML = '<div class="error-note">Please enter a valid wallet address (starts with 0x).</div>';
+  if (!wallet || !wallet.startsWith("0x")) {
+    errEl.innerHTML = '<div class="error-note">Invalid wallet address.</div>';
     return;
   }
-
-  // Force-clear cache if refresh requested
-  if (forceRefresh) {
-    delete WALLET_CACHE[wallet.toLowerCase()];
-    setCacheStatus('', '#888');
-  }
-
-  const btn = document.getElementById('btn-calc');
-  btn.disabled = true;
-  btn.textContent = 'Loading...';
-
+ 
+  const url = `https://orin111.vercel.app/api/inventory?wallet=${wallet}`;
+ 
   let chars;
   try {
-    const result = await fetchWalletData(wallet);
-    chars = result.chars;
+    const res = await fetch(url);
+    const data = await res.json();
+    chars = parseLegionData(data);
+   
   } catch(e) {
-    errEl.innerHTML = `<div class="error-note">${e.message}</div>`;
-    btn.disabled = false;
-    btn.textContent = 'Calculate';
+    errEl.innerHTML = '<div class="error-note">Failed to fetch data.</div>';
     return;
   }
-
-  btn.disabled = false;
-  btn.textContent = 'Calculate';
 
   if (!chars.length) {
-    errEl.innerHTML = '<div class="error-note">No characters found for this wallet.</div>';
+    errEl.innerHTML = '<div class="error-note">No characters found.</div>';
     return;
   }
 
-  runCalc(chars, legionTgt, maxChar, charTgt);
-}
+  // Sort by level descending — highest level chars are most valuable for legion
+  chars.sort((a, b) => b.level - a.level);
 
-function runCalc(chars, legionTgt, maxChar, charTgt) {
-  // Sort by level descending
-  chars = [...chars].sort((a, b) => b.level - a.level);
-
+  // Mark which chars are "counted" (top maxChar by level)
   chars.forEach((c, i) => {
-    c.rank    = i + 1;
+    c.rank = i + 1;
     c.counted = i < maxChar;
   });
 
-  const currentLegion = chars.filter(c => c.counted).reduce((s, c) => s + c.level, 0);
-  const legionGap     = Math.max(0, legionTgt - currentLegion);
+  // Current legion = sum of levels of counted characters
+  const currentLegion = chars
+    .filter(c => c.counted)
+    .reduce((s, c) => s + c.level, 0);
 
-  chars.forEach(c => { c.levelsNeeded = 0; c.isActive = false; c.isDone = false; });
+  const legionGap = Math.max(0, legionTgt - currentLegion);
 
+  // ── SMART ASSIGNMENT ──
+  // Strategy: level up the LOWEST counted chars first (most gain per char).
+  // We only assign as many levels as needed to close the legion gap exactly.
+  // chars already at/above charTgt contribute 0 extra levels.
+
+  // Reset all
+  chars.forEach(c => {
+    c.levelsNeeded  = 0;
+    c.isActive      = false; // this char is part of the plan to reach target
+    c.isDone        = false; // already at or above charTgt
+  });
+
+  // Work through counted chars sorted lowest level first
   const countedByAsc = chars.filter(c => c.counted).sort((a, b) => a.level - b.level);
+
   let remaining = legionGap;
 
   if (legionGap <= 0) {
+    // Already at or above target — mark all as done
     countedByAsc.forEach(c => { c.isDone = c.level >= charTgt; });
   } else {
     for (const c of countedByAsc) {
       if (remaining <= 0) break;
-      if (c.level >= charTgt) { c.isDone = true; continue; }
-      const assign = Math.min(charTgt - c.level, remaining);
+      if (c.level >= charTgt) {
+        c.isDone = true;
+        continue;
+      }
+      const canGive = charTgt - c.level; // max this char can contribute
+      const assign  = Math.min(canGive, remaining);
       c.levelsNeeded = assign;
       c.isActive     = true;
       remaining -= assign;
     }
-    countedByAsc.forEach(c => { if (c.level >= charTgt) c.isDone = true; });
+    // Mark remaining counted chars (above target or not needed) as done/skip
+    countedByAsc.forEach(c => {
+      if (c.level >= charTgt) c.isDone = true;
+    });
   }
 
-  const totalNeeded = chars.reduce((s, c) => s + c.levelsNeeded, 0);
-  const alreadyDone = legionGap <= 0;
-  const canReach    = remaining <= 0;
-  const shortfall   = remaining;
+  const totalNeeded  = chars.reduce((s, c) => s + c.levelsNeeded, 0);
+  const alreadyDone  = legionGap <= 0;
+  const canReach     = remaining <= 0; // greedy loop closed the gap fully
+  const shortfall    = remaining;      // > 0 means we couldn't reach target
 
-  const maxPossible = chars.filter(c => c.counted).reduce((s, c) => s + Math.max(c.level, charTgt), 0);
+  // Max possible legion if ALL counted chars hit charTgt
+  const maxPossible = chars
+    .filter(c => c.counted)
+    .reduce((s, c) => s + Math.max(c.level, charTgt), 0);
+
+  // How many more chars (from excluded pool) would be needed to close shortfall
   const excludedPool = chars.filter(c => !c.counted).sort((a,b) => b.level - a.level);
   let extraCharsNeeded = 0, extraGap = shortfall;
   for (const c of excludedPool) {
     if (extraGap <= 0) break;
+    const give = Math.min(Math.max(0, charTgt - c.level), extraGap);
+    // actually just count how many more chars needed at charTgt
     extraGap -= (charTgt - Math.min(c.level, charTgt));
     extraCharsNeeded++;
   }
 
-  // Stats
+  // Show stats
   document.getElementById('stats-row').style.display = 'grid';
   document.getElementById('list-card').style.display  = 'block';
-  document.getElementById('st-total').textContent     = chars.length.toLocaleString();
-  document.getElementById('st-used').textContent      = Math.min(maxChar, chars.length).toLocaleString();
-  document.getElementById('st-current').textContent   = currentLegion.toLocaleString();
+  document.getElementById('st-total').textContent   = chars.length.toLocaleString();
+  document.getElementById('st-used').textContent    = Math.min(maxChar, chars.length).toLocaleString();
+  document.getElementById('st-current').textContent = currentLegion.toLocaleString();
 
   const neededEl = document.getElementById('st-needed');
-  if (alreadyDone)      { neededEl.textContent = '✓ Reached!';    neededEl.style.color = '#0F6E56'; }
-  else if (!canReach)   { neededEl.textContent = '✗ Can't reach'; neededEl.style.color = '#c0392b'; }
-  else                  { neededEl.textContent = totalNeeded.toLocaleString(); neededEl.style.color = '#c0392b'; }
+  if (alreadyDone) {
+    neededEl.textContent = '✓ Reached!';
+    neededEl.style.color = '#0F6E56';
+  } else if (!canReach) {
+    neededEl.textContent = '✗ Can\'t reach';
+    neededEl.style.color = '#c0392b';
+  } else {
+    neededEl.textContent = totalNeeded.toLocaleString();
+    neededEl.style.color = '#c0392b';
+  }
 
   document.getElementById('list-subtitle').textContent =
     `sorted low → high · top ${Math.min(maxChar, chars.length)} counted · gap: ${legionGap.toLocaleString()} levels`;
 
-  // Banner
+  // ── BANNER ──
   const banner = document.getElementById('reach-banner');
   if (alreadyDone) {
-    banner.style.cssText = 'display:block;margin-bottom:16px;border-radius:12px;padding:14px 18px;font-size:13px;line-height:1.6;background:#E1F5EE;border:1px solid #9FE1CB;color:#085041;';
+    banner.style.display = 'block';
+    banner.style.background = '#E1F5EE';
+    banner.style.border = '1px solid #9FE1CB';
+    banner.style.color = '#085041';
     banner.innerHTML = `<b style="color:#0F6E56;">✓ Already reached!</b> Your current legion (${currentLegion.toLocaleString()}) already meets the target of ${legionTgt.toLocaleString()}.`;
   } else if (!canReach) {
-    const advice = excludedPool.length > 0
-      ? ` Try increasing <b>Max characters</b> by ~${extraCharsNeeded} more, or lower the target to <b>${(legionTgt - shortfall).toLocaleString()}</b>.`
-      : ` Lower the target legion level to <b>${(legionTgt - shortfall).toLocaleString()}</b> or raise the character level target above ${charTgt}.`;
-    banner.style.cssText = 'display:block;margin-bottom:16px;border-radius:12px;padding:14px 18px;font-size:13px;line-height:1.6;background:#FAECE7;border:1px solid #F5C4B3;color:#712B13;';
-    banner.innerHTML = `<b style="color:#993C1D;">✗ Cannot reach target.</b> Even leveling all ${Math.min(maxChar, chars.length)} counted chars to ${charTgt}, you can only reach <b>${maxPossible.toLocaleString()}</b> — still <b>${shortfall.toLocaleString()} short</b>.${advice}`;
+    banner.style.display = 'block';
+    banner.style.background = '#FAECE7';
+    banner.style.border = '1px solid #F5C4B3';
+    banner.style.color = '#712B13';
+    const maxPossibleStr = maxPossible.toLocaleString();
+    const shortfallStr   = shortfall.toLocaleString();
+    let advice = '';
+    if (excludedPool.length > 0) {
+      advice = ` Try increasing <b>Max characters</b> by ~${extraCharsNeeded} more, or lower the target legion level to <b>${(legionTgt - shortfall).toLocaleString()}</b>.`;
+    } else {
+      advice = ` You've used all available characters. Lower the target legion level to <b>${(legionTgt - shortfall).toLocaleString()}</b> or raise the character level target above ${charTgt}.`;
+    }
+    banner.innerHTML = `<b style="color:#993C1D;">✗ Cannot reach target.</b> Even leveling all ${Math.min(maxChar, chars.length)} counted characters to ${charTgt}, you can only reach <b>${maxPossibleStr}</b> — still <b>${shortfallStr} short</b> of ${legionTgt.toLocaleString()}.${advice}`;
   } else {
-    banner.style.cssText = 'display:block;margin-bottom:16px;border-radius:12px;padding:14px 18px;font-size:13px;line-height:1.6;background:#EEEDFE;border:1px solid #AFA9EC;color:#26215C;';
+    banner.style.display = 'block';
+    banner.style.background = '#EEEDFE';
+    banner.style.border = '1px solid #AFA9EC';
+    banner.style.color = '#26215C';
     banner.innerHTML = `<b style="color:#534AB7;">Plan ready.</b> Level up <b>${chars.filter(c=>c.isActive).length} characters</b> for a total of <b>${totalNeeded.toLocaleString()} levels</b> to reach ${legionTgt.toLocaleString()} from ${currentLegion.toLocaleString()}.`;
   }
 
-  // Render list
-  const activeChars  = chars.filter(c => c.counted && c.isActive && !c.isDone).sort((a,b) => a.level - b.level);
-  const skippedChars = chars.filter(c => c.counted && !c.isActive && !c.isDone);
-  const doneChars    = chars.filter(c => c.counted && c.isDone);
-  const excChars     = chars.filter(c => !c.counted);
-  const sorted = [...activeChars, ...skippedChars, ...doneChars, ...excChars];
+  // List order: active chars first (asc level = most work needed),
+  // then done chars, then excluded
+  const activeChars   = chars.filter(c => c.counted && c.isActive && !c.isDone).sort((a,b) => a.level - b.level);
+  const doneChars     = chars.filter(c => c.counted && c.isDone);
+  const skippedChars  = chars.filter(c => c.counted && !c.isActive && !c.isDone); // counted but not needed
+  const excludedChars = chars.filter(c => !c.counted);
+  const sorted = [...activeChars, ...skippedChars, ...doneChars, ...excludedChars];
 
   const listEl = document.getElementById('char-list');
   listEl.innerHTML = '';
+
+  if (!sorted.length) {
+    listEl.innerHTML = '<div class="empty-note">No characters to display.</div>';
+    return;
+  }
 
   sorted.forEach(c => {
     const isExcluded = !c.counted;
     const pct = Math.min(100, Math.round((c.level / charTgt) * 100));
 
-    const badgeHtml = c.isDone        ? '<span class="char-badge badge-done">Done</span>'
-                    : isExcluded      ? '<span class="char-badge badge-excluded">Excluded</span>'
-                    : c.isActive      ? '<span class="char-badge badge-counted">Priority</span>'
-                    : '<span class="char-badge" style="background:#f0efe8;color:#888;">Skip</span>';
+    // Badge
+    let badgeHtml = '';
+    if (c.isDone)        badgeHtml = '<span class="char-badge badge-done">Done</span>';
+    else if (isExcluded) badgeHtml = '<span class="char-badge badge-excluded">Excluded</span>';
+    else if (c.isActive) badgeHtml = '<span class="char-badge badge-counted">Priority</span>';
+    else                 badgeHtml = '<span class="char-badge" style="background:#f0efe8;color:#888;">Skip</span>';
 
-    const needHtml = isExcluded   ? '<span class="char-need" style="color:#bbb;">—</span>'
-                   : c.isDone     ? '<span class="char-need done">✓ Done</span>'
-                   : c.isActive   ? `<span class="char-need pos">+${c.levelsNeeded.toLocaleString()} lvls</span>`
-                   : '<span class="char-need" style="color:#bbb;">Not needed</span>';
+    // Levels needed column
+    let needHtml = '';
+    if (isExcluded) {
+      needHtml = '<span class="char-need" style="color:#bbb;">—</span>';
+    } else if (c.isDone) {
+      needHtml = '<span class="char-need done">✓ Done</span>';
+    } else if (c.isActive) {
+      needHtml = `<span class="char-need pos">+${c.levelsNeeded.toLocaleString()} lvls</span>`;
+    } else {
+      needHtml = '<span class="char-need" style="color:#bbb;">Not needed</span>';
+    }
 
+    // Target level shown only for active chars
     const tgtDisplay = (isExcluded || (!c.isActive && !c.isDone)) ? '—' : charTgt;
 
     const imgHtml = c.imageUrl
-      ? `<img class="char-img" src="${c.imageUrl}" alt="${c.name}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="char-img-placeholder" style="display:none;">${c.name.slice(0,2).toUpperCase()}</div>`
+      ? `<img class="char-img" src="${c.imageUrl}" alt="${c.name}" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
+        + `<div class="char-img-placeholder" style="display:none;">${c.name.slice(0,2).toUpperCase()}</div>`
       : `<div class="char-img-placeholder">${c.name.slice(0,2).toUpperCase()}</div>`;
 
     const rowClass = c.isDone ? 'char-row is-done'
@@ -440,22 +443,9 @@ function runCalc(chars, legionTgt, maxChar, charTgt) {
   });
 }
 
+// Auto-load if there's a default JSON (for convenience during testing)
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('inp-wallet').focus();
-
-  // Re-run calc instantly when number inputs change (no API call needed)
-  ['inp-legion','inp-maxchar','inp-target'].forEach(id => {
-    document.getElementById(id).addEventListener('change', () => {
-      const wallet = document.getElementById('inp-wallet').value.trim();
-      if (!wallet) return;
-      const key = wallet.toLowerCase();
-      if (!WALLET_CACHE[key]) return; // no data yet
-      const legionTgt = parseInt(document.getElementById('inp-legion').value) || 5500;
-      const maxChar   = parseInt(document.getElementById('inp-maxchar').value) || 40;
-      const charTgt   = parseInt(document.getElementById('inp-target').value) || 200;
-      runCalc(WALLET_CACHE[key].chars, legionTgt, maxChar, charTgt);
-    });
-  });
 });
 </script>
 </body>
