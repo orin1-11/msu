@@ -273,7 +273,7 @@ async function loadAndCalc() {
   });
 
   // Work through counted chars sorted lowest level first
-  const countedByAsc = chars.filter(c => c.counted).sort((a, b) => b.level - a.level);
+  const countedByAsc = chars.filter(c => c.counted).sort((a, b) => a.level - b.level);
 
   let remaining = legionGap;
 
@@ -340,7 +340,7 @@ async function loadAndCalc() {
   }
 
   document.getElementById('list-subtitle').textContent =
-    `sorted high → low · top ${Math.min(maxChar, chars.length)} counted · gap: ${legionGap.toLocaleString()} levels`
+    `sorted low → high · top ${Math.min(maxChar, chars.length)} counted · gap: ${legionGap.toLocaleString()} levels`
 
   // ── BANNER ──
   const banner = document.getElementById('reach-banner');
