@@ -1,0 +1,374 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Legion Calculator</title><style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; padding: 24px 16px; }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  .site-nav { display: flex; gap: 0; margin-bottom: 24px; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
+  .nav-tab { flex: 1; padding: 11px 8px; text-align: center; font-size: 13px; font-weight: 600; border: none; background: #fff; color: #999; transition: background 0.15s, color 0.15s; border-right: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: inherit; text-decoration: none; }
+  .nav-tab:last-child { border-right: none; }
+  .nav-tab .nav-icon { font-size: 17px; line-height: 1; }
+  .nav-tab .nav-icon-img { width: 20px; height: 20px; object-fit: contain; }
+  .nav-tab .nav-label { font-size: 11px; letter-spacing: 0.03em; }
+  .nav-tab.active { background: #1a1a1a; color: #fff; }
+  .nav-tab:not(.active):hover { background: #f5f4f0; color: #555; }
+
+  .sim-header { margin-bottom: 20px; }
+  .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+  .sim-header .sub { font-size: 13px; color: #888; }
+
+  .card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; }
+  .card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+
+  .inputs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  @media (max-width: 600px) { .inputs-grid { grid-template-columns: 1fr 1fr; } }
+  .field label { font-size: 12px; color: #999; display: block; margin-bottom: 6px; }
+  .field input, .field textarea { width: 100%; font-size: 13px; padding: 7px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; outline: none; font-family: inherit; }
+  .field input:focus, .field textarea:focus { border-color: #534AB7; }
+
+  .btn-load { margin-top: 12px; padding: 9px 20px; border-radius: 8px; border: 1px solid #534AB7; background: #EEEDFE; color: #534AB7; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.1s; }
+  .btn-load:hover { background: #e0ddf8; }
+  .btn-load:active { transform: scale(0.97); }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+  @media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 12px; text-align: center; }
+  .stat-label { font-size: 10px; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .stat-val { font-size: 20px; font-weight: 600; color: #1a1a1a; }
+  .stat-val.purple { color: #534AB7; }
+  .stat-val.green  { color: #0F6E56; }
+  .stat-val.orange { color: #c0392b; }
+
+  .char-list { display: flex; flex-direction: column; gap: 6px; }
+  .char-row {
+    display: flex; align-items: center; gap: 12px;
+    background: #fafafa; border: 1px solid #e0ddd5; border-radius: 10px;
+    padding: 8px 12px; transition: border-color 0.1s;
+  }
+  .char-row.is-done { background: #E1F5EE; border-color: #9FE1CB; }
+  .char-row.is-excluded { opacity: 0.45; border-style: dashed; background: #f9f9f9; }
+  .char-rank { font-size: 11px; color: #bbb; min-width: 22px; font-weight: 600; }
+  .char-img { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; background: #eee; flex-shrink: 0; }
+  .char-img-placeholder { width: 36px; height: 36px; border-radius: 6px; background: #e0ddd5; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #999; }
+  .char-info { flex: 1; min-width: 0; }
+  .char-name { font-size: 13px; font-weight: 600; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .char-job  { font-size: 11px; color: #888; }
+  .char-level-now { font-size: 13px; font-weight: 600; color: #1a1a1a; min-width: 36px; text-align: right; }
+  .char-arrow { font-size: 12px; color: #bbb; padding: 0 4px; }
+  .char-level-target { font-size: 13px; font-weight: 600; color: #534AB7; min-width: 36px; text-align: center; }
+  .char-need { font-size: 12px; font-weight: 600; min-width: 70px; text-align: right; }
+  .char-need.pos { color: #c0392b; }
+  .char-need.done { color: #0F6E56; }
+  .char-badge { font-size: 10px; padding: 2px 7px; border-radius: 5px; font-weight: 700; flex-shrink: 0; }
+  .badge-done     { background: #E1F5EE; color: #085041; }
+  .badge-excluded { background: #f0efe8; color: #888; }
+  .badge-counted  { background: #EEEDFE; color: #3C3489; }
+
+  .progress-wrap { background: #f0efe8; border-radius: 99px; height: 6px; overflow: hidden; margin-top: 4px; }
+  .progress-fill { height: 100%; background: #534AB7; border-radius: 99px; transition: width 0.3s; }
+  .progress-fill.done { background: #0F6E56; }
+
+  .empty-note { font-size: 13px; color: #bbb; padding: 8px 0; text-align: center; }
+  .error-note { font-size: 13px; color: #c0392b; padding: 6px 0; }
+
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; font-size: 11px; color: #888; align-items: center; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+  .list-header { display: flex; align-items: center; gap: 12px; padding: 0 12px 6px; font-size: 10px; color: #bbb; text-transform: uppercase; letter-spacing: 0.05em; }
+  .lh-rank { min-width: 22px; }
+  .lh-img  { width: 36px; }
+  .lh-name { flex: 1; }
+  .lh-now  { min-width: 36px; text-align: right; }
+  .lh-arr  { padding: 0 4px; }
+  .lh-tgt  { min-width: 36px; text-align: center; }
+  .lh-need { min-width: 70px; text-align: right; }
+  .lh-badge { min-width: 60px; }
+  .lh-excl { min-width: 30px; }
+
+  /* Exclude / restore button */
+  .btn-excl {
+    width: 26px; height: 26px; border-radius: 50%; border: 1px solid #ddd;
+    background: #f5f4f0; color: #aaa; font-size: 16px; line-height: 1;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-family: inherit; transition: background 0.1s, color 0.1s, border-color 0.1s;
+    padding: 0;
+  }
+  .btn-excl:hover { background: #fce8e8; border-color: #f5a5a5; color: #c0392b; }
+  .btn-excl.restore { background: #E1F5EE; border-color: #9FE1CB; color: #0F6E56; }
+  .btn-excl.restore:hover { background: #c9f0e1; }</style></head><body><div class="container"><nav class="site-nav"><a class="nav-tab" href="index.html"><span class="nav-icon">🏠</span> <span class="nav-label">Home</span> </a><a class="nav-tab" href="cube.html"><img class="nav-icon-img" src="images/RED.webp" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=font-size:17px>🎲</span>')" alt=""> <span class="nav-label">Cube Sim</span> </a><a class="nav-tab" href="symbols.html"><span class="nav-icon">✦</span> <span class="nav-label">Symbols</span> </a><a class="nav-tab" href="vmatrix.html"><span class="nav-icon">◈</span> <span class="nav-label">V Matrix</span> </a><a class="nav-tab active" href="legion.html"><span class="nav-icon">⚔</span> <span class="nav-label">Legion</span></a></nav><div class="sim-header"><h1>Legion Calculator</h1><p class="sub">Plan which characters to level up for your target Legion score</p></div><div class="card"><div class="card-title">Settings</div><div class="inputs-grid"><div class="field"><label>Target legion level</label> <input type="number" id="inp-legion" value="5500" min="0" placeholder="e.g. 5500"></div><div class="field"><label>Max characters to use</label> <input type="number" id="inp-maxchar" value="40" min="1" max="200" placeholder="e.g. 40"></div><div class="field"><label>Target character level</label> <input type="number" id="inp-target" value="200" min="1" max="300" placeholder="e.g. 200"></div></div><div class="field" style="margin-top:12px;"><label>Enter wallet address</label> <input id="inp-wallet" placeholder="0x..."></div><button class="btn-load" onclick="loadAndCalc()">Calculate</button><div id="parse-error"></div></div><div class="stats" id="stats-row" style="display:none;"><div class="stat"><div class="stat-label">Total characters</div><div class="stat-val" id="st-total">—</div></div><div class="stat"><div class="stat-label">Characters used</div><div class="stat-val purple" id="st-used">—</div></div><div class="stat"><div class="stat-label">Current legion</div><div class="stat-val" id="st-current">—</div></div><div class="stat"><div class="stat-label">Levels still needed</div><div class="stat-val orange" id="st-needed">—</div></div></div><div id="reach-banner" style="display:none;margin-bottom:16px;border-radius:12px;padding:14px 18px;font-size:13px;line-height:1.6;"></div><div class="card" id="list-card" style="display:none;"><div class="card-title">Character list <span id="list-subtitle" style="font-weight:400;color:#aaa;font-size:10px;text-transform:none;"></span></div><div class="legend"><span><span class="legend-dot" style="background:#534AB7;"></span>Priority — needs leveling</span> <span><span class="legend-dot" style="background:#0F6E56;"></span>Done — already at target</span> <span><span class="legend-dot" style="background:#ddd;"></span>Skip / Excluded</span> <span style="color:#bbb;">· Click <b style="color:#c0392b;">−</b> to exclude a character, <b style="color:#0F6E56;">+</b> to restore</span></div><div class="list-header"><span class="lh-rank">#</span> <span class="lh-img"></span> <span class="lh-name">Name · Job</span> <span class="lh-now">Level</span> <span class="lh-arr"></span> <span class="lh-tgt">Target</span> <span class="lh-need">Levels needed</span> <span class="lh-badge"></span> <span class="lh-excl"></span></div><div class="char-list" id="char-list"></div></div></div><script>// Set of manually excluded character names
+const manuallyExcluded = new Set();
+
+// All loaded chars stored globally for re-render
+let allChars = [];
+let lastLegionTgt = 5500;
+let lastMaxChar = 40;
+let lastCharTgt = 200;
+
+function parseLegionData(data) {
+  const arr = data.characters || data;
+  return arr.map(item => {
+    const c = item.character;
+    return {
+      name:     c.name,
+      job:      c.job?.jobName || '—',
+      level:    c.level || 0,
+      imageUrl: c.imageUrl || '',
+      worldId:  c.worldId || '',
+      expr:     parseFloat(c.expr) || 0,
+    };
+  }).filter(c => c.level > 0);
+}
+
+async function loadAndCalc() {
+  const errEl = document.getElementById('parse-error');
+  errEl.innerHTML = '';
+
+  const wallet = document.getElementById('inp-wallet').value.trim();
+  lastLegionTgt = parseInt(document.getElementById('inp-legion').value) || 5500;
+  lastMaxChar   = parseInt(document.getElementById('inp-maxchar').value) || 40;
+  lastCharTgt   = parseInt(document.getElementById('inp-target').value) || 200;
+
+  if (!wallet || !wallet.startsWith("0x")) {
+    errEl.innerHTML = '<div class="error-note">Invalid wallet address.</div>';
+    return;
+  }
+
+  const url = `https://orin111.vercel.app/api/inventory?wallet=${wallet}`;
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    allChars = parseLegionData(data);
+  } catch(e) {
+    errEl.innerHTML = '<div class="error-note">Failed to fetch data.</div>';
+    return;
+  }
+
+  if (!allChars.length) {
+    errEl.innerHTML = '<div class="error-note">No characters found.</div>';
+    return;
+  }
+
+  // Clear manual exclusions on fresh load
+  manuallyExcluded.clear();
+
+  renderCalc();
+}
+
+function toggleExclude(name) {
+  if (manuallyExcluded.has(name)) {
+    manuallyExcluded.delete(name);
+  } else {
+    manuallyExcluded.add(name);
+  }
+  renderCalc();
+}
+
+function renderCalc() {
+  const legionTgt = lastLegionTgt;
+  const maxChar   = lastMaxChar;
+  const charTgt   = lastCharTgt;
+
+  // Filter out manually excluded chars before sorting/counting
+  const activeCharsPool = allChars.filter(c => !manuallyExcluded.has(c.name));
+  const excludedCharsPool = allChars.filter(c => manuallyExcluded.has(c.name));
+
+  // Sort active by level descending
+  activeCharsPool.sort((a, b) => b.level - a.level);
+
+  // Assign ranks and counted flag only among active pool
+  activeCharsPool.forEach((c, i) => {
+    c.rank = i + 1;
+    c.counted = i < maxChar;
+    c.manuallyExcluded = false;
+  });
+  excludedCharsPool.forEach(c => {
+    c.counted = false;
+    c.manuallyExcluded = true;
+  });
+
+  // Current legion = sum of levels of counted (active) characters
+  const currentLegion = activeCharsPool
+    .filter(c => c.counted)
+    .reduce((s, c) => s + c.level, 0);
+
+  const legionGap = Math.max(0, legionTgt - currentLegion);
+
+  // Reset planning state
+  allChars.forEach(c => {
+    c.levelsNeeded = 0;
+    c.isActive     = false;
+    c.isDone       = false;
+  });
+
+  const countedByAsc = activeCharsPool.filter(c => c.counted).sort((a, b) => a.level - b.level);
+  let remaining = legionGap;
+
+  if (legionGap <= 0) {
+    countedByAsc.forEach(c => { c.isDone = c.level >= charTgt; });
+  } else {
+    for (const c of countedByAsc) {
+      if (remaining <= 0) break;
+      if (c.level >= charTgt) { c.isDone = true; continue; }
+      const canGive = charTgt - c.level;
+      const assign  = Math.min(canGive, remaining);
+      c.levelsNeeded = assign;
+      c.isActive     = true;
+      remaining -= assign;
+    }
+    countedByAsc.forEach(c => { if (c.level >= charTgt) c.isDone = true; });
+  }
+
+  const totalNeeded  = activeCharsPool.reduce((s, c) => s + c.levelsNeeded, 0);
+  const alreadyDone  = legionGap <= 0;
+  const canReach     = remaining <= 0;
+  const shortfall    = remaining;
+
+  const maxPossible = activeCharsPool
+    .filter(c => c.counted)
+    .reduce((s, c) => s + Math.max(c.level, charTgt), 0);
+
+  const excludedPool2 = activeCharsPool.filter(c => !c.counted).sort((a,b) => b.level - a.level);
+  let extraCharsNeeded = 0, extraGap = shortfall;
+  for (const c of excludedPool2) {
+    if (extraGap <= 0) break;
+    extraGap -= (charTgt - Math.min(c.level, charTgt));
+    extraCharsNeeded++;
+  }
+
+  // Show stats
+  document.getElementById('stats-row').style.display = 'grid';
+  document.getElementById('list-card').style.display  = 'block';
+  document.getElementById('st-total').textContent   = allChars.length.toLocaleString();
+  document.getElementById('st-used').textContent    = Math.min(maxChar, activeCharsPool.length).toLocaleString();
+  document.getElementById('st-current').textContent = currentLegion.toLocaleString();
+
+  const neededEl = document.getElementById('st-needed');
+  if (alreadyDone) {
+    neededEl.textContent = '✓ Reached!';
+    neededEl.style.color = '#0F6E56';
+  } else if (!canReach) {
+    neededEl.textContent = '✗ Can\'t reach';
+    neededEl.style.color = '#c0392b';
+  } else {
+    neededEl.textContent = totalNeeded.toLocaleString();
+    neededEl.style.color = '#c0392b';
+  }
+
+  document.getElementById('list-subtitle').textContent =
+    `sorted low → high · top ${Math.min(maxChar, activeCharsPool.length)} counted · gap: ${legionGap.toLocaleString()} levels`
+    + (manuallyExcluded.size > 0 ? ` · ${manuallyExcluded.size} manually excluded` : '');
+
+  // Banner
+  const banner = document.getElementById('reach-banner');
+  if (alreadyDone) {
+    banner.style.display = 'block';
+    banner.style.background = '#E1F5EE';
+    banner.style.border = '1px solid #9FE1CB';
+    banner.style.color = '#085041';
+    banner.innerHTML = `<b style="color:#0F6E56;">✓ Already reached!</b> Your current legion (${currentLegion.toLocaleString()}) already meets the target of ${legionTgt.toLocaleString()}.`;
+  } else if (!canReach) {
+    banner.style.display = 'block';
+    banner.style.background = '#FAECE7';
+    banner.style.border = '1px solid #F5C4B3';
+    banner.style.color = '#712B13';
+    let advice = '';
+    if (excludedPool2.length > 0) {
+      advice = ` Try increasing <b>Max characters</b> by ~${extraCharsNeeded} more, or lower the target legion level to <b>${(legionTgt - shortfall).toLocaleString()}</b>.`;
+    } else {
+      advice = ` You've used all available characters. Lower the target legion level to <b>${(legionTgt - shortfall).toLocaleString()}</b> or raise the character level target above ${charTgt}.`;
+    }
+    banner.innerHTML = `<b style="color:#993C1D;">✗ Cannot reach target.</b> Even leveling all ${Math.min(maxChar, activeCharsPool.length)} counted characters to ${charTgt}, you can only reach <b>${maxPossible.toLocaleString()}</b> — still <b>${shortfall.toLocaleString()} short</b> of ${legionTgt.toLocaleString()}.${advice}`;
+  } else {
+    banner.style.display = 'block';
+    banner.style.background = '#EEEDFE';
+    banner.style.border = '1px solid #AFA9EC';
+    banner.style.color = '#26215C';
+    banner.innerHTML = `<b style="color:#534AB7;">Plan ready.</b> Level up <b>${activeCharsPool.filter(c=>c.isActive).length} characters</b> for a total of <b>${totalNeeded.toLocaleString()} levels</b> to reach ${legionTgt.toLocaleString()} from ${currentLegion.toLocaleString()}.`;
+  }
+
+  // Sort for display
+  const priorityChars  = activeCharsPool.filter(c => c.counted && c.isActive && !c.isDone).sort((a,b) => a.level - b.level);
+  const skippedChars   = activeCharsPool.filter(c => c.counted && !c.isActive && !c.isDone);
+  const doneChars      = activeCharsPool.filter(c => c.counted && c.isDone);
+  const notCountedChars = activeCharsPool.filter(c => !c.counted);
+  const manualExclChars = excludedCharsPool;
+
+  const sorted = [...priorityChars, ...skippedChars, ...doneChars, ...notCountedChars, ...manualExclChars];
+
+  const listEl = document.getElementById('char-list');
+  listEl.innerHTML = '';
+
+  if (!sorted.length) {
+    listEl.innerHTML = '<div class="empty-note">No characters to display.</div>';
+    return;
+  }
+
+  sorted.forEach(c => {
+    const isManualExcl = c.manuallyExcluded;
+    const isNotCounted = !c.counted && !isManualExcl;
+    const pct = Math.min(100, Math.round((c.level / charTgt) * 100));
+
+    // Badge
+    let badgeHtml = '';
+    if (isManualExcl)    badgeHtml = '<span class="char-badge badge-excluded">Excluded</span>';
+    else if (c.isDone)   badgeHtml = '<span class="char-badge badge-done">Done</span>';
+    else if (isNotCounted) badgeHtml = '<span class="char-badge badge-excluded">Excluded</span>';
+    else if (c.isActive) badgeHtml = '<span class="char-badge badge-counted">Priority</span>';
+    else                 badgeHtml = '<span class="char-badge" style="background:#f0efe8;color:#888;">Skip</span>';
+
+    // Levels needed
+    let needHtml = '';
+    if (isManualExcl || isNotCounted) {
+      needHtml = '<span class="char-need" style="color:#bbb;">—</span>';
+    } else if (c.isDone) {
+      needHtml = '<span class="char-need done">✓ Done</span>';
+    } else if (c.isActive) {
+      needHtml = `<span class="char-need pos">+${c.levelsNeeded.toLocaleString()} lvls</span>`;
+    } else {
+      needHtml = '<span class="char-need" style="color:#bbb;">Not needed</span>';
+    }
+
+    const tgtDisplay = (isManualExcl || isNotCounted || (!c.isActive && !c.isDone)) ? '—' : charTgt;
+
+    const imgHtml = c.imageUrl
+      ? `<img class="char-img" src="${c.imageUrl}" alt="${c.name}" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
+        + `<div class="char-img-placeholder" style="display:none;">${c.name.slice(0,2).toUpperCase()}</div>`
+      : `<div class="char-img-placeholder">${c.name.slice(0,2).toUpperCase()}</div>`;
+
+    const rowClass = isManualExcl ? 'char-row is-excluded'
+                   : isNotCounted ? 'char-row is-excluded'
+                   : c.isDone ? 'char-row is-done'
+                   : (!c.isActive) ? 'char-row is-excluded'
+                   : 'char-row';
+
+    const rankDisplay = isManualExcl ? '—' : (c.rank || '—');
+
+    // Exclude/restore button
+    const btnClass = isManualExcl ? 'btn-excl restore' : 'btn-excl';
+    const btnLabel = isManualExcl ? '+' : '−';
+    const btnTitle = isManualExcl ? 'Restore character' : 'Exclude character';
+    const escapedName = c.name.replace(/'/g, "\\'");
+    const exclBtn = `<button class="${btnClass}" title="${btnTitle}" onclick="toggleExclude('${escapedName}')">${btnLabel}</button>`;
+
+    const row = document.createElement('div');
+    row.className = rowClass;
+    row.innerHTML = `
+      <span class="char-rank">${rankDisplay}</span>
+      ${imgHtml}
+      <div class="char-info">
+        <div class="char-name">${c.name}</div>
+        <div class="char-job">${c.job} · ${c.worldId}</div>
+        <div class="progress-wrap"><div class="progress-fill ${c.isDone?'done':''}" style="width:${pct}%"></div></div>
+      </div>
+      <span class="char-level-now">${c.level}</span>
+      <span class="char-arrow">→</span>
+      <span class="char-level-target">${tgtDisplay}</span>
+      ${needHtml}
+      ${badgeHtml}
+      ${exclBtn}
+    `;
+    listEl.appendChild(row);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('inp-wallet').focus();
+});</script></body></html>

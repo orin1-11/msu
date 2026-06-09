@@ -1,0 +1,165 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EXP Calculator — MapleStory N</title><link rel="stylesheet" href="css/nav.css"><style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; }
+
+  /* LAYOUT */
+  main { max-width: 480px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  .page-header { margin-bottom: 20px; }
+  .page-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+  .page-header p { font-size: 13px; color: #888; }
+
+  /* CARD */
+  .card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; }
+  .card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; color: #999; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .field input[type="number"] { width: 100%; font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; outline: none; font-family: inherit; transition: border-color 0.15s; }
+  .field input[type="number"]:focus { border-color: #534AB7; }
+
+  /* SLIDER */
+  .slider-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .slider-row label { font-size: 12px; color: #999; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .slider-row span { font-size: 13px; color: #555; font-weight: 600; }
+  input[type="range"] { width: 100%; accent-color: #0F6E56; margin-bottom: 4px; }
+
+  /* RESULT */
+  .result-card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 22px; text-align: center; margin-bottom: 12px; }
+  .result-route { font-size: 12px; color: #888; margin-bottom: 6px; }
+  .result-num { font-size: 40px; font-weight: 700; letter-spacing: -1px; color: #0F6E56; }
+  .result-unit { font-size: 12px; color: #888; margin-top: 4px; }
+
+  /* ADVANCED TOGGLE */
+  .adv-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; padding: 14px 20px; background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; margin-bottom: 12px; transition: background 0.15s; }
+  .adv-toggle:hover { background: #f5f4f0; }
+  .adv-toggle span { font-size: 13px; color: #888; }
+  .adv-toggle .chevron { margin-left: auto; color: #aaa; transition: transform 0.2s; }
+  .adv-toggle.open .chevron { transform: rotate(180deg); }
+
+  /* SWITCH */
+  .switch { position: relative; width: 32px; height: 18px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch-track { position: absolute; inset: 0; background: #ddd; border-radius: 9px; transition: background 0.2s; }
+  .switch input:checked + .switch-track { background: #0F6E56; }
+  .switch-thumb { position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: white; transition: left 0.2s; }
+  .switch input:checked ~ .switch-thumb { left: 17px; }
+
+  /* ADV PANEL */
+  .adv-panel { display: none; }
+  .adv-panel.open { display: block; }
+
+  .time-result-card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+  .time-result-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .time-stat { background: #f5f4f0; border-radius: 8px; padding: 12px; text-align: center; }
+  .time-stat .val { font-size: 20px; font-weight: 600; color: #1a1a1a; }
+  .time-stat .lbl { font-size: 11px; color: #888; margin-top: 2px; }
+
+  .error-msg { font-size: 12px; color: #e53e3e; margin-top: 10px; display: none; }
+  .divider { border: none; border-top: 1px solid #e0ddd5; margin: 14px 0; }
+
+  footer { text-align: center; padding: 20px; font-size: 12px; color: #aaa; border-top: 1px solid #e0ddd5; }
+  footer a { color: #aaa; }</style><link rel="stylesheet" href="css/theme.css"></head><body><div id="siteNavMount"></div><main><div class="page-header"><h1>EXP Calculator</h1><p>MapleStory N · Enter your level and EXP progress to see how much EXP you need.</p></div><div class="card"><div class="grid2"><div class="field"><label>Current Level</label> <input type="number" id="curLv" min="1" max="249" value="200"></div><div class="field"><label>Target Level</label> <input type="number" id="tgtLv" min="2" max="250" value="210"></div></div><hr class="divider"><div class="slider-row"><label>Current EXP %</label> <span id="expDisplay">0% (0 / 0)</span></div><input type="range" id="expSlider" min="0" max="99" value="0" step="1"><p class="error-msg" id="errorMsg"></p></div><div class="result-card" id="resultCard"><div class="result-route" id="resultRoute">Level 200 (0%) → Level 210</div><div class="result-num" id="resultNum">—</div><div class="result-unit">EXP needed</div></div><div class="adv-toggle" id="advToggle" onclick="toggleAdv()"><label class="switch" onclick="event.stopPropagation()"><input type="checkbox" id="advCheck" onchange="toggleAdv()"><div class="switch-track"></div><div class="switch-thumb"></div></label> <span>Advanced — Time estimation</span> <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="adv-panel" id="advPanel"><div class="card"><div class="field"><label>EXP gained per minute</label> <input type="number" id="expPerMin" min="1" placeholder="e.g. 500000000" value=""></div><p style="font-size:12px;color:#888;margin-top:8px;">Tip: supports shorthand — type <strong style="color:#1a1a1a">500m</strong>, <strong style="color:#1a1a1a">1.2b</strong>, etc. (or raw numbers)</p><p style="font-size:12px;color:#888;margin-top:4px;">To find your EXP/min: check your EXP bar after exactly 1 minute of grinding.</p></div><div class="time-result-card" id="timeCard"><div class="result-route" id="timeRoute">Time to reach target</div><div class="time-result-grid" id="timeGrid"><div class="time-stat"><div class="val" id="tDays">—</div><div class="lbl">Days</div></div><div class="time-stat"><div class="val" id="tHours">—</div><div class="lbl">Hours</div></div><div class="time-stat"><div class="val" id="tMins">—</div><div class="lbl">Minutes</div></div></div></div></div></main><footer>Data sourced from <a href="https://msu.io/maplestoryn" target="_blank">msu.io</a> · Unofficial fan tools</footer><script src="js/theme.js"></script><script src="js/nav.js"></script><script>renderSiteNav('exp');</script><script>const EXP = {1:15,2:34,3:57,4:92,5:135,6:372,7:560,8:840,9:1242,10:1304,11:1317,12:1330,13:1343,14:1356,15:1627,16:1952,17:2342,18:2810,19:3372,20:4383,21:5259,22:6310,23:7572,24:9086,25:10903,26:13083,27:15699,28:18838,29:22605,30:24865,31:26108,32:27413,33:28783,34:30222,35:36266,36:43519,37:52222,38:62666,39:75199,40:82718,41:89335,42:96481,43:104199,44:112534,45:123787,46:133689,47:144384,48:155934,49:168408,50:181880,51:196430,52:212144,53:229115,54:247444,55:267239,56:288618,57:311707,58:336643,59:363574,60:381752,61:400839,62:420880,63:441924,64:464020,65:498821,66:536232,67:576449,68:619682,69:666158,70:732773,71:787730,72:846809,73:910319,74:978592,75:1056879,76:1125576,77:1198738,78:1276655,79:1359637,80:1448013,81:1542133,82:1642371,83:1749125,84:1862818,85:1983901,86:2112854,87:2250189,88:2396451,89:2552220,90:2718114,91:2894791,92:3082952,93:3283343,94:3496760,95:3724049,96:3966112,97:4223909,98:4498463,99:4790863,100:5653218,101:5653218,102:5653218,103:5653218,104:5653218,105:5992411,106:6351955,107:6764832,108:7204546,109:7672841,110:8133211,111:8661869,112:9224890,113:9824507,114:10463099,115:11092932,116:11812815,117:12578789,118:13395308,119:14266447,120:15123041,121:16106685,122:17154164,123:18530420,124:19456000,125:19980968,126:21963877,127:23265370,128:24781776,129:26540439,130:28492656,131:30539744,132:32448778,133:34455302,134:36560363,135:39149756,136:41943035,137:44740152,138:47710787,139:50702381,140:55638667,141:59263859,142:63131062,143:67239057,144:71432978,145:78192140,146:82575724,147:87388922,148:92655081,149:98385163,150:108073001,151:115847859,152:122585374,153:130177435,154:138657232,155:150999055,156:160918984,157:169751810,158:179774309,159:190611136,160:207984648,161:220982140,162:234534334,163:248851889,164:264009992,165:288131394,166:308040174,167:325529900,168:345890510,169:368264802,170:404242591,171:430001576,172:457511298,173:486920982,174:514907895,175:566178063,176:603068271,177:643047253,178:684665486,179:723411526,180:797044198,181:844793761,182:895650249,183:947742633,184:1005380323,185:1107050028,186:1171526334,187:1243407069,188:1317613868,189:1396918450,190:1536000602,191:1628699589,192:1726209668,193:1830164389,194:1940001027,195:2133841206,196:2262619116,197:2399798537,198:2543521822,199:2694292163,200:6763374200,201:8085286697,202:9696231061,203:11620493797,204:13958564470,205:16660989580,206:19919070578,207:24230767994,208:29009200448,209:34730489272,210:73389143631,211:77915507147,212:83076005093,213:88470636955,214:94326117855,215:100525547581,216:107158677592,217:114219327029,218:121711255305,219:129664561297,220:257522891462,221:268221003632,222:279465009143,223:291265714240,224:303635285313,225:316588139893,226:330140706019,227:344306782822,228:359101034774,229:374540143898,230:749773164038,231:757989143891,232:770234975537,233:783073716394,234:796023745567,235:810195068795,236:824593338267,237:839213718161,238:854058826595,239:869132817795,240:1754894086821,241:1777019804063,242:1799762143703,243:1823123667408,244:1847109005798,245:1871722856830,246:1896969819581,247:1922854622730,248:1949381660285,249:1976556141279};
+
+function fmt(n) {
+  if (n >= 1e15) return (n/1e15).toFixed(1).replace(/\.0$/,'') + 'Q';
+  if (n >= 1e12) return (n/1e12).toFixed(1).replace(/\.0$/,'') + 'T';
+  if (n >= 1e9)  return (n/1e9).toFixed(1).replace(/\.0$/,'') + 'B';
+  if (n >= 1e6)  return (n/1e6).toFixed(1).replace(/\.0$/,'') + 'M';
+  if (n >= 1e3)  return (n/1e3).toFixed(1).replace(/\.0$/,'') + 'K';
+  return n.toLocaleString();
+}
+
+function parseInput(s) {
+  if (!s) return null;
+  s = s.trim().toLowerCase().replace(/,/g, '');
+  const m = s.match(/^(\d+\.?\d*)\s*([kmbtq]?)$/);
+  if (!m) return null;
+  const n = parseFloat(m[1]);
+  const mult = {'':{1:1},'k':1e3,'m':1e6,'b':1e9,'t':1e12,'q':1e15}[m[2]] ?? ({'':1,'k':1e3,'m':1e6,'b':1e9,'t':1e12,'q':1e15}[m[2]]);
+  const map = {'':1,'k':1e3,'m':1e6,'b':1e9,'t':1e12,'q':1e15};
+  return n * (map[m[2]] ?? 1);
+}
+
+function calcEXP(cur, pct, tgt) {
+  let rem = (EXP[cur] ?? 0) * (1 - pct / 100);
+  for (let lv = cur + 1; lv < tgt; lv++) rem += EXP[lv] ?? 0;
+  return Math.ceil(rem);
+}
+
+let lastEXPNeeded = null;
+
+function update() {
+  const cur = parseInt(document.getElementById('curLv').value);
+  const tgt = parseInt(document.getElementById('tgtLv').value);
+  const pct = parseInt(document.getElementById('expSlider').value);
+  const curExp = EXP[cur] ?? 0;
+  const haveExp = Math.floor(pct / 100 * curExp);
+  const errEl = document.getElementById('errorMsg');
+
+  document.getElementById('expDisplay').textContent =
+    pct + '% (' + fmt(haveExp) + ' / ' + fmt(curExp) + ')';
+  document.getElementById('resultRoute').textContent =
+    'Level ' + cur + ' (' + pct + '%) → Level ' + tgt;
+  document.getElementById('timeRoute').textContent =
+    'Time to reach Level ' + tgt;
+
+  if (isNaN(cur) || isNaN(tgt) || cur < 1 || cur > 249 || tgt <= cur || tgt > 250) {
+    errEl.textContent = 'Target must be greater than current level (max 250).';
+    errEl.style.display = 'block';
+    document.getElementById('resultNum').textContent = '—';
+    lastEXPNeeded = null;
+    updateTime();
+    return;
+  }
+  errEl.style.display = 'none';
+  lastEXPNeeded = calcEXP(cur, pct, tgt);
+  document.getElementById('resultNum').textContent = fmt(lastEXPNeeded);
+  updateTime();
+}
+
+function updateTime() {
+  const epmRaw = document.getElementById('expPerMin').value;
+  const epm = parseInput(epmRaw);
+  const days = document.getElementById('tDays');
+  const hours = document.getElementById('tHours');
+  const mins = document.getElementById('tMins');
+
+  if (!lastEXPNeeded || !epm || epm <= 0) {
+    days.textContent = '—'; hours.textContent = '—'; mins.textContent = '—';
+    return;
+  }
+  const totalMins = lastEXPNeeded / epm;
+  const d = Math.floor(totalMins / 1440);
+  const h = Math.floor((totalMins % 1440) / 60);
+  const m = Math.floor(totalMins % 60);
+  days.textContent = d;
+  hours.textContent = h;
+  mins.textContent = m;
+}
+
+function toggleAdv() {
+  const check = document.getElementById('advCheck');
+  const toggle = document.getElementById('advToggle');
+  const panel = document.getElementById('advPanel');
+  // sync checkbox if clicked on outer div
+  if (event && event.target === toggle) check.checked = !check.checked;
+  const open = check.checked;
+  toggle.classList.toggle('open', open);
+  panel.classList.toggle('open', open);
+}
+
+document.getElementById('curLv').addEventListener('input', () => {
+  const cur = parseInt(document.getElementById('curLv').value);
+  const tgt = parseInt(document.getElementById('tgtLv').value);
+  if (!isNaN(cur) && !isNaN(tgt) && tgt <= cur)
+    document.getElementById('tgtLv').value = Math.min(cur + 1, 250);
+  update();
+});
+document.getElementById('tgtLv').addEventListener('input', update);
+document.getElementById('expSlider').addEventListener('input', update);
+document.getElementById('expPerMin').addEventListener('input', updateTime);
+
+update();</script></body></html>

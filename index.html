@@ -1,0 +1,219 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MSU Tools — MapleStory N</title><style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f4f0;
+    color: #1a1a1a;
+    min-height: 100vh;
+    padding: 24px 16px;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── NAV ── */
+  .site-nav {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    background: #fff;
+  }
+
+  .nav-tab {
+    flex: 1;
+    padding: 11px 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    background: #fff;
+    color: #999;
+    transition: background 0.15s, color 0.15s;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-family: inherit;
+    text-decoration: none;
+  }
+
+  .nav-tab:last-child { border-right: none; }
+
+  .nav-tab .nav-icon {
+    font-size: 17px;
+    line-height: 1;
+  }
+
+  .nav-tab .nav-icon-img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+
+  .nav-tab .nav-label {
+    font-size: 11px;
+    letter-spacing: 0.03em;
+  }
+
+  .nav-tab.active {
+    background: #1a1a1a;
+    color: #fff;
+  }
+
+  .nav-tab:not(.active):hover {
+    background: #f5f4f0;
+    color: #555;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 48px 0 40px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1px solid #e0ddd5;
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    display: inline-block;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    line-height: 1.15;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: #c0392b;
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: #888;
+    max-width: 420px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── TOOL CARDS ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 760px) {
+    .tools-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .tools-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .tool-card {
+    background: #fff;
+    border: 1px solid #e0ddd5;
+    border-radius: 14px;
+    padding: 20px 18px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, transform 0.12s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tool-card:hover {
+    border-color: #bbb;
+    transform: translateY(-2px);
+  }
+
+  .tool-card:active {
+    transform: translateY(0);
+  }
+
+  .tool-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .icon-cube   { background: #fdf0ef; }
+  .icon-sym    { background: #E1F5EE; }
+  .icon-vmat   { background: #EEEDFE; }
+  /* .icon-legion { background: #FAECE7; } */
+  .icon-exp    { background: #E7F3FA; }
+  .icon-wallet { background: #E1F5EE; }
+  .icon-explore { background: #FAECE7; }
+  .tool-icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+
+  .tool-name {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .tool-desc {
+    font-size: 12px;
+    color: #999;
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .tool-arrow {
+    font-size: 12px;
+    color: #bbb;
+    margin-top: 4px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #ccc;
+    padding: 8px 0 16px;
+  }
+
+  .footer a {
+    color: #bbb;
+  }</style><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/theme.css"></head><body><div class="container"><div id="siteNavMount"></div><div class="hero"><div class="hero-badge"><span class="dot"></span> MapleStory N</div><h1>Tools for<br><em>MapleStory N</em></h1><p>Simulators and calculators to help plan your progression.</p></div><div class="tools-grid"><a class="tool-card" href="cube.html"><div class="tool-icon icon-cube"><img src="images/RED.webp" onerror="this.outerHTML='<span style=font-size:22px>🎲</span>'" alt=""></div><div class="tool-name">Cube Simulator</div><div class="tool-desc">Simulate Red, Black and Bonus cube rolls. Supports rank-up and all grades.</div><div class="tool-arrow">Open →</div></a><a class="tool-card" href="explore.html"><div class="tool-icon icon-explore">🔎</div><div class="tool-name">Explore</div><div class="tool-desc">Browse wallet transactions, item transfers, marketplace activity, and NESO movement.</div><div class="tool-arrow">Open →</div></a><a class="tool-card" href="wallet.html"><div class="tool-icon icon-wallet">◎</div><div class="tool-name">Wallet Analytics</div><div class="tool-desc">Track NESO minting, Power Crystal spending, daily averages, and wallet net flow.</div><div class="tool-arrow">Open →</div></a><a class="tool-card" href="symbols.html"><div class="tool-icon icon-sym">✦</div><div class="tool-name">Arcane Symbols</div><div class="tool-desc">Calculate symbols and Neso needed to hit your target symbol level.</div><div class="tool-arrow">Open →</div></a><a class="tool-card" href="vmatrix.html"><div class="tool-icon icon-vmat">◈</div><div class="tool-name">V Matrix</div><div class="tool-desc">Plan Skill and Boost node upgrades and see total node costs.</div><div class="tool-arrow">Open →</div></a><a class="tool-card" href="exp.html"><div class="tool-icon icon-exp">⚡</div><div class="tool-name">EXP Calculator</div><div class="tool-desc">Calculate EXP needed from your current level to your target level.</div><div class="tool-arrow">Open →</div></a></div><div class="footer">Data sourced from <a href="https://msu.io/maplestoryn" target="_blank">msu.io</a> · Unofficial fan tools</div></div><script src="js/theme.js"></script><script src="js/nav.js"></script><script>renderSiteNav('home');</script></body></html>

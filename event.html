@@ -1,0 +1,195 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Weekly Shop Calculator</title><style>* {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+  }
+
+  .app {
+    width: 420px;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+
+  h1 {
+    font-size: 20px;
+    margin: 0 0 14px;
+  }
+
+  .top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  label {
+    font-size: 13px;
+    color: #4b5563;
+  }
+
+  input {
+    width: 100%;
+    padding: 9px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    margin-top: 5px;
+    font-size: 14px;
+  }
+
+  .item {
+    display: grid;
+    grid-template-columns: 1fr 80px 70px;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .cost {
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  .summary {
+    margin-top: 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    margin: 7px 0;
+    font-size: 15px;
+  }
+
+  .good {
+    color: #047857;
+    font-weight: bold;
+  }
+
+  .bad {
+    color: #dc2626;
+    font-weight: bold;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    border: 0;
+    border-radius: 9px;
+    background: #111827;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #000;
+  }</style></head><body><div class="app"><h1>Weekly Shop Calculator</h1><div class="top"><div><label>Weekly Points</label> <input id="weeklyPoints" type="number" value="3000"></div><div><label>Current Points</label> <input id="currentPoints" type="number" value="3000"></div></div><div id="items"></div><div class="summary"><div class="row"><span>Total Cost</span> <strong id="totalCost">0</strong></div><div class="row"><span>Remaining Points</span> <strong id="remaining">3000</strong></div><div class="row"><span>Weeks Needed</span> <strong id="weeksNeeded">0</strong></div><div class="row"><span>Status</span> <strong id="status" class="good">OK</strong></div></div><button onclick="resetAll()">Reset</button></div><script>const shopItems = [
+  { name: "Red Cube Lucky Box", cost: 300, defaultQty: 1 },
+  { name: "Black Cube Lucky Box", cost: 400, defaultQty: 1 },
+  { name: "Bonus Cube Lucky Box", cost: 400, defaultQty: 1 },
+  { name: "Nodestones Lucky Box", cost: 100, defaultQty: 1 },
+  { name: "Symbols Lucky Box", cost: 80, defaultQty: 1 },
+  { name: "Experience Nodestone", cost: 150, defaultQty: 1 },
+
+
+  { name: "Red Cube", cost: 60, limit: 10, defaultQty: 10 },
+  { name: "Black Cube", cost: 150, limit: 5, defaultQty: 5 },
+  { name: "Bonus Cube", cost: 200, limit: 3, defaultQty: 3 },
+
+  // Add more items here later
+];
+
+const itemsContainer = document.getElementById("items");
+
+function renderItems() {
+  itemsContainer.innerHTML = "";
+
+  shopItems.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "item";
+
+    div.innerHTML = `
+      <div>
+        <div class="name">${item.name}</div>
+        <div class="cost">${item.cost} points</div>
+      </div>
+
+      <input 
+        type="number" 
+        min="0" 
+        value="${item.defaultQty || 0}"
+        id="qty-${index}" 
+        oninput="calculate()"
+      >
+
+      <div>${item.cost}</div>
+    `;
+
+    itemsContainer.appendChild(div);
+  });
+}
+
+function calculate() {
+  const weeklyPoints = Number(document.getElementById("weeklyPoints").value) || 0;
+  const currentPoints = Number(document.getElementById("currentPoints").value) || 0;
+
+  let total = 0;
+
+  shopItems.forEach((item, index) => {
+    const qty = Number(document.getElementById(`qty-${index}`).value) || 0;
+    total += item.cost * qty;
+  });
+
+  const remaining = currentPoints - total;
+  const weeksNeeded = weeklyPoints > 0 ? Math.ceil(total / weeklyPoints) : 0;
+
+  document.getElementById("totalCost").textContent = total;
+  document.getElementById("remaining").textContent = remaining;
+  document.getElementById("weeksNeeded").textContent = weeksNeeded;
+
+  const status = document.getElementById("status");
+
+  if (remaining >= 0) {
+    status.textContent = "OK";
+    status.className = "good";
+  } else {
+    status.textContent = "Not enough points";
+    status.className = "bad";
+  }
+}
+
+function resetAll() {
+  shopItems.forEach((item, index) => {
+    document.getElementById(`qty-${index}`).value = item.defaultQty || 0;
+  });
+
+  calculate();
+}
+
+document.getElementById("weeklyPoints").addEventListener("input", calculate);
+document.getElementById("currentPoints").addEventListener("input", calculate);
+
+renderItems();
+calculate();</script></body></html>

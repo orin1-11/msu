@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Arcane Symbol Calculator</title><link rel="stylesheet" href="css/nav.css"><style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; min-height: 100vh; padding: 24px 16px; }
+  .container { max-width: 480px; margin: 0 auto; }
+
+  /* ── HEADER ── */
+  .sim-header { margin-bottom: 20px; }
+  .sim-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+  .sim-header .sub { font-size: 13px; color: #888; }
+
+  /* ── CARDS ── */
+  .card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; }
+  .card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+
+  /* ── FORM ── */
+  .row { display: flex; gap: 12px; margin-bottom: 14px; }
+  .field { flex: 1; }
+  .field label { font-size: 12px; color: #999; display: block; margin-bottom: 6px; }
+  .wanted-select { width: 100%; font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; cursor: pointer; outline: none; font-family: inherit; }
+  .wanted-select:focus { border-color: #534AB7; }
+
+  .slider-row { margin-bottom: 0; }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .slider-header span { font-size: 12px; color: #999; }
+  .slider-header strong { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+  input[type=range] { width: 100%; accent-color: #0F6E56; margin-bottom: 4px; }
+  .slider-hint { font-size: 11px; color: #bbb; }
+
+  /* ── METRICS ── */
+  .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .metric { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 14px 16px; }
+  .metric-label { font-size: 10px; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .metric-val { font-size: 24px; font-weight: 600; color: #1a1a1a; }
+  .metric-val.green { color: #0F6E56; }</style><link rel="stylesheet" href="css/theme.css"></head><body><div id="siteNavMount"></div><div class="container"><div class="sim-header"><h1>Arcane Symbol Calculator</h1><p class="sub">MapleStory N · Arcane Force symbols</p></div><div class="card"><div class="card-title">Setup</div><div class="row"><div class="field"><label>Current level</label> <select id="curLv" class="wanted-select"></select></div><div class="field"><label>Target level</label> <select id="tgtLv" class="wanted-select"></select></div></div><div class="slider-row"><div class="slider-header"><span>Symbols at current level</span> <strong id="symVal">0</strong></div><input type="range" id="symSlider" min="0" max="12" value="0" step="1"><div class="slider-hint" id="symHint">need 12 to level up</div></div></div><div class="metrics"><div class="metric"><div class="metric-label">Symbols needed</div><div class="metric-val green" id="mSymbols">0</div></div><div class="metric"><div class="metric-label">Neso needed</div><div class="metric-val" id="mNeso">0</div></div></div></div><script src="js/theme.js"></script><script src="js/nav.js"></script><script>renderSiteNav('symbols');</script><script>const COSTS = [12,15,20,27,36,47,60,75,92,111,132,155,180,207,236,267,300,335,372];
+const NESO  = [227000,308000,392000,479000,573000,674000,784000,904000,
+               1037000,1184000,1345000,1525000,1721000,1936000,2174000,
+               2434000,2718000,3028000,3273000];
+
+const curLvEl  = document.getElementById('curLv');
+const tgtLvEl  = document.getElementById('tgtLv');
+const slider   = document.getElementById('symSlider');
+const symValEl = document.getElementById('symVal');
+const symHint  = document.getElementById('symHint');
+
+for (let i = 1; i <= 20; i++) {
+  curLvEl.innerHTML += `<option value="${i}">${i}</option>`;
+  tgtLvEl.innerHTML += `<option value="${i}">${i}</option>`;
+}
+tgtLvEl.value = 20;
+
+function fmt(n) { return n.toLocaleString(); }
+
+function calc() {
+  const cur  = parseInt(curLvEl.value);
+  const tgt  = parseInt(tgtLvEl.value);
+  const have = parseInt(slider.value);
+
+  const maxAtCur = COSTS[cur - 1];
+  slider.max = maxAtCur - 1;
+  if (parseInt(slider.value) >= maxAtCur) slider.value = 0;
+  symValEl.textContent = slider.value;
+  symHint.textContent  = `need ${maxAtCur} to level up`;
+
+  if (tgt <= cur) {
+    document.getElementById('mSymbols').textContent = '0';
+    document.getElementById('mNeso').textContent    = '0';
+    return;
+  }
+
+  let totalSymbols = 0, totalNeso = 0;
+  for (let i = cur - 1; i < tgt - 1; i++) {
+    totalSymbols += COSTS[i];
+    totalNeso    += NESO[i];
+  }
+
+  const remaining = Math.max(0, totalSymbols - have);
+  document.getElementById('mSymbols').textContent = fmt(remaining);
+  document.getElementById('mNeso').textContent    = fmt(totalNeso);
+}
+
+function syncTarget() {
+  const cur = parseInt(curLvEl.value);
+  for (let i = 0; i < tgtLvEl.options.length; i++) {
+    tgtLvEl.options[i].disabled = parseInt(tgtLvEl.options[i].value) <= cur;
+  }
+  if (parseInt(tgtLvEl.value) <= cur) tgtLvEl.value = Math.min(cur + 1, 20);
+  slider.value = 0;
+  calc();
+}
+
+curLvEl.addEventListener('change', syncTarget);
+tgtLvEl.addEventListener('change', calc);
+slider.addEventListener('input', calc);
+syncTarget();</script></body></html>
